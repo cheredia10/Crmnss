@@ -1,125 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Phone, Calendar, Clock, Filter, Download, Plus } from 'lucide-react';
 import { Breadcrumbs } from './Breadcrumbs';
 import { Modal } from './Modal';
-
-interface Llamada {
-  id: string;
-  cliente: string;
-  empresa: string;
-  fecha: string;
-  hora: string;
-  duracion: string;
-  tipo: 'Entrante' | 'Saliente';
-  motivo: string;
-  resultado: string;
-  agente: string;
-}
-
-const mockLlamadas: Llamada[] = [
-  {
-    id: 'LL-001',
-    cliente: 'Juan Pérez',
-    empresa: 'Tech Solutions SA',
-    fecha: '27 Nov 2024',
-    hora: '10:30',
-    duracion: '15 min',
-    tipo: 'Saliente',
-    motivo: 'Seguimiento de propuesta',
-    resultado: 'Positivo',
-    agente: 'Kepa Syntax',
-  },
-  {
-    id: 'LL-002',
-    cliente: 'María García',
-    empresa: 'Innovate Corp',
-    fecha: '27 Nov 2024',
-    hora: '09:15',
-    duracion: '8 min',
-    tipo: 'Entrante',
-    motivo: 'Consulta técnica',
-    resultado: 'Resuelto',
-    agente: 'Kepa Syntax',
-  },
-  {
-    id: 'LL-003',
-    cliente: 'Carlos Rodríguez',
-    empresa: 'Digital Partners',
-    fecha: '26 Nov 2024',
-    hora: '14:45',
-    duracion: '22 min',
-    tipo: 'Saliente',
-    motivo: 'Presentación de producto',
-    resultado: 'Positivo',
-    agente: 'Ana López',
-  },
-  {
-    id: 'LL-004',
-    cliente: 'Ana Martínez',
-    empresa: 'Global Systems',
-    fecha: '26 Nov 2024',
-    hora: '11:20',
-    duracion: '12 min',
-    tipo: 'Saliente',
-    motivo: 'Seguimiento',
-    resultado: 'Neutral',
-    agente: 'Pedro García',
-  },
-  {
-    id: 'LL-005',
-    cliente: 'Luis Fernández',
-    empresa: 'Smart Business',
-    fecha: '25 Nov 2024',
-    hora: '16:00',
-    duracion: '18 min',
-    tipo: 'Entrante',
-    motivo: 'Renovación de contrato',
-    resultado: 'Positivo',
-    agente: 'Kepa Syntax',
-  },
-  {
-    id: 'LL-006',
-    cliente: 'Elena Santos',
-    empresa: 'Future Tech',
-    fecha: '25 Nov 2024',
-    hora: '10:45',
-    duracion: '25 min',
-    tipo: 'Saliente',
-    motivo: 'Prospección',
-    resultado: 'Seguimiento pendiente',
-    agente: 'Ana López',
-  },
-  {
-    id: 'LL-007',
-    cliente: 'Roberto Díaz',
-    empresa: 'Mega Corp',
-    fecha: '24 Nov 2024',
-    hora: '13:30',
-    duracion: '10 min',
-    tipo: 'Entrante',
-    motivo: 'Soporte técnico',
-    resultado: 'Resuelto',
-    agente: 'Pedro García',
-  },
-  {
-    id: 'LL-008',
-    cliente: 'Patricia Ruiz',
-    empresa: 'Innovation Labs',
-    fecha: '24 Nov 2024',
-    hora: '09:00',
-    duracion: '30 min',
-    tipo: 'Saliente',
-    motivo: 'Cierre de venta',
-    resultado: 'Positivo',
-    agente: 'Kepa Syntax',
-  },
-];
+import { llamadasAPI, clientesAPI, type Llamada, type Cliente } from '../utils/api';
 
 interface LlamadasViewProps {
   prefilledData?: {
-    cliente: string;
-    empresa: string;
-    telefono: string;
+    clienteId: string;
+    clienteNombre: string;
   };
 }
 
@@ -128,29 +16,84 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
   const [tipoFilter, setTipoFilter] = useState('');
   const [fechaFilter, setFechaFilter] = useState('');
   const [showModal, setShowModal] = useState(!!prefilledData);
+  const [llamadas, setLlamadas] = useState<Llamada[]>([]);
+  const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    cliente: prefilledData?.cliente || '',
-    empresa: prefilledData?.empresa || '',
+    clienteId: prefilledData?.clienteId || '',
+    clienteNombre: prefilledData?.clienteNombre || '',
     tipo: 'Saliente' as 'Entrante' | 'Saliente',
-    motivo: '',
     duracion: '',
-    resultado: '',
+    estado: 'Completada' as 'Completada' | 'Perdida' | 'No contestada',
     notas: '',
   });
 
-  const filteredLlamadas = mockLlamadas.filter(llamada => {
-    const matchesSearch = llamada.cliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         llamada.empresa.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         llamada.motivo.toLowerCase().includes(searchTerm.toLowerCase());
+  // Cargar datos al montar
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [llamadasData, clientesData] = await Promise.all([
+        llamadasAPI.getAll(),
+        clientesAPI.getAll()
+      ]);
+      setLlamadas(llamadasData);
+      setClientes(clientesData);
+    } catch (error) {
+      console.error('Error al cargar datos:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateLlamada = async () => {
+    try {
+      await llamadasAPI.create({
+        clienteId: formData.clienteId,
+        clienteNombre: formData.clienteNombre,
+        fecha: new Date().toISOString(),
+        duracion: formData.duracion,
+        tipo: formData.tipo,
+        estado: formData.estado,
+        notas: formData.notas
+      });
+      await loadData();
+      setShowModal(false);
+      setFormData({
+        clienteId: '',
+        clienteNombre: '',
+        tipo: 'Saliente',
+        duracion: '',
+        estado: 'Completada',
+        notas: '',
+      });
+    } catch (error) {
+      console.error('Error al crear llamada:', error);
+      alert('Error al registrar la llamada');
+    }
+  };
+
+  const filteredLlamadas = llamadas.filter(llamada => {
+    const matchesSearch = llamada.clienteNombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         llamada.notas.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesTipo = !tipoFilter || llamada.tipo === tipoFilter;
     return matchesSearch && matchesTipo;
   });
 
   // Estadísticas
-  const totalLlamadas = mockLlamadas.length;
-  const llamadasHoy = mockLlamadas.filter(l => l.fecha === '27 Nov 2024').length;
-  const llamadasSalientes = mockLlamadas.filter(l => l.tipo === 'Saliente').length;
-  const llamadasEntrantes = mockLlamadas.filter(l => l.tipo === 'Entrante').length;
+  const totalLlamadas = llamadas.length;
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  const llamadasHoy = llamadas.filter(l => {
+    const fechaLlamada = new Date(l.fecha);
+    fechaLlamada.setHours(0, 0, 0, 0);
+    return fechaLlamada.getTime() === hoy.getTime();
+  }).length;
+  const llamadasSalientes = llamadas.filter(l => l.tipo === 'Saliente').length;
+  const llamadasEntrantes = llamadas.filter(l => l.tipo === 'Entrante').length;
 
   return (
     <div className="flex flex-col gap-[24px] w-full">
@@ -322,9 +265,6 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
                   Cliente
                 </th>
                 <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px]">
-                  Empresa
-                </th>
-                <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px]">
                   Fecha y Hora
                 </th>
                 <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px]">
@@ -334,43 +274,49 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
                   Tipo
                 </th>
                 <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px]">
-                  Motivo
-                </th>
-                <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px]">
-                  Resultado
+                  Estado
                 </th>
                 <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px] rounded-tr-[8px]">
-                  Agente
+                  Notas
                 </th>
               </tr>
             </thead>
             <tbody>
-              {filteredLlamadas.map((llamada, index) => (
+              {loading ? (
+                <tr>
+                  <td colSpan={7} className="px-[16px] py-[24px] text-center font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#999999]">
+                    Cargando llamadas...
+                  </td>
+                </tr>
+              ) : filteredLlamadas.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-[16px] py-[24px] text-center font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#999999]">
+                    No se encontraron llamadas
+                  </td>
+                </tr>
+              ) : filteredLlamadas.map((llamada, index) => (
                 <tr 
                   key={llamada.id} 
                   className={`${index % 2 === 0 ? 'bg-white' : 'bg-[#f9f9f9]'} hover:bg-[#e6f0fe] cursor-pointer transition-colors`}
                 >
                   <td className="px-[16px] py-[12px] font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
-                    {llamada.id}
+                    {llamada.id.substring(0, 8)}
                   </td>
                   <td className="px-[16px] py-[12px] font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-[#333333]">
-                    {llamada.cliente}
-                  </td>
-                  <td className="px-[16px] py-[12px] font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
-                    {llamada.empresa}
+                    {llamada.clienteNombre}
                   </td>
                   <td className="px-[16px] py-[12px]">
                     <div className="flex flex-col gap-[4px]">
                       <div className="flex items-center gap-[6px]">
                         <Calendar className="size-[12px]" color="#004179" />
                         <span className="font-['Open_Sans:Regular',sans-serif] text-[12px] text-[#333333]">
-                          {llamada.fecha}
+                          {new Date(llamada.fecha).toLocaleDateString('es-ES')}
                         </span>
                       </div>
                       <div className="flex items-center gap-[6px]">
                         <Clock className="size-[12px]" color="#004179" />
                         <span className="font-['Open_Sans:Regular',sans-serif] text-[12px] text-[#4d545e]">
-                          {llamada.hora}
+                          {new Date(llamada.fecha).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
                     </div>
@@ -390,14 +336,21 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
                       {llamada.tipo}
                     </span>
                   </td>
-                  <td className="px-[16px] py-[12px] font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
-                    {llamada.motivo}
+                  <td className="px-[16px] py-[12px]">
+                    <span
+                      className={`px-[12px] py-[4px] rounded-[4px] font-['Open_Sans:SemiBold',sans-serif] text-[12px] ${
+                        llamada.estado === 'Completada'
+                          ? 'bg-[#d4edda] text-[#155724]'
+                          : llamada.estado === 'Perdida'
+                          ? 'bg-[#f8d7da] text-[#721c24]'
+                          : 'bg-[#fff3cd] text-[#856404]'
+                      }`}
+                    >
+                      {llamada.estado}
+                    </span>
                   </td>
-                  <td className="px-[16px] py-[12px] font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
-                    {llamada.resultado}
-                  </td>
-                  <td className="px-[16px] py-[12px] font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#4d545e]">
-                    {llamada.agente}
+                  <td className="px-[16px] py-[12px] font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333] max-w-[200px] truncate">
+                    {llamada.notas}
                   </td>
                 </tr>
               ))}
@@ -414,12 +367,11 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
           // Limpiar datos prellenados al cerrar
           if (prefilledData) {
             setFormData({
-              cliente: '',
-              empresa: '',
+              clienteId: '',
+              clienteNombre: '',
               tipo: 'Saliente',
-              motivo: '',
               duracion: '',
-              resultado: '',
+              estado: 'Completada',
               notas: '',
             });
           }
@@ -435,10 +387,7 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
                   Registrando llamada desde Tablero de Seguimiento
                 </p>
                 <p className="font-['Open_Sans:Regular',sans-serif] text-[12px] text-[#4d545e]">
-                  {prefilledData.cliente} - {prefilledData.empresa}
-                </p>
-                <p className="font-['Open_Sans:Regular',sans-serif] text-[12px] text-[#4d545e]">
-                  📞 {prefilledData.telefono}
+                  {prefilledData.clienteNombre}
                 </p>
               </div>
             </div>
@@ -448,30 +397,28 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
               <label className="font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-black">
                 Cliente
               </label>
-              <input
-                type="text"
-                value={formData.cliente}
-                onChange={(e) => setFormData({ ...formData, cliente: e.target.value })}
-                placeholder="Nombre del cliente"
+              <select
+                value={formData.clienteId}
+                onChange={(e) => {
+                  const selectedCliente = clientes.find(c => c.id === e.target.value);
+                  setFormData({ 
+                    ...formData, 
+                    clienteId: e.target.value,
+                    clienteNombre: selectedCliente?.nombre || ''
+                  });
+                }}
                 className="h-[44px] px-[10px] bg-white font-['Open_Sans:Regular',sans-serif] text-[14px] rounded-[8px] border border-[#bbbfc1] outline-none focus:border-[#015CA8]"
-              />
+                disabled={!!prefilledData}
+              >
+                <option value="">Seleccionar cliente</option>
+                {clientes.map(cliente => (
+                  <option key={cliente.id} value={cliente.id}>
+                    {cliente.nombre} - {cliente.empresa}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            <div className="flex flex-col gap-[8px]">
-              <label className="font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-black">
-                Empresa
-              </label>
-              <input
-                type="text"
-                value={formData.empresa}
-                onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
-                placeholder="Nombre de la empresa"
-                className="h-[44px] px-[10px] bg-white font-['Open_Sans:Regular',sans-serif] text-[14px] rounded-[8px] border border-[#bbbfc1] outline-none focus:border-[#015CA8]"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
             <div className="flex flex-col gap-[8px]">
               <label className="font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-black">
                 Tipo de Llamada
@@ -485,7 +432,9 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
                 <option value="Entrante">Entrante</option>
               </select>
             </div>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
             <div className="flex flex-col gap-[8px]">
               <label className="font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-black">
                 Duración
@@ -498,32 +447,21 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
                 className="h-[44px] px-[10px] bg-white font-['Open_Sans:Regular',sans-serif] text-[14px] rounded-[8px] border border-[#bbbfc1] outline-none focus:border-[#015CA8]"
               />
             </div>
-          </div>
 
-          <div className="flex flex-col gap-[8px]">
-            <label className="font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-black">
-              Motivo
-            </label>
-            <input
-              type="text"
-              value={formData.motivo}
-              onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}
-              placeholder="Motivo de la llamada"
-              className="h-[44px] px-[10px] bg-white font-['Open_Sans:Regular',sans-serif] text-[14px] rounded-[8px] border border-[#bbbfc1] outline-none focus:border-[#015CA8]"
-            />
-          </div>
-
-          <div className="flex flex-col gap-[8px]">
-            <label className="font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-black">
-              Resultado
-            </label>
-            <input
-              type="text"
-              value={formData.resultado}
-              onChange={(e) => setFormData({ ...formData, resultado: e.target.value })}
-              placeholder="Resultado de la llamada"
-              className="h-[44px] px-[10px] bg-white font-['Open_Sans:Regular',sans-serif] text-[14px] rounded-[8px] border border-[#bbbfc1] outline-none focus:border-[#015CA8]"
-            />
+            <div className="flex flex-col gap-[8px]">
+              <label className="font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-black">
+                Estado
+              </label>
+              <select
+                value={formData.estado}
+                onChange={(e) => setFormData({ ...formData, estado: e.target.value as 'Completada' | 'Perdida' | 'No contestada' })}
+                className="h-[44px] px-[10px] bg-white font-['Open_Sans:Regular',sans-serif] text-[14px] rounded-[8px] border border-[#bbbfc1] outline-none focus:border-[#015CA8]"
+              >
+                <option value="Completada">Completada</option>
+                <option value="Perdida">Perdida</option>
+                <option value="No contestada">No contestada</option>
+              </select>
+            </div>
           </div>
 
           <div className="flex flex-col gap-[8px]">
@@ -546,20 +484,7 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
               Cancelar
             </button>
             <button 
-              onClick={() => {
-                // Aquí iría la lógica para guardar la llamada
-                console.log('Nueva llamada:', formData);
-                setShowModal(false);
-                setFormData({
-                  cliente: '',
-                  empresa: '',
-                  tipo: 'Saliente',
-                  motivo: '',
-                  duracion: '',
-                  resultado: '',
-                  notas: '',
-                });
-              }}
+              onClick={handleCreateLlamada}
               className="bg-[#004179] text-white px-[20px] py-[10px] rounded-[8px] font-['Open_Sans:SemiBold',sans-serif] text-[14px] hover:bg-[#003060] transition-colors"
             >
               Guardar Llamada

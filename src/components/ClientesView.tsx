@@ -1,77 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Plus, MoreHorizontal, Phone, Mail, MapPin } from 'lucide-react';
 import { Breadcrumbs } from './Breadcrumbs';
 import { Modal } from './Modal';
-
-interface Cliente {
-  id: string;
-  nombre: string;
-  empresa: string;
-  telefono: string;
-  email: string;
-  ciudad: string;
-  ultimaLlamada: string;
-  totalLlamadas: number;
-  estado: 'Activo' | 'Inactivo' | 'Prospecto';
-}
-
-const mockClientes: Cliente[] = [
-  {
-    id: '001',
-    nombre: 'Juan Pérez',
-    empresa: 'Tech Solutions SA',
-    telefono: '+34 612 345 678',
-    email: 'juan.perez@techsolutions.com',
-    ciudad: 'Madrid',
-    ultimaLlamada: '23 Nov 2024',
-    totalLlamadas: 12,
-    estado: 'Activo',
-  },
-  {
-    id: '002',
-    nombre: 'María García',
-    empresa: 'Innovate Corp',
-    telefono: '+34 623 456 789',
-    email: 'maria.garcia@innovate.com',
-    ciudad: 'Barcelona',
-    ultimaLlamada: '22 Nov 2024',
-    totalLlamadas: 8,
-    estado: 'Activo',
-  },
-  {
-    id: '003',
-    nombre: 'Carlos Rodríguez',
-    empresa: 'Digital Partners',
-    telefono: '+34 634 567 890',
-    email: 'carlos@digitalpartners.com',
-    ciudad: 'Valencia',
-    ultimaLlamada: '20 Nov 2024',
-    totalLlamadas: 5,
-    estado: 'Prospecto',
-  },
-  {
-    id: '004',
-    nombre: 'Ana Martínez',
-    empresa: 'Global Systems',
-    telefono: '+34 645 678 901',
-    email: 'ana.martinez@globalsys.com',
-    ciudad: 'Sevilla',
-    ultimaLlamada: '15 Nov 2024',
-    totalLlamadas: 3,
-    estado: 'Inactivo',
-  },
-  {
-    id: '005',
-    nombre: 'Luis Fernández',
-    empresa: 'Smart Business',
-    telefono: '+34 656 789 012',
-    email: 'luis.fernandez@smartbiz.com',
-    ciudad: 'Bilbao',
-    ultimaLlamada: '24 Nov 2024',
-    totalLlamadas: 15,
-    estado: 'Activo',
-  },
-];
+import { clientesAPI, type Cliente } from '../utils/api';
 
 interface ClientesViewProps {
   onClientSelect: (clienteId: string) => void;
@@ -81,6 +12,8 @@ export function ClientesView({ onClientSelect }: ClientesViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [estadoFilter, setEstadoFilter] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     nombre: '',
     empresa: '',
@@ -91,7 +24,56 @@ export function ClientesView({ onClientSelect }: ClientesViewProps) {
     estado: 'Prospecto' as 'Activo' | 'Inactivo' | 'Prospecto',
   });
 
-  const filteredClientes = mockClientes.filter(cliente => {
+  // Cargar clientes al montar el componente
+  useEffect(() => {
+    loadClientes();
+  }, []);
+
+  const loadClientes = async () => {
+    try {
+      setLoading(true);
+      const data = await clientesAPI.getAll();
+      setClientes(data);
+    } catch (error) {
+      console.error('Error al cargar clientes:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateCliente = async () => {
+    try {
+      await clientesAPI.create(formData);
+      await loadClientes();
+      setShowModal(false);
+      setFormData({
+        nombre: '',
+        empresa: '',
+        telefono: '',
+        email: '',
+        ciudad: '',
+        direccion: '',
+        estado: 'Prospecto',
+      });
+    } catch (error) {
+      console.error('Error al crear cliente:', error);
+      alert('Error al crear el cliente');
+    }
+  };
+
+  const handleDeleteCliente = async (id: string) => {
+    if (!confirm('¿Está seguro de que desea eliminar este cliente?')) return;
+    
+    try {
+      await clientesAPI.delete(id);
+      await loadClientes();
+    } catch (error) {
+      console.error('Error al eliminar cliente:', error);
+      alert('Error al eliminar el cliente');
+    }
+  };
+
+  const filteredClientes = clientes.filter(cliente => {
     const matchesSearch = cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          cliente.empresa.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesEstado = !estadoFilter || cliente.estado === estadoFilter;
@@ -199,10 +181,7 @@ export function ClientesView({ onClientSelect }: ClientesViewProps) {
                   Ciudad
                 </th>
                 <th className="px-[12px] md:px-[16px] py-[10px] md:py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[12px] md:text-[14px]">
-                  Última Llamada
-                </th>
-                <th className="px-[12px] md:px-[16px] py-[10px] md:py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[12px] md:text-[14px]">
-                  Total Llamadas
+                  Fecha Registro
                 </th>
                 <th className="px-[12px] md:px-[16px] py-[10px] md:py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[12px] md:text-[14px]">
                   Estado
@@ -213,7 +192,19 @@ export function ClientesView({ onClientSelect }: ClientesViewProps) {
               </tr>
             </thead>
             <tbody>
-              {filteredClientes.map((cliente, index) => (
+              {loading ? (
+                <tr>
+                  <td colSpan={9} className="px-[16px] py-[24px] text-center font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#999999]">
+                    Cargando clientes...
+                  </td>
+                </tr>
+              ) : filteredClientes.length === 0 ? (
+                <tr>
+                  <td colSpan={9} className="px-[16px] py-[24px] text-center font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#999999]">
+                    No se encontraron clientes
+                  </td>
+                </tr>
+              ) : filteredClientes.map((cliente, index) => (
                 <tr 
                   key={cliente.id} 
                   className={`${index % 2 === 0 ? 'bg-white' : 'bg-[#f9f9f9]'} hover:bg-[#e6f0fe] cursor-pointer transition-colors`}
@@ -253,10 +244,7 @@ export function ClientesView({ onClientSelect }: ClientesViewProps) {
                     </div>
                   </td>
                   <td className="px-[16px] py-[12px] font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
-                    {cliente.ultimaLlamada}
-                  </td>
-                  <td className="px-[16px] py-[12px] font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-[#004179] text-center">
-                    {cliente.totalLlamadas}
+                    {new Date(cliente.fechaRegistro).toLocaleDateString('es-ES')}
                   </td>
                   <td className="px-[16px] py-[12px]">
                     <span
@@ -272,7 +260,13 @@ export function ClientesView({ onClientSelect }: ClientesViewProps) {
                     </span>
                   </td>
                   <td className="px-[16px] py-[12px]">
-                    <button className="hover:bg-[#e6f0fe] p-[8px] rounded-[4px] transition-colors">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteCliente(cliente.id);
+                      }}
+                      className="hover:bg-[#e6f0fe] p-[8px] rounded-[4px] transition-colors"
+                    >
                       <MoreHorizontal className="size-[18px]" color="#333333" />
                     </button>
                   </td>
@@ -397,20 +391,8 @@ export function ClientesView({ onClientSelect }: ClientesViewProps) {
               Cancelar
             </button>
             <button 
-              onClick={() => {
-                console.log('Nuevo cliente:', formData);
-                setShowModal(false);
-                setFormData({
-                  nombre: '',
-                  empresa: '',
-                  telefono: '',
-                  email: '',
-                  ciudad: '',
-                  direccion: '',
-                  estado: 'Prospecto',
-                });
-              }}
-              className="bg-[#004179] text-white px-[20px] py-[10px] rounded-[8px] font-['Open_Sans:SemiBold',sans-serif] text-[14px] hover:bg-[#003060] transition-colors"
+              onClick={handleCreateCliente}
+              className="px-[20px] py-[10px] rounded-[8px] bg-[#239ebc] font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-white hover:bg-[#1a7a94] transition-colors"
             >
               Guardar Cliente
             </button>

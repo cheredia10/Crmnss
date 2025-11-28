@@ -1,7 +1,34 @@
+import { useState, useEffect } from 'react';
 import { Breadcrumbs } from './Breadcrumbs';
 import { Users, Phone, TrendingUp, Calendar, Clock, FileText, ChevronRight } from 'lucide-react';
+import { statsAPI, type DashboardStats } from '../utils/api';
 
 export function DashboardView() {
+  const [stats, setStats] = useState<DashboardStats>({
+    totalClientes: 0,
+    clientesActivos: 0,
+    llamadasMes: 0,
+    llamadasHoy: 0,
+    tareasPendientes: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadStats();
+  }, []);
+
+  const loadStats = async () => {
+    try {
+      setLoading(true);
+      const data = await statsAPI.get();
+      setStats(data);
+    } catch (error) {
+      console.error('Error al cargar estadísticas:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-[24px] w-full">
       <Breadcrumbs items={['CRM', 'Dashboard']} />
@@ -38,7 +65,7 @@ export function DashboardView() {
               Total Clientes
             </p>
             <p className="font-['Open_Sans:SemiBold',sans-serif] text-[32px] text-[#333333]">
-              248
+              {loading ? '...' : stats.totalClientes}
             </p>
           </div>
         </div>
@@ -47,7 +74,7 @@ export function DashboardView() {
         <div className="bg-white rounded-[8px] p-[24px] flex flex-col gap-[16px] border border-[#bbbfc1]">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-center size-[48px] rounded-full" style={{ background: '#d4edda' }}>
-              <Users className="size-[24px]" color="#155724" />
+              <span className="text-[28px]">👥</span>
             </div>
             <div className="flex items-center gap-[4px]">
               <TrendingUp className="size-[16px]" color="#155724" />
@@ -61,7 +88,7 @@ export function DashboardView() {
               Clientes Activos
             </p>
             <p className="font-['Open_Sans:SemiBold',sans-serif] text-[32px] text-[#333333]">
-              182
+              {loading ? '...' : stats.clientesActivos}
             </p>
           </div>
         </div>
@@ -84,7 +111,7 @@ export function DashboardView() {
               Llamadas del Mes
             </p>
             <p className="font-['Open_Sans:SemiBold',sans-serif] text-[32px] text-[#333333]">
-              567
+              {loading ? '...' : stats.llamadasMes}
             </p>
           </div>
         </div>
@@ -106,7 +133,7 @@ export function DashboardView() {
               Llamadas Hoy
             </p>
             <p className="font-['Open_Sans:SemiBold',sans-serif] text-[32px] text-[#333333]">
-              24
+              {loading ? '...' : stats.llamadasHoy}
             </p>
           </div>
         </div>

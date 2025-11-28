@@ -1,119 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Breadcrumbs } from './Breadcrumbs';
 import { Calendar, Clock, AlertCircle, CheckCircle, Plus, Filter, User, Building } from 'lucide-react';
 import { Modal } from './Modal';
-
-interface Tarea {
-  id: string;
-  titulo: string;
-  descripcion: string;
-  cliente: string;
-  empresa: string;
-  fechaVencimiento: string;
-  prioridad: 'Alta' | 'Media' | 'Baja';
-  estado: 'Pendiente' | 'En Progreso' | 'Completada' | 'Vencida';
-  asignado: string;
-  tipo: 'Llamada' | 'Reunión' | 'Email' | 'Seguimiento' | 'Propuesta';
-}
-
-const mockTareas: Tarea[] = [
-  {
-    id: 'T-001',
-    titulo: 'Llamada de seguimiento propuesta',
-    descripcion: 'Realizar llamada para conocer decisión sobre propuesta comercial Q4',
-    cliente: 'María García',
-    empresa: 'Innovate Corp',
-    fechaVencimiento: '28 Nov 2024',
-    prioridad: 'Alta',
-    estado: 'Pendiente',
-    asignado: 'Kepa Syntax',
-    tipo: 'Llamada',
-  },
-  {
-    id: 'T-002',
-    titulo: 'Reunión presencial Madrid',
-    descripcion: 'Reunión para presentar ampliación de contrato',
-    cliente: 'Juan Pérez',
-    empresa: 'Tech Solutions SA',
-    fechaVencimiento: '29 Nov 2024',
-    prioridad: 'Alta',
-    estado: 'En Progreso',
-    asignado: 'Kepa Syntax',
-    tipo: 'Reunión',
-  },
-  {
-    id: 'T-003',
-    titulo: 'Enviar documentación técnica',
-    descripcion: 'Enviar manual técnico y especificaciones del producto',
-    cliente: 'Carlos Rodríguez',
-    empresa: 'Digital Partners',
-    fechaVencimiento: '27 Nov 2024',
-    prioridad: 'Media',
-    estado: 'Vencida',
-    asignado: 'Ana López',
-    tipo: 'Email',
-  },
-  {
-    id: 'T-004',
-    titulo: 'Seguimiento post-venta',
-    descripcion: 'Verificar satisfacción con el servicio implementado',
-    cliente: 'Luis Fernández',
-    empresa: 'Smart Business',
-    fechaVencimiento: '30 Nov 2024',
-    prioridad: 'Baja',
-    estado: 'Pendiente',
-    asignado: 'Pedro García',
-    tipo: 'Seguimiento',
-  },
-  {
-    id: 'T-005',
-    titulo: 'Enviar propuesta Enterprise',
-    descripcion: 'Preparar y enviar propuesta para plan Enterprise personalizado',
-    cliente: 'Elena Santos',
-    empresa: 'Future Tech',
-    fechaVencimiento: '02 Dic 2024',
-    prioridad: 'Alta',
-    estado: 'En Progreso',
-    asignado: 'Kepa Syntax',
-    tipo: 'Propuesta',
-  },
-  {
-    id: 'T-006',
-    titulo: 'Renovación de contrato',
-    descripcion: 'Contactar para renovación de contrato anual',
-    cliente: 'Ana Martínez',
-    empresa: 'Global Systems',
-    fechaVencimiento: '01 Dic 2024',
-    prioridad: 'Media',
-    estado: 'Pendiente',
-    asignado: 'Ana López',
-    tipo: 'Llamada',
-  },
-  {
-    id: 'T-007',
-    titulo: 'Demo de producto actualizado',
-    descripcion: 'Realizar demostración de nuevas funcionalidades',
-    cliente: 'Roberto Díaz',
-    empresa: 'Mega Corp',
-    fechaVencimiento: '25 Nov 2024',
-    prioridad: 'Baja',
-    estado: 'Completada',
-    asignado: 'Pedro García',
-    tipo: 'Reunión',
-  },
-  {
-    id: 'T-008',
-    titulo: 'Seguimiento cierre venta',
-    descripcion: 'Confirmar fecha de implementación y firma de contrato',
-    cliente: 'Patricia Ruiz',
-    empresa: 'Innovation Labs',
-    fechaVencimiento: '28 Nov 2024',
-    prioridad: 'Alta',
-    estado: 'En Progreso',
-    asignado: 'Kepa Syntax',
-    tipo: 'Seguimiento',
-  },
-];
+import { tareasAPI, clientesAPI, type Tarea, type Cliente } from '../utils/api';
 
 export function SeguimientoView() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -122,22 +11,92 @@ export function SeguimientoView() {
   const [showModal, setShowModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedTarea, setSelectedTarea] = useState<Tarea | null>(null);
-  const [tareas, setTareas] = useState<Tarea[]>(mockTareas);
+  const [tareas, setTareas] = useState<Tarea[]>([]);
+  const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: '',
-    cliente: '',
-    empresa: '',
+    clienteId: '',
+    clienteNombre: '',
     fechaVencimiento: '',
     prioridad: 'Media' as 'Alta' | 'Media' | 'Baja',
-    tipo: 'Llamada' as 'Llamada' | 'Reunión' | 'Email' | 'Seguimiento' | 'Propuesta',
-    asignado: 'Kepa Syntax',
+    tipo: 'Seguimiento',
   });
+
+  // Cargar datos al montar
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [tareasData, clientesData] = await Promise.all([
+        tareasAPI.getAll(),
+        clientesAPI.getAll()
+      ]);
+      setTareas(tareasData);
+      setClientes(clientesData);
+    } catch (error) {
+      console.error('Error al cargar datos:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateTarea = async () => {
+    try {
+      await tareasAPI.create({
+        clienteId: formData.clienteId,
+        clienteNombre: formData.clienteNombre,
+        titulo: formData.titulo,
+        descripcion: formData.descripcion,
+        fechaVencimiento: formData.fechaVencimiento,
+        prioridad: formData.prioridad,
+        estado: 'Pendiente',
+        tipo: formData.tipo
+      });
+      await loadData();
+      setShowModal(false);
+      setFormData({
+        titulo: '',
+        descripcion: '',
+        clienteId: '',
+        clienteNombre: '',
+        fechaVencimiento: '',
+        prioridad: 'Media',
+        tipo: 'Seguimiento',
+      });
+    } catch (error) {
+      console.error('Error al crear tarea:', error);
+      alert('Error al crear la tarea');
+    }
+  };
+
+  const handleMarcarCompletada = async (tareaId: string) => {
+    try {
+      await tareasAPI.update(tareaId, { estado: 'Completada' });
+      await loadData();
+    } catch (error) {
+      console.error('Error al actualizar tarea:', error);
+      alert('Error al actualizar la tarea');
+    }
+  };
+
+  const handleCambiarEstado = async (tareaId: string, newEstado: 'Pendiente' | 'En Progreso' | 'Completada') => {
+    try {
+      await tareasAPI.update(tareaId, { estado: newEstado });
+      await loadData();
+    } catch (error) {
+      console.error('Error al cambiar estado:', error);
+      alert('Error al cambiar el estado');
+    }
+  };
 
   const filteredTareas = tareas.filter(tarea => {
     const matchesSearch = tarea.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         tarea.cliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         tarea.empresa.toLowerCase().includes(searchTerm.toLowerCase());
+                         tarea.clienteNombre.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesEstado = !estadoFilter || tarea.estado === estadoFilter;
     const matchesPrioridad = !prioridadFilter || tarea.prioridad === prioridadFilter;
     return matchesSearch && matchesEstado && matchesPrioridad;
@@ -147,18 +106,17 @@ export function SeguimientoView() {
   const totalTareas = tareas.length;
   const tareasPendientes = tareas.filter(t => t.estado === 'Pendiente').length;
   const tareasEnProgreso = tareas.filter(t => t.estado === 'En Progreso').length;
-  const tareasVencidas = tareas.filter(t => t.estado === 'Vencida').length;
   const tareasCompletadas = tareas.filter(t => t.estado === 'Completada').length;
-
-  const handleMarcarCompletada = (tareaId: string) => {
-    setTareas(prevTareas => 
-      prevTareas.map(tarea => 
-        tarea.id === tareaId 
-          ? { ...tarea, estado: 'Completada' as const }
-          : tarea
-      )
-    );
-  };
+  
+  // Calcular tareas vencidas (pendientes o en progreso con fecha pasada)
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  const tareasVencidas = tareas.filter(t => {
+    if (t.estado === 'Completada') return false;
+    const fechaVencimiento = new Date(t.fechaVencimiento);
+    fechaVencimiento.setHours(0, 0, 0, 0);
+    return fechaVencimiento < hoy;
+  }).length;
 
   const handleVerDetalles = (tarea: Tarea) => {
     setSelectedTarea(tarea);
@@ -401,19 +359,7 @@ export function SeguimientoView() {
                       Cliente
                     </span>
                     <span className="font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
-                      {tarea.cliente}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-[8px]">
-                  <Building className="size-[16px]" color="#004179" />
-                  <div className="flex flex-col">
-                    <span className="font-['Open_Sans:SemiBold',sans-serif] text-[12px] text-[#999999]">
-                      Empresa
-                    </span>
-                    <span className="font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
-                      {tarea.empresa}
+                      {tarea.clienteNombre}
                     </span>
                   </div>
                 </div>
@@ -425,7 +371,7 @@ export function SeguimientoView() {
                       Vencimiento
                     </span>
                     <span className="font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
-                      {tarea.fechaVencimiento}
+                      {new Date(tarea.fechaVencimiento).toLocaleDateString('es-ES')}
                     </span>
                   </div>
                 </div>
@@ -439,17 +385,9 @@ export function SeguimientoView() {
                       {tarea.asignado.split(' ').map(n => n[0]).join('')}
                     </span>
                   </div>
-                  <div className="flex flex-col">
-                    <span className="font-['Open_Sans:SemiBold',sans-serif] text-[12px] text-[#999999]">
-                      Asignado a
-                    </span>
-                    <span className="font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
-                      {tarea.asignado}
-                    </span>
-                  </div>
                 </div>
 
-                <div className="flex gap-[8px]">
+                <div className="flex gap-[8px] flex-wrap">
                   {tarea.estado !== 'Completada' && (
                     <button 
                       onClick={() => handleMarcarCompletada(tarea.id)}
@@ -695,32 +633,29 @@ export function SeguimientoView() {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
-            <div className="flex flex-col gap-[8px]">
-              <label className="font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-black">
-                Cliente
-              </label>
-              <input
-                type="text"
-                value={formData.cliente}
-                onChange={(e) => setFormData({ ...formData, cliente: e.target.value })}
-                placeholder="Nombre del cliente"
-                className="h-[44px] px-[10px] bg-white font-['Open_Sans:Regular',sans-serif] text-[14px] rounded-[8px] border border-[#bbbfc1] outline-none focus:border-[#015CA8]"
-              />
-            </div>
-
-            <div className="flex flex-col gap-[8px]">
-              <label className="font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-black">
-                Empresa
-              </label>
-              <input
-                type="text"
-                value={formData.empresa}
-                onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
-                placeholder="Nombre de la empresa"
-                className="h-[44px] px-[10px] bg-white font-['Open_Sans:Regular',sans-serif] text-[14px] rounded-[8px] border border-[#bbbfc1] outline-none focus:border-[#015CA8]"
-              />
-            </div>
+          <div className="flex flex-col gap-[8px]">
+            <label className="font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-black">
+              Cliente
+            </label>
+            <select
+              value={formData.clienteId}
+              onChange={(e) => {
+                const selectedCliente = clientes.find(c => c.id === e.target.value);
+                setFormData({ 
+                  ...formData, 
+                  clienteId: e.target.value,
+                  clienteNombre: selectedCliente?.nombre || ''
+                });
+              }}
+              className="h-[44px] px-[10px] bg-white font-['Open_Sans:Regular',sans-serif] text-[14px] rounded-[8px] border border-[#bbbfc1] outline-none focus:border-[#015CA8]"
+            >
+              <option value="">Seleccionar cliente</option>
+              {clientes.map(cliente => (
+                <option key={cliente.id} value={cliente.id}>
+                  {cliente.nombre} - {cliente.empresa}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[16px]">
@@ -769,21 +704,6 @@ export function SeguimientoView() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-[8px]">
-            <label className="font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-black">
-              Asignado a
-            </label>
-            <select
-              value={formData.asignado}
-              onChange={(e) => setFormData({ ...formData, asignado: e.target.value })}
-              className="h-[44px] px-[10px] bg-white font-['Open_Sans:Regular',sans-serif] text-[14px] rounded-[8px] border border-[#bbbfc1] outline-none focus:border-[#015CA8]"
-            >
-              <option value="Kepa Syntax">Kepa Syntax</option>
-              <option value="Ana López">Ana López</option>
-              <option value="Pedro García">Pedro García</option>
-            </select>
-          </div>
-
           <div className="flex gap-[12px] justify-end pt-[20px]">
             <button
               onClick={() => setShowModal(false)}
@@ -792,20 +712,7 @@ export function SeguimientoView() {
               Cancelar
             </button>
             <button 
-              onClick={() => {
-                console.log('Nueva tarea:', formData);
-                setShowModal(false);
-                setFormData({
-                  titulo: '',
-                  descripcion: '',
-                  cliente: '',
-                  empresa: '',
-                  fechaVencimiento: '',
-                  prioridad: 'Media',
-                  tipo: 'Llamada',
-                  asignado: 'Kepa Syntax',
-                });
-              }}
+              onClick={handleCreateTarea}
               className="bg-[#004179] text-white px-[20px] py-[10px] rounded-[8px] font-['Open_Sans:SemiBold',sans-serif] text-[14px] hover:bg-[#003060] transition-colors"
             >
               Crear Tarea
