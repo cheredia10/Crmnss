@@ -1,12 +1,33 @@
 import { HelpCircle, Settings, Inbox, LogOut, Menu } from 'lucide-react';
+import { signOut } from '../services/authService';
 
 interface NavbarProps {
   onMenuClick: () => void;
+  userName?: string;
+  userEmail?: string;
 }
 
-export function Navbar({ onMenuClick }: NavbarProps) {
+export function Navbar({ onMenuClick, userName = 'Kepa Syntax', userEmail = 'kepa@syntax.com' }: NavbarProps) {
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      // El listener de auth en App.tsx manejará el cambio de estado
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  };
+  
+  // Obtener iniciales del nombre
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
   return (
-    <div className="absolute box-border content-stretch flex gap-[16px] md:gap-[30px] items-center justify-between lg:justify-end left-0 lg:left-[97px] overflow-clip pl-[16px] md:pl-[32px] lg:pl-[48px] pr-[16px] md:pr-[32px] py-[12px] md:py-[16px] top-0 w-full">
+    <div className="absolute box-border content-stretch flex gap-[16px] md:gap-[30px] items-center justify-between lg:justify-end left-0 lg:left-[97px] overflow-clip pl-[16px] md:pl-[32px] lg:pl-[48px] pr-[16px] md:pr-[32px] py-[12px] md:py-[16px] top-0 right-0">
       {/* Menu Button - Solo móvil */}
       <button 
         onClick={onMenuClick}
@@ -37,7 +58,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
         <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0">
           <div className="size-[36px] md:size-[48px] rounded-full flex items-center justify-center" style={{ background: '#004179' }}>
             <p className="font-['Open_Sans:Bold',sans-serif] text-[14px] md:text-[16px] text-neutral-50">
-              KS
+              {getInitials(userName)}
             </p>
           </div>
         </div>
@@ -45,15 +66,21 @@ export function Navbar({ onMenuClick }: NavbarProps) {
         {/* Profile Info - Oculto en móvil */}
         <div className="content-stretch hidden md:flex flex-col font-['Open_Sans:Regular',sans-serif] gap-[4px] h-full items-start relative shrink-0">
           <p className="text-[16px] text-[#14181f]">
-            Kepa Syntax
+            {userName}
           </p>
           <p className="text-[11.11px] text-[#4d545e]">
-            kepa@syntax.com
+            {userEmail}
           </p>
         </div>
         
         {/* Logout Icon - Oculto en móvil pequeño */}
-        <LogOut className="hidden sm:block size-[20px] md:size-[24px]" strokeWidth={2} color="#2A2E34" />
+        <button 
+          onClick={handleLogout}
+          className="hidden sm:block p-[4px] hover:bg-[#e6f0fe] rounded-[8px] transition-colors"
+          title="Cerrar sesión"
+        >
+          <LogOut className="size-[20px] md:size-[24px]" strokeWidth={2} color="#2A2E34" />
+        </button>
       </div>
     </div>
   );

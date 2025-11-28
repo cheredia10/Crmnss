@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Breadcrumbs } from './Breadcrumbs';
-import { Users, Phone, TrendingUp, Calendar, Clock, FileText, ChevronRight } from 'lucide-react';
-import { statsAPI, type DashboardStats } from '../utils/api';
+import { Users, Phone, TrendingUp, Calendar, Clock, FileText, ChevronRight, PhoneCall, PhoneIncoming, PhoneMissed } from 'lucide-react';
+import { statsAPI, cloudtalkAPI, type DashboardStats, type CloudTalkStats } from '../utils/api';
 
-export function DashboardView() {
+interface DashboardViewProps {
+  userName?: string;
+}
+
+export function DashboardView({ userName = 'Usuario' }: DashboardViewProps) {
   const [stats, setStats] = useState<DashboardStats>({
     totalClientes: 0,
     clientesActivos: 0,
@@ -11,10 +15,14 @@ export function DashboardView() {
     llamadasHoy: 0,
     tareasPendientes: 0
   });
+  const [cloudtalkStats, setCloudtalkStats] = useState<CloudTalkStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadingCloudtalk, setLoadingCloudtalk] = useState(true);
+  const [demoMode, setDemoMode] = useState(false);
 
   useEffect(() => {
     loadStats();
+    loadCloudtalkStats();
   }, []);
 
   const loadStats = async () => {
@@ -29,15 +37,66 @@ export function DashboardView() {
     }
   };
 
+  const loadCloudtalkStats = async () => {
+    try {
+      setLoadingCloudtalk(true);
+      // Obtener estadísticas del mes actual
+      const now = new Date();
+      const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+      const from_date = firstDay.toISOString().split('T')[0];
+      const to_date = now.toISOString().split('T')[0];
+      
+      const response: any = await cloudtalkAPI.getStats({ from_date, to_date });
+      
+      // Verificar si estamos en modo demo
+      if (response.demo_mode !== undefined) {
+        setDemoMode(response.demo_mode);
+      }
+      
+      // Solo establecer las estadísticas si hay datos válidos
+      if (response && response.total_calls > 0) {
+        setCloudtalkStats(response);
+      } else {
+        setCloudtalkStats(null);
+      }
+    } catch (error) {
+      // Silenciosamente fallar si CloudTalk no está disponible
+      console.log('CloudTalk no disponible o no configurado');
+      setCloudtalkStats(null);
+    } finally {
+      setLoadingCloudtalk(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-[24px] w-full">
       <Breadcrumbs items={['CRM', 'Dashboard']} />
+      
+      {/* Demo Mode Banner */}
+      {demoMode && (
+        <div className="bg-gradient-to-r from-[#239ebc] to-[#004179] text-white p-[20px] rounded-[12px] border-2 border-[#004179] shadow-lg">
+          <div className="flex items-center gap-[16px]">
+            <div className="flex items-center justify-center size-[48px] bg-white/20 rounded-full">
+              <PhoneCall className="size-[24px]" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-['Open_Sans:Bold',sans-serif] text-[18px] mb-[4px]">
+                🎭 Modo Demo Activo
+              </h3>
+              <p className="font-['Open_Sans:Regular',sans-serif] text-[14px] opacity-90">
+                Estás usando datos de demostración porque la API Key de CloudTalk no es válida. 
+                Todos los datos que ves son ficticios. <strong>Actualiza tu API Key en Configuración para usar datos reales.</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Welcome Section */}
       <div className="box-border content-stretch flex flex-col items-start p-[10px] relative shrink-0">
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
           <div className="flex flex-col font-['Open_Sans:SemiBold',sans-serif] justify-center leading-[0] relative shrink-0 text-[#333333] text-[24px] md:text-[32px]">
-            <p className="leading-[normal] whitespace-pre-wrap">Bienvenido, Kepa Syntax!</p>
+            <p className="leading-[normal] whitespace-pre-wrap">Bienvenido, {userName}!</p>
           </div>
           <p className="font-['Open_Sans:Regular',sans-serif] text-[12px] md:text-[14px] text-[#239ebc]">
             Te deseamos una excelente jornada!
@@ -138,6 +197,74 @@ export function DashboardView() {
           </div>
         </div>
       </div>
+
+      {/* CloudTalk Stats - Only show if data is available and has calls */}
+      {cloudtalkStats && !loadingCloudtalk && cloudtalkStats.total_calls > 0 && (
+        <div className="bg-white rounded-[8px] border border-[#bbbfc1] p-[24px]">
+          <div className="flex items-center gap-[12px] mb-[20px]">
+            <div className="flex items-center justify-center size-[40px] rounded-full bg-[#e6f0fe]">
+              <PhoneCall className="size-[20px]" color="#004179" />
+            </div>
+            <h3 className="font-['Open_Sans:SemiBold',sans-serif] text-[18px] text-[#333333]">
+              Estadísticas de CloudTalk - Mes Actual
+            </h3>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[16px]">
+            {/* Total Llamadas CloudTalk */}
+            <div className="bg-[#e6f0fe] rounded-[8px] p-[20px] flex flex-col gap-[8px]">
+              <div className="flex items-center gap-[8px]">
+                <PhoneCall className="size-[18px]" color="#004179" />
+                <p className="font-['Open_Sans:Regular',sans-serif] text-[12px] text-[#004179]">
+                  Total Llamadas
+                </p>
+              </div>
+              <p className="font-['Open_Sans:SemiBold',sans-serif] text-[28px] text-[#004179]">
+                {cloudtalkStats.total_calls}
+              </p>
+            </div>
+
+            {/* Llamadas Contestadas */}
+            <div className="bg-[#d4edda] rounded-[8px] p-[20px] flex flex-col gap-[8px]">
+              <div className="flex items-center gap-[8px]">
+                <PhoneIncoming className="size-[18px]" color="#155724" />
+                <p className="font-['Open_Sans:Regular',sans-serif] text-[12px] text-[#155724]">
+                  Contestadas
+                </p>
+              </div>
+              <p className="font-['Open_Sans:SemiBold',sans-serif] text-[28px] text-[#155724]">
+                {cloudtalkStats.answered_calls}
+              </p>
+            </div>
+
+            {/* Llamadas Perdidas */}
+            <div className="bg-[#f8d7da] rounded-[8px] p-[20px] flex flex-col gap-[8px]">
+              <div className="flex items-center gap-[8px]">
+                <PhoneMissed className="size-[18px]" color="#721c24" />
+                <p className="font-['Open_Sans:Regular',sans-serif] text-[12px] text-[#721c24]">
+                  Perdidas
+                </p>
+              </div>
+              <p className="font-['Open_Sans:SemiBold',sans-serif] text-[28px] text-[#721c24]">
+                {cloudtalkStats.missed_calls}
+              </p>
+            </div>
+
+            {/* Duración Promedio */}
+            <div className="bg-[#fff3cd] rounded-[8px] p-[20px] flex flex-col gap-[8px]">
+              <div className="flex items-center gap-[8px]">
+                <Clock className="size-[18px]" color="#856404" />
+                <p className="font-['Open_Sans:Regular',sans-serif] text-[12px] text-[#856404]">
+                  Duración Promedio
+                </p>
+              </div>
+              <p className="font-['Open_Sans:SemiBold',sans-serif] text-[28px] text-[#856404]">
+                {Math.floor(cloudtalkStats.average_duration / 60)}:{(cloudtalkStats.average_duration % 60).toString().padStart(2, '0')}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Featured Banner - Full Width */}
       <div className="bg-white rounded-[8px] border border-[#bbbfc1] overflow-hidden">

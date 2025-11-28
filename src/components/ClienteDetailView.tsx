@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Breadcrumbs } from './Breadcrumbs';
-import { ArrowLeft, Phone, Mail, MapPin, Building, Calendar, Clock, Plus, Edit } from 'lucide-react';
+import { ArrowLeft, Phone, Mail, MapPin, Building, Calendar, Clock, Plus, Edit, PhoneCall } from 'lucide-react';
+import { cloudtalkAPI } from '../utils/api';
 
 interface Llamada {
   id: string;
@@ -150,6 +151,32 @@ export function ClienteDetailView({ clienteId, onBack }: ClienteDetailViewProps)
                 <p className="font-['Open_Sans:Regular',sans-serif] text-[16px] text-[#333333]">
                   {cliente.telefono}
                 </p>
+                <button
+                  onClick={async () => {
+                    try {
+                      // Solicitar número del agente
+                      const from = prompt('Ingrese su número de teléfono (agente):');
+                      if (!from) return;
+                      
+                      const result = await cloudtalkAPI.initiateCall(from, cliente.telefono, cliente.id);
+                      if (result.success) {
+                        alert('✅ ¡Llamada iniciada!\n\nRecibirá una llamada en su teléfono en breve.');
+                      } else {
+                        alert('⚠️ CloudTalk no está disponible.\n\nPuedes llamar manualmente al: ' + cliente.telefono);
+                      }
+                    } catch (error) {
+                      console.log('CloudTalk no disponible:', error);
+                      alert('⚠️ CloudTalk no está disponible.\n\nPuedes llamar manualmente al: ' + cliente.telefono);
+                    }
+                  }}
+                  className="ml-auto bg-[#004179] text-white px-[12px] py-[6px] rounded-[6px] flex items-center gap-[6px] hover:bg-[#003060] transition-colors"
+                  title="Iniciar llamada con CloudTalk"
+                >
+                  <PhoneCall className="size-[14px]" />
+                  <span className="font-['Open_Sans:SemiBold',sans-serif] text-[12px]">
+                    Llamar
+                  </span>
+                </button>
               </div>
             </div>
           </div>

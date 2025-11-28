@@ -1,4 +1,4 @@
-import { Home, Users, Phone, FileText, FolderOpen, ChevronLeft, LayoutGrid } from 'lucide-react';
+import { Home, Users, Phone, FileText, FolderOpen, ChevronLeft, LayoutGrid, Settings, MessageSquare, Voicemail } from 'lucide-react';
 import { useState } from 'react';
 
 interface SidebarProps {
@@ -15,9 +15,12 @@ export function Sidebar({ currentView, onViewChange, isOpen = false, onToggle }:
     { id: 'dashboard', icon: Home, label: 'Dashboard' },
     { id: 'clientes', icon: Users, label: 'Clientes' },
     { id: 'llamadas', icon: Phone, label: 'Llamadas' },
+    { id: 'sms', icon: MessageSquare, label: 'SMS' },
+    { id: 'voicemails', icon: Voicemail, label: 'Buzones' },
     { id: 'documentos', icon: FileText, label: 'Documentos' },
     { id: 'archivos', icon: FolderOpen, label: 'Seguimiento' },
     { id: 'tablero', icon: LayoutGrid, label: 'Tablero' },
+    { id: 'configuracion', icon: Settings, label: 'Configuración' },
   ];
 
   return (

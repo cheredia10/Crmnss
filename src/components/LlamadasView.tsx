@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Search, Phone, Calendar, Clock, Filter, Download, Plus } from 'lucide-react';
+import { Search, Phone, Calendar, Clock, Filter, Download, Plus, PlayCircle, RefreshCw } from 'lucide-react';
 import { Breadcrumbs } from './Breadcrumbs';
 import { Modal } from './Modal';
-import { llamadasAPI, clientesAPI, type Llamada, type Cliente } from '../utils/api';
+import { RecordingPlayer } from './RecordingPlayer';
+import { llamadasAPI, clientesAPI, cloudtalkAPI, type Llamada, type Cliente, type CloudTalkCall } from '../utils/api';
 
 interface LlamadasViewProps {
   prefilledData?: {
@@ -19,6 +20,10 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
   const [llamadas, setLlamadas] = useState<Llamada[]>([]);
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cloudtalkCalls, setCloudtalkCalls] = useState<CloudTalkCall[]>([]);
+  const [loadingCloudtalk, setLoadingCloudtalk] = useState(false);
+  const [showRecordingPlayer, setShowRecordingPlayer] = useState(false);
+  const [currentRecordingUrl, setCurrentRecordingUrl] = useState('');
   const [formData, setFormData] = useState({
     clienteId: prefilledData?.clienteId || '',
     clienteNombre: prefilledData?.clienteNombre || '',
@@ -46,6 +51,43 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
       console.error('Error al cargar datos:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadCloudtalkCalls = async () => {
+    try {
+      setLoadingCloudtalk(true);
+      // Obtener llamadas de los últimos 30 días
+      const now = new Date();
+      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      const from_date = thirtyDaysAgo.toISOString().split('T')[0];
+      const to_date = now.toISOString().split('T')[0];
+      
+      const calls = await cloudtalkAPI.getCalls({ from_date, to_date, limit: 100 });
+      setCloudtalkCalls(calls);
+      
+      if (calls.length === 0) {
+        alert('ℹ️ CloudTalk: No se encontraron llamadas.\n\nPosibles razones:\n- CloudTalk no está configurado\n- No hay llamadas en los últimos 30 días\n- La API Key no es válida\n\nEl CRM funciona normalmente sin CloudTalk. Puedes registrar llamadas manualmente.');
+      } else {
+        alert(`✅ Éxito: Se sincronizaron ${calls.length} llamadas de CloudTalk.`);
+      }
+    } catch (error) {
+      console.log('CloudTalk no disponible:', error);
+      alert('ℹ️ CloudTalk no está disponible en este momento.\n\nEl CRM funciona completamente sin esta integración. Puedes:\n- Registrar llamadas manualmente\n- Consultar CLOUDTALK_TROUBLESHOOTING.md para más información');
+      setCloudtalkCalls([]);
+    } finally {
+      setLoadingCloudtalk(false);
+    }
+  };
+
+  const handlePlayRecording = async (callId: string) => {
+    try {
+      const url = await cloudtalkAPI.getRecording(callId);
+      setCurrentRecordingUrl(url);
+      setShowRecordingPlayer(true);
+    } catch (error) {
+      console.error('Error al obtener grabación:', error);
+      alert('No se pudo obtener la grabación de esta llamada.');
     }
   };
 
@@ -177,6 +219,126 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
           </div>
         </div>
       </div>
+
+      {/* CloudTalk Sync Button */}
+      <div className="bg-white rounded-[8px] p-[16px] md:p-[24px] border border-[#bbbfc1]">
+        <div className="flex items-center justify-between mb-[12px]">
+          <div className="flex flex-col gap-[4px]">
+            <p className="font-['Open_Sans:SemiBold',sans-serif] text-[16px] text-[#333333]">
+              Sincronizar con CloudTalk
+            </p>
+            <p className="font-['Open_Sans:Regular',sans-serif] text-[12px] text-[#999999]">
+              Obtén las últimas llamadas de CloudTalk (últimos 30 días)
+            </p>
+          </div>
+          <button
+            onClick={loadCloudtalkCalls}
+            disabled={loadingCloudtalk}
+            className="bg-[#004179] text-white px-[20px] py-[10px] rounded-[8px] font-['Open_Sans:SemiBold',sans-serif] text-[14px] hover:bg-[#003060] transition-colors flex items-center gap-[8px] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <RefreshCw className={`size-[16px] ${loadingCloudtalk ? 'animate-spin' : ''}`} />
+            {loadingCloudtalk ? 'Sincronizando...' : 'Sincronizar'}
+          </button>
+        </div>
+        
+        {/* Info box */}
+        <div className="bg-[#e6f0fe] border border-[#004179] rounded-[6px] p-[12px]">
+          <p className="font-['Open_Sans:Regular',sans-serif] text-[11px] text-[#333333]">
+            <strong>💡 Nota:</strong> Si no tienes CloudTalk configurado o no aparecen llamadas, 
+            puedes seguir usando el registro manual de llamadas. 
+            Consulta <strong>CLOUDTALK_TROUBLESHOOTING.md</strong> para más información.
+          </p>
+        </div>
+      </div>
+
+      {/* CloudTalk Calls List */}
+      {cloudtalkCalls.length > 0 && (
+        <div className="bg-white rounded-[8px] p-[16px] md:p-[24px] border border-[#bbbfc1]">
+          <h3 className="font-['Open_Sans:SemiBold',sans-serif] text-[18px] text-[#333333] mb-[16px]">
+            Llamadas de CloudTalk ({cloudtalkCalls.length})
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-[#f9f9f9]">
+                  <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-[#333333] rounded-tl-[8px]">
+                    Dirección
+                  </th>
+                  <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-[#333333]">
+                    Desde
+                  </th>
+                  <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-[#333333]">
+                    Hacia
+                  </th>
+                  <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-[#333333]">
+                    Duración
+                  </th>
+                  <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-[#333333]">
+                    Estado
+                  </th>
+                  <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-[#333333]">
+                    Fecha
+                  </th>
+                  <th className="px-[16px] py-[12px] text-left font-['Open_Sans:SemiBold',sans-serif] text-[14px] text-[#333333] rounded-tr-[8px]">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {cloudtalkCalls.map((call, index) => (
+                  <tr 
+                    key={call.id}
+                    className={`${index % 2 === 0 ? 'bg-white' : 'bg-[#f9f9f9]'} hover:bg-[#e6f0fe] transition-colors`}
+                  >
+                    <td className="px-[16px] py-[12px]">
+                      <span className={`px-[12px] py-[4px] rounded-[4px] font-['Open_Sans:SemiBold',sans-serif] text-[12px] ${
+                        call.direction === 'inbound' 
+                          ? 'bg-[#d4edda] text-[#155724]' 
+                          : 'bg-[#fff3cd] text-[#856404]'
+                      }`}>
+                        {call.direction === 'inbound' ? 'Entrante' : 'Saliente'}
+                      </span>
+                    </td>
+                    <td className="px-[16px] py-[12px] font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
+                      {call.from}
+                    </td>
+                    <td className="px-[16px] py-[12px] font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
+                      {call.to}
+                    </td>
+                    <td className="px-[16px] py-[12px] font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
+                      {Math.floor(call.duration / 60)}:{(call.duration % 60).toString().padStart(2, '0')}
+                    </td>
+                    <td className="px-[16px] py-[12px]">
+                      <span className={`px-[12px] py-[4px] rounded-[4px] font-['Open_Sans:SemiBold',sans-serif] text-[12px] ${
+                        call.status === 'answered' || call.status === 'completed'
+                          ? 'bg-[#d4edda] text-[#155724]'
+                          : 'bg-[#f8d7da] text-[#721c24]'
+                      }`}>
+                        {call.status}
+                      </span>
+                    </td>
+                    <td className="px-[16px] py-[12px] font-['Open_Sans:Regular',sans-serif] text-[14px] text-[#333333]">
+                      {new Date(call.started_at).toLocaleString('es-ES')}
+                    </td>
+                    <td className="px-[16px] py-[12px]">
+                      <button
+                        onClick={() => handlePlayRecording(call.id)}
+                        className="bg-[#004179] text-white px-[12px] py-[6px] rounded-[6px] flex items-center gap-[6px] hover:bg-[#003060] transition-colors"
+                        title="Reproducir grabación"
+                      >
+                        <PlayCircle className="size-[14px]" />
+                        <span className="font-['Open_Sans:SemiBold',sans-serif] text-[12px]">
+                          Reproducir
+                        </span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {/* Filters and Actions */}
       <div className="bg-white rounded-[8px] p-[16px] md:p-[24px] flex flex-col gap-[16px] md:gap-[24px]">
@@ -492,6 +654,17 @@ export function LlamadasView({ prefilledData }: LlamadasViewProps = {}) {
           </div>
         </div>
       </Modal>
+
+      {/* Recording Player */}
+      {showRecordingPlayer && (
+        <RecordingPlayer
+          recordingUrl={currentRecordingUrl}
+          onClose={() => {
+            setShowRecordingPlayer(false);
+            setCurrentRecordingUrl('');
+          }}
+        />
+      )}
     </div>
   );
 }

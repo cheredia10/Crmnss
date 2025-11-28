@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Search, Plus, MoreHorizontal, Phone, Mail, MapPin } from 'lucide-react';
+import { Search, Plus, MoreHorizontal, Phone, Mail, MapPin, PhoneCall } from 'lucide-react';
 import { Breadcrumbs } from './Breadcrumbs';
 import { Modal } from './Modal';
-import { clientesAPI, type Cliente } from '../utils/api';
+import { clientesAPI, cloudtalkAPI, type Cliente } from '../utils/api';
 
 interface ClientesViewProps {
   onClientSelect: (clienteId: string) => void;
@@ -226,6 +226,28 @@ export function ClientesView({ onClientSelect }: ClientesViewProps) {
                         <span className="font-['Open_Sans:Regular',sans-serif] text-[12px] text-[#4d545e]">
                           {cliente.telefono}
                         </span>
+                        <button
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            try {
+                              const from = prompt('Ingrese su número de teléfono (agente):');
+                              if (!from) return;
+                              const result = await cloudtalkAPI.initiateCall(from, cliente.telefono, cliente.id);
+                              if (result.success) {
+                                alert('✅ ¡Llamada iniciada!\n\nRecibirá una llamada en su teléfono en breve.');
+                              } else {
+                                alert('⚠️ CloudTalk no está disponible.\n\nPuedes llamar manualmente al: ' + cliente.telefono);
+                              }
+                            } catch (error) {
+                              console.log('CloudTalk no disponible:', error);
+                              alert('⚠️ CloudTalk no está disponible.\n\nPuedes llamar manualmente al: ' + cliente.telefono);
+                            }
+                          }}
+                          className="ml-auto bg-[#004179] text-white p-[4px] rounded-[4px] hover:bg-[#003060] transition-colors"
+                          title="Iniciar llamada con CloudTalk"
+                        >
+                          <PhoneCall className="size-[10px]" />
+                        </button>
                       </div>
                       <div className="flex items-center gap-[6px]">
                         <Mail className="size-[12px]" color="#004179" />
