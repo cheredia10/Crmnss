@@ -1,6 +1,6 @@
-import imgLogoSytax1 from "figma:asset/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
-import imgPexelsSteve289478521 from "figma:asset/34a2d73dc65cdd75feb21a18c485bd573552fb65.png";
-import imgLogoSyntaxCorto1 from "figma:asset/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
+import imgLogoSytax1 from src="/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
+import imgPexelsSteve289478521 from src="/assets/34a2d73dc65cdd75feb21a18c485bd573552fb65.png";
+import imgLogoSyntaxCorto1 from src="/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
 
 function Frame10() {
   return (

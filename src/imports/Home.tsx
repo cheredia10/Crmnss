@@ -1,12 +1,12 @@
 import svgPaths from "./svg-zy9j7k6f2y";
-import imgEbimVerdesMesaDeTrabajo1 from "figma:asset/1842e0cd4e5c0a9148dd81262bdff05524a9b00f.png";
-import imgGeminiGeneratedImageStz373Stz373Stz31 from "figma:asset/76bb250bf5f7ee433cf5f5cfe639283a09b9dd68.png";
-import imgOffice1 from "figma:asset/7e6bd5e17efbba7de42fdcdba763e7a7a69c96b4.png";
-import imgOutlook732223 from "figma:asset/5cd79ac6f1f7c10db694ec120182ab4a260a2606.png";
-import imgLogo15465764 from "figma:asset/4a972d03170d1a6cb5c0c2a50e6a673c83ecff6e.png";
-import imgLogo15465638 from "figma:asset/6d147b8b5c49dfefb5b52b75dae477449ce6599c.png";
-import imgWindow from "figma:asset/6875df99c897bb104169fadf7dc5ac6d8795dfbe.png";
-import imgBusiness from "figma:asset/4db8cdef2e6eb81ef5062fa56a9f3dd54330ac65.png";
+import imgEbimVerdesMesaDeTrabajo1 from src="/assets/1842e0cd4e5c0a9148dd81262bdff05524a9b00f.png";
+import imgGeminiGeneratedImageStz373Stz373Stz31 from src="/assets/76bb250bf5f7ee433cf5f5cfe639283a09b9dd68.png";
+import imgOffice1 from src="/assets/7e6bd5e17efbba7de42fdcdba763e7a7a69c96b4.png";
+import imgOutlook732223 from src="/assets/5cd79ac6f1f7c10db694ec120182ab4a260a2606.png";
+import imgLogo15465764 from src="/assets/4a972d03170d1a6cb5c0c2a50e6a673c83ecff6e.png";
+import imgLogo15465638 from src="/assets/6d147b8b5c49dfefb5b52b75dae477449ce6599c.png";
+import imgWindow from src="/assets/6875df99c897bb104169fadf7dc5ac6d8795dfbe.png";
+import imgBusiness from src="/assets/4db8cdef2e6eb81ef5062fa56a9f3dd54330ac65.png";
 
 function Frame13() {
   return (
