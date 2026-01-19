@@ -48,7 +48,6 @@ export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
   };
 
   return (
-    return (
   <div className="bg-white relative size-full" data-name="Login">
     {/* Fondo: pexels + overlay (abajo) */}
     <div className="absolute h-full left-0 top-0 w-[722px] z-0" data-name="pexels-steve-28947852 1">
