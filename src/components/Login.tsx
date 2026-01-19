@@ -198,3 +198,6 @@ export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
