@@ -14,10 +14,9 @@ export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Imágenes
-  const imgFondo = "/assets/34a2d73dc65cdd75feb21a18c485bd573552fb65.png";
-  const imgLogoGrande = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
-  const imgLogoPequeno = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
+  // Asegúrate de que estas rutas sean las correctas en tu proyecto
+  const imgFondoIzquierdo = "/assets/34a2d73dc65cdd75feb21a18c485bd573552fb65.png"; // Imagen azul con la X
+  const imgLogoHamar = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png"; // Logo Hamar X (arriba derecha)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,136 +51,126 @@ export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
   return (
     <div className="flex w-full h-screen bg-white overflow-hidden font-sans">
       
-      {/* IZQUIERDA: Imagen y Branding */}
-      <div className="hidden md:flex relative w-1/2 h-full bg-[#004179]">
-        {/* Imagen de fondo con opacidad */}
+      {/* === LADO IZQUIERDO (Branding) === */}
+      <div className="hidden md:flex relative w-1/2 h-full bg-[#0E3D6B] items-center justify-center">
+        {/* Usamos object-cover para llenar todo el fondo azul */}
         <img 
-          alt="Oficina moderna" 
-          className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay"
-          src={imgFondo}
-          onError={(e) => e.currentTarget.style.display = 'none'}
+          alt="Fondo Branding" 
+          className="absolute inset-0 w-full h-full object-cover"
+          src={imgFondoIzquierdo}
         />
-        {/* Capa de color corporativo */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#004179] to-[#002a4d] opacity-90"></div>
-        
-        {/* Logo Grande Centrado */}
-        <div className="relative z-10 flex flex-col items-center justify-center w-full h-full p-10">
-           <img 
-            alt="Logo Hamar" 
-            className="w-[280px] drop-shadow-2xl mb-4"
-            src={imgLogoGrande} 
-          />
-          <p className="text-white text-lg tracking-widest opacity-80 border-t border-white/30 pt-4 mt-2">
-            NEW STAGE SOLUTIONS
-          </p>
-        </div>
+        {/* Capa de protección por si la imagen tarda en cargar */}
+        <div className="absolute inset-0 bg-[#0E3D6B] -z-10"></div>
       </div>
 
-      {/* DERECHA: Formulario de Acceso */}
-      <div className="w-full md:w-1/2 h-full flex flex-col items-center justify-center p-8 lg:p-16 bg-white">
+      {/* === LADO DERECHO (Formulario) === */}
+      <div className="w-full md:w-1/2 h-full flex flex-col items-center justify-center bg-white px-8 py-12">
         
-        <div className="w-full max-w-[420px] flex flex-col gap-8">
+        <div className="w-full max-w-[400px]">
           
-          {/* Cabecera Móvil (solo visible si la pantalla es pequeña y no se ve el lado izquierdo) */}
-          <div className="md:hidden flex justify-center mb-4">
-             <img alt="Logo" className="w-[150px]" src={imgLogoPequeno} />
+          {/* Logo Superior */}
+          <div className="flex flex-col items-center mb-10">
+            <img 
+              alt="Hamar X Logo" 
+              className="h-[60px] object-contain mb-2" // Ajusta h-[60px] según el tamaño real deseado
+              src={imgLogoHamar} 
+            />
+            <p className="font-bold text-[#333333] text-xl tracking-wide">CRM</p>
           </div>
 
-          {/* Títulos */}
-          <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
-              {isSignUp ? 'Crear Cuenta' : 'Bienvenido de nuevo'}
-            </h1>
-            <p className="text-gray-500">
-              {isSignUp ? 'Ingresa tus datos para registrarte' : 'Ingresa tus credenciales para acceder al CRM'}
-            </p>
-          </div>
+          {/* Título */}
+          <h2 className="text-2xl font-bold text-[#333333] text-center mb-8">
+            {isSignUp ? 'Crear cuenta' : 'Inicio de sesión'}
+          </h2>
 
           {/* Formulario */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             
+            {/* Campo Nombre (Solo Registro) */}
             {isSignUp && (
-              <div className="space-y-1">
-                <label className="text-sm font-medium text-gray-700 ml-1">Nombre completo</label>
+              <div className="flex flex-col gap-2">
+                <label className="text-[14px] font-bold text-black ml-1">Nombre</label>
                 <input
                   type="text"
                   value={nombre}
                   onChange={(e) => setNombre(e.target.value)}
-                  placeholder="Ej. Juan Pérez"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#015ca8] focus:ring-2 focus:ring-[#015ca8]/20 outline-none transition-all bg-white"
+                  placeholder="Ingrese su nombre completo"
+                  className="w-full h-[50px] px-4 bg-[#F2F8FD] rounded-[6px] text-gray-700 placeholder-gray-400 outline-none focus:ring-1 focus:ring-blue-500 transition-all"
                   required={isSignUp}
                 />
               </div>
             )}
 
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700 ml-1">Usuario / Email</label>
+            {/* Campo Usuario */}
+            <div className="flex flex-col gap-2">
+              <label className="text-[14px] font-bold text-black ml-1">Usuario</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="usuario@empresa.com"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#015ca8] focus:ring-2 focus:ring-[#015ca8]/20 outline-none transition-all bg-white"
+                placeholder="Ingrese su nombre de usuario"
+                className="w-full h-[50px] px-4 bg-[#F2F8FD] rounded-[6px] text-gray-700 placeholder-gray-400 outline-none focus:ring-1 focus:ring-blue-500 transition-all"
                 required
               />
             </div>
 
-            <div className="space-y-1">
-              <div className="flex justify-between items-center ml-1">
-                <label className="text-sm font-medium text-gray-700">Contraseña</label>
-                {!isSignUp && (
-                  <button type="button" onClick={onForgotPassword} className="text-xs font-semibold text-[#015ca8] hover:underline">
-                    ¿Olvidaste tu contraseña?
-                  </button>
-                )}
-              </div>
+            {/* Campo Contraseña */}
+            <div className="flex flex-col gap-2">
+              <label className="text-[14px] font-bold text-black ml-1">Contraseña</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#015ca8] focus:ring-2 focus:ring-[#015ca8]/20 outline-none transition-all bg-white"
+                placeholder="Introduzca su contraseña"
+                className="w-full h-[50px] px-4 bg-[#F2F8FD] rounded-[6px] text-gray-700 placeholder-gray-400 outline-none focus:ring-1 focus:ring-blue-500 transition-all"
                 required
               />
             </div>
 
+            {/* Mensaje de Error */}
             {error && (
-              <div className="p-3 bg-red-50 border border-red-100 text-red-600 text-sm rounded-lg flex items-center gap-2">
-                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <div className="p-3 bg-red-50 text-red-600 text-sm rounded text-center">
                 {error}
               </div>
             )}
 
+            {/* Botón Principal */}
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 w-full py-3.5 bg-[#015ca8] hover:bg-[#004179] text-white rounded-lg font-bold shadow-lg shadow-blue-900/10 hover:shadow-blue-900/20 transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+              className="mt-4 w-full h-[50px] bg-[#0C5D9E] hover:bg-[#094b80] text-white font-bold rounded-[6px] transition-colors shadow-sm disabled:opacity-70"
             >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                  Procesando...
-                </span>
-              ) : (isSignUp ? 'Registrarse' : 'Iniciar Sesión')}
+              {loading ? 'Cargando...' : (isSignUp ? 'Crear cuenta' : 'Iniciar sesión')}
             </button>
           </form>
 
-          {/* Pie del formulario */}
-          <div className="text-center pt-2">
-            <p className="text-sm text-gray-500">
-              {isSignUp ? '¿Ya tienes una cuenta?' : '¿Aún no tienes acceso?'}
+          {/* Links Inferiores */}
+          <div className="mt-8 flex flex-col items-center gap-3 text-sm font-medium">
+            {!isSignUp && (
+              <button 
+                type="button" 
+                onClick={onForgotPassword} 
+                className="text-[#bbbfc1] hover:text-[#0C5D9E] transition-colors"
+              >
+                ¿Olvidaste la contraseña?
+              </button>
+            )}
+            
+            <div className="flex gap-1 text-[#bbbfc1]">
+              <span>{isSignUp ? '¿Ya tienes cuenta?' : '¿Aún no eres miembro?'}</span>
               <button
                 type="button"
                 onClick={() => {
                   setIsSignUp(!isSignUp);
                   setError('');
                 }}
-                className="ml-1 text-[#015ca8] font-bold hover:underline transition-colors"
+                className="text-[#0E3D6B] font-bold hover:underline"
               >
-                {isSignUp ? 'Inicia sesión aquí' : 'Solicita una cuenta'}
+                {isSignUp ? 'Iniciar sesión' : 'Crear cuenta'}
               </button>
-            </p>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
