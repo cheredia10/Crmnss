@@ -48,33 +48,31 @@ export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
   };
 
   return (
-    <div className="bg-white relative size-full" data-name="Login">
-      {/* Imagen de fondo */}
-      <div className="absolute h-full left-0 top-0 w-[722px]" data-name="pexels-steve-28947852 1">
-        <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
-          <img alt="" className="absolute max-w-none object-50%-50% object-cover size-full" src={imgPexelsSteve289478521} />
-          <div className="absolute bg-[rgba(0,65,121,0.8)] inset-0" />
-        </div>
+    return (
+  <div className="bg-white relative size-full" data-name="Login">
+    {/* Fondo: pexels + overlay (abajo) */}
+    <div className="absolute h-full left-0 top-0 w-[722px] z-0" data-name="pexels-steve-28947852 1">
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
+        <img
+          alt=""
+          className="absolute max-w-none object-50%-50% object-cover size-full"
+          src={imgPexelsSteve289478521}
+        />
+        <div className="absolute bg-[rgba(0,65,121,0.8)] inset-0" />
       </div>
-      
-      {/* Logo grande izquierdo */}
-      <div className="absolute inset-0 w-[722px] h-full">
-        <img alt="" src={imgLogoSyntaxCorto1} className="absolute inset-0 w-full h-full object-cover"/>
-      </div>
-      
-      {/* Contenedor del formulario */}
-      <div className="absolute content-stretch flex flex-col gap-[100px] items-center left-[911px] top-[81px] w-[374px]">
-        {/* Logo y título CRM */}
-        <div className="content-stretch flex flex-col gap-[20px] items-center relative shrink-0 w-full">
-          <div className="h-[82px] relative shrink-0 w-[232px]" data-name="Logo-Sytax 1">
-            <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgLogoSytax1} />
-          </div>
-          <p className="font-['Open_Sans:Bold',sans-serif] font-bold leading-[normal] min-w-full relative shrink-0 text-[#333333] text-[24px] text-center w-[min-content]" style={{ fontVariationSettings: "'wdth' 100" }}>
-            CRM
-          </p>
-        </div>
+    </div>
 
-        {/* Formulario */}
+    {/* Imagen X (encima del overlay) */}
+    <div className="absolute inset-0 w-[722px] h-full z-10 pointer-events-none">
+      <img
+        alt=""
+        src={imgLogoSyntaxCorto1}
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+    </div>
+
+    {/* Formulario (encima de todo) */}
+    <div className="absolute content-stretch flex flex-col gap-[100px] items-center left-[911px] top-[81px] w-[374px] z-20">
         <div className="content-stretch flex flex-col gap-[40px] items-center relative shrink-0 w-full">
           <p className="font-['Open_Sans:Bold',sans-serif] font-bold leading-[normal] relative shrink-0 text-[#333333] text-[24px] text-center w-full" style={{ fontVariationSettings: "'wdth' 100" }}>
             {isSignUp ? 'Crear cuenta' : 'Inicio de sesión'}
