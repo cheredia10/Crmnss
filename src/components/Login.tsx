@@ -48,7 +48,7 @@ export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
   };
 
   return (
-    <div className="bg-white relative size-full" data-name="Login">
+  <div className="bg-white relative w-full h-screen overflow-hidden" data-name="Login"></div>
       {/* Imagen de fondo */}
       <div className="absolute h-full left-0 top-0 w-[722px]" data-name="pexels-steve-28947852 1">
         <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
