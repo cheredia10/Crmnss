@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { Toaster, toast } from 'sonner';
 
-// Background image for the left panel
-import imgBackground from src="/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1";
-// "Hamar" logo for the form header
-import imgFormLogo from src="/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
+// Imagen de fondo (Panel izquierdo)
+const imgBackground = "/assets/34a2d73dc65cdd75feb21a18c485bd573552fb65.png";
+
+// Logo grande "X" (Panel izquierdo)
+const imgSideLogo = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
+
+// Logo "Hamar" (Encabezado del formulario)
+const imgFormLogo = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
 
 export default function App() {
   const [username, setUsername] = useState('');
