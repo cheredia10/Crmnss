@@ -11,7 +11,7 @@ import { DocumentosView } from './components/DocumentosView';
 import { SeguimientoView } from './components/SeguimientoView';
 import { TableroSeguimientoView } from './components/TableroSeguimientoView';
 import { CloudTalkSettings } from './components/CloudTalkSettings';
-import Login  from './components/Login';
+import { Login } from './components/Login';
 import { ForgotPassword } from './components/ForgotPassword';
 import { getSession, onAuthStateChange, type User } from './services/authService';
 
