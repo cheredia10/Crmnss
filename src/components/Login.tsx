@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { signIn, signUp } from '../services/authService';
 
+//arreglo final
+
 interface LoginProps {
   onLoginSuccess: () => void;
   onForgotPassword: () => void;
