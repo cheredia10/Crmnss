@@ -1,139 +1,221 @@
-import React, { useState } from 'react';
-import { Toaster, toast } from 'sonner';
+import { useState } from 'react';
+const imgLogoSytax1 = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
+const imgPexelsSteve289478521 = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
+const imgLogoSyntaxCorto1 = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
 
-// Imports from Figma assets
-const imgBackground = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
-const imgSideLogo = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
-const imgFormLogo = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
+interface LoginProps {
+  onLoginSuccess: () => void;
+  onForgotPassword: () => void;
+}
 
-export default function App() {
-  const [username, setUsername] = useState('');
+export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [nombre, setNombre] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !password) {
-      toast.error('Por favor complete todos los campos');
-      return;
+    setError('');
+    setLoading(true);
+
+    try {
+      let result;
+      
+      if (isSignUp) {
+        if (!nombre.trim()) {
+          setError('Por favor ingrese su nombre');
+          setLoading(false);
+          return;
+        }
+        result = await signUp(nombre, email, password);
+      } else {
+        result = await signIn(email, password);
+      }
+
+      if (result.success) {
+        onLoginSuccess();
+      } else {
+        setError(result.error || 'Error al autenticar');
+      }
+    } catch (err) {
+      setError('Error de conexión. Por favor intente nuevamente.');
+    } finally {
+      setLoading(false);
     }
-    // Mock login logic - this would be replaced by Supabase auth
-    toast.success('Iniciando sesión...');
-    console.log('Login attempt:', { username, password });
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-white font-sans text-[#333]">
-      <Toaster position="bottom-center" />
-      
-      {/* Left Panel - Branding & Background */}
-      {/* Hidden on mobile, visible on large screens */}
-      <div className="hidden lg:flex lg:w-1/2 relative flex-col items-center justify-center overflow-hidden bg-[#004179]">
-        {/* Background Image Container */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={imgBackground} 
-            alt="Background Office" 
-            className="w-full h-full object-cover"
-          />
-          {/* Blue Overlay: rgba(0,65,121,0.8) from Figma */}
-          <div className="absolute inset-0 bg-[#004179]/80" />
-        </div>
-
-        {/* Side Logo Content */}
-        <div className="relative z-10 p-12 w-full max-w-[500px] flex items-center justify-center">
-          <img 
-            src={imgSideLogo} 
-            alt="New Stage Solutions Branding" 
-            className="w-full h-auto object-contain max-w-[400px]"
-          />
+    <div className="bg-white relative size-full" data-name="Login">
+      {/* Imagen de fondo */}
+      <div className="absolute h-full left-0 top-0 w-[722px]" data-name="pexels-steve-28947852 1">
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
+          <img alt="" className="absolute max-w-none object-50%-50% object-cover size-full" src={imgPexelsSteve289478521} />
+          <div className="absolute bg-[rgba(0,65,121,0.8)] inset-0" />
         </div>
       </div>
+      
+      {/* Logo grande izquierdo */}
+      <div className="absolute h-[488px] left-[161px] top-[268px] w-[400px]" data-name="Logo-Syntax-Corto 1">
+        <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgLogoSyntaxCorto1} />
+      </div>
 
-      {/* Right Panel - Login Form */}
-      <div className="flex flex-1 flex-col items-center justify-center p-6 sm:p-12 w-full">
-        <div className="w-full max-w-[400px] flex flex-col items-center gap-10">
-          
-          {/* Header Logos & Title */}
-          <div className="flex flex-col items-center gap-5 w-full">
-            <div className="w-[232px] h-auto">
-              <img 
-                src={imgFormLogo} 
-                alt="HamarX CRM" 
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <h2 className="text-2xl font-bold text-[#333]">CRM</h2>
+      {/* Contenedor del formulario */}
+      <div className="absolute content-stretch flex flex-col gap-[100px] items-center left-[911px] top-[81px] w-[374px]">
+        {/* Logo y título CRM */}
+        <div className="content-stretch flex flex-col gap-[20px] items-center relative shrink-0 w-full">
+          <div className="h-[82px] relative shrink-0 w-[232px]" data-name="Logo-Sytax 1">
+            <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgLogoSytax1} />
           </div>
+          <p className="font-['Open_Sans:Bold',sans-serif] font-bold leading-[normal] min-w-full relative shrink-0 text-[#333333] text-[24px] text-center w-[min-content]" style={{ fontVariationSettings: "'wdth' 100" }}>
+            CRM
+          </p>
+        </div>
 
-          <div className="flex flex-col items-center w-full gap-8">
-            <h1 className="text-2xl font-bold text-[#333]">Inicio de sesión</h1>
+        {/* Formulario */}
+        <div className="content-stretch flex flex-col gap-[40px] items-center relative shrink-0 w-full">
+          <p className="font-['Open_Sans:Bold',sans-serif] font-bold leading-[normal] relative shrink-0 text-[#333333] text-[24px] text-center w-full" style={{ fontVariationSettings: "'wdth' 100" }}>
+            {isSignUp ? 'Crear cuenta' : 'Inicio de sesión'}
+          </p>
 
-            {/* Form */}
-            <form onSubmit={handleLogin} className="w-full flex flex-col gap-6">
-              
-              {/* Username Field */}
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-black pl-1">
-                  Usuario
-                </label>
-                <div className="bg-[#f0f9ff] rounded-lg border border-transparent focus-within:border-[#015ca8] transition-colors">
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Ingrese su nombre de usuario"
-                    className="w-full bg-transparent px-4 py-3 outline-none text-sm text-[#333] placeholder-[#bbbfc1]"
-                  />
+          <form onSubmit={handleSubmit} className="content-stretch flex flex-col gap-[50px] items-center relative shrink-0 w-full">
+            <div className="content-stretch flex flex-col gap-[30px] items-start relative shrink-0 w-full">
+              {/* Campo Nombre - solo en registro */}
+              {isSignUp && (
+                <div className="content-stretch flex flex-col gap-[8px] h-[80px] items-start justify-center relative shrink-0 w-full" data-name="Input-text">
+                  <div className="content-stretch flex gap-[10px] h-[19px] items-center relative shrink-0 w-full" data-name="Texto">
+                    <p className="font-['Open_Sans:SemiBold',sans-serif] font-semibold leading-[normal] relative shrink-0 text-[14px] text-black text-nowrap whitespace-pre" style={{ fontVariationSettings: "'wdth' 100" }}>
+                      Nombre
+                    </p>
+                  </div>
+                  <div className="basis-0 bg-sky-50 grow min-h-px min-w-px relative rounded-[8px] shrink-0 w-full">
+                    <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
+                      <input
+                        type="text"
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                        placeholder="Ingrese su nombre"
+                        className="box-border content-stretch flex gap-[10px] items-center p-[10px] relative size-full bg-transparent border-none outline-none font-['Open_Sans:Regular',sans-serif] font-normal leading-[normal] text-[#000] text-[14px] placeholder:text-[#bbbfc1]"
+                        style={{ fontVariationSettings: "'wdth' 100" }}
+                        required={isSignUp}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Campo Usuario */}
+              <div className="content-stretch flex flex-col gap-[8px] h-[80px] items-start justify-center relative shrink-0 w-full" data-name="Input-text">
+                <div className="content-stretch flex gap-[10px] h-[19px] items-center relative shrink-0 w-full" data-name="Texto">
+                  <p className="font-['Open_Sans:SemiBold',sans-serif] font-semibold leading-[normal] relative shrink-0 text-[14px] text-black text-nowrap whitespace-pre" style={{ fontVariationSettings: "'wdth' 100" }}>
+                    Usuario
+                  </p>
+                </div>
+                <div className="basis-0 bg-sky-50 grow min-h-px min-w-px relative rounded-[8px] shrink-0 w-full">
+                  <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Ingrese su nombre de usuario"
+                      className="box-border content-stretch flex gap-[10px] items-center p-[10px] relative size-full bg-transparent border-none outline-none font-['Open_Sans:Regular',sans-serif] font-normal leading-[normal] text-[#000] text-[14px] placeholder:text-[#bbbfc1]"
+                      style={{ fontVariationSettings: "'wdth' 100" }}
+                      required
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Password Field */}
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-black pl-1">
-                  Contraseña
-                </label>
-                <div className="bg-[#f0f9ff] rounded-lg border border-transparent focus-within:border-[#015ca8] transition-colors">
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Introduzca su contraseña"
-                    className="w-full bg-transparent px-4 py-3 outline-none text-sm text-[#333] placeholder-[#bbbfc1]"
-                  />
+              {/* Campo Contraseña */}
+              <div className="content-stretch flex flex-col gap-[8px] h-[80px] items-start justify-center relative shrink-0 w-full" data-name="Input-text">
+                <div className="content-stretch flex gap-[10px] h-[19px] items-center relative shrink-0 w-full" data-name="Texto">
+                  <p className="font-['Open_Sans:SemiBold',sans-serif] font-semibold leading-[normal] relative shrink-0 text-[14px] text-black text-nowrap whitespace-pre" style={{ fontVariationSettings: "'wdth' 100" }}>
+                    Contraseña
+                  </p>
+                </div>
+                <div className="basis-0 bg-sky-50 grow min-h-px min-w-px relative rounded-[8px] shrink-0 w-full">
+                  <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Introduzca su contraseña"
+                      className="box-border content-stretch flex gap-[10px] items-center p-[10px] relative size-full bg-transparent border-none outline-none font-['Open_Sans:Regular',sans-serif] font-normal leading-[normal] text-[#000] text-[14px] placeholder:text-[#bbbfc1]"
+                      style={{ fontVariationSettings: "'wdth' 100" }}
+                      required
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Submit Button */}
-              <button 
+              {/* Mensaje de error */}
+              {error && (
+                <div className="w-full p-[12px] bg-red-50 border border-red-200 rounded-[8px]">
+                  <p className="font-['Open_Sans:Regular',sans-serif] text-[14px] text-red-600 text-center" style={{ fontVariationSettings: "'wdth' 100" }}>
+                    {error}
+                  </p>
+                </div>
+              )}
+
+              {/* Botón Iniciar sesión */}
+              <button
                 type="submit"
-                className="mt-4 w-full bg-[#015ca8] hover:bg-[#014b8a] text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-sm"
+                disabled={loading}
+                className="bg-[#015ca8] h-[48px] min-w-[136px] relative rounded-[8px] shrink-0 w-full hover:bg-[#004179] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                data-name="Botones"
               >
-                Iniciar sesión
+                <div className="flex flex-col items-center justify-center min-w-inherit size-full">
+                  <div className="box-border content-stretch flex flex-col gap-[10px] h-[48px] items-center justify-center min-w-inherit p-[10px] relative w-full">
+                    <div className="box-border content-stretch flex items-center justify-center px-[6px] py-0 relative shrink-0">
+                      <p className="font-['Open_Sans:SemiBold',sans-serif] font-semibold leading-[normal] relative shrink-0 text-[14px] text-center text-nowrap text-white whitespace-pre" style={{ fontVariationSettings: "'wdth' 100" }}>
+                        {loading ? 'Cargando...' : (isSignUp ? 'Crear cuenta' : 'Iniciar sesión')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </button>
-            </form>
+            </div>
 
-            {/* Footer Actions */}
-            <div className="flex flex-col items-center gap-8 w-full">
-              <a 
-                href="#" 
-                className="text-sm text-[#bbbfc1] hover:text-[#015ca8] transition-colors font-semibold"
-                onClick={(e) => { e.preventDefault(); toast.info('Funcionalidad de recuperación pendiente'); }}
-              >
-                ¿Olvidaste la contraseña?
-              </a>
-              
-              <div className="flex items-center gap-2 text-sm font-semibold">
-                <span className="text-[#bbbfc1]">¿Aún no eres miembro?</span>
-                <a 
-                  href="#" 
-                  className="text-[#004179] hover:underline"
-                  onClick={(e) => { e.preventDefault(); toast.info('Registro de usuarios pendiente'); }}
+            {/* Enlaces inferiores */}
+            <div className="content-stretch flex flex-col gap-[30px] items-center relative shrink-0 w-full">
+              {!isSignUp && (
+                <button
+                  type="button"
+                  onClick={onForgotPassword}
+                  className="[white-space-collapse:collapse] block font-['Open_Sans:SemiBold',sans-serif] font-semibold leading-[0] relative shrink-0 text-[#bbbfc1] text-[0px] text-nowrap hover:text-[#004179] transition-colors"
+                  style={{ fontVariationSettings: "'wdth' 100" }}
                 >
-                  Crear cuenta
-                </a>
+                  <p className="cursor-pointer leading-[normal] text-[14px] whitespace-pre" style={{ fontVariationSettings: "'wdth' 100" }}>
+                    ¿Olvidaste la contraseña?
+                  </p>
+                </button>
+              )}
+
+              <div className="content-stretch flex gap-[10px] items-start justify-center relative shrink-0 w-full">
+                <div className="content-stretch flex font-['Open_Sans:SemiBold',sans-serif] font-semibold gap-[10px] items-center leading-[normal] relative shrink-0 text-[14px] text-nowrap whitespace-pre">
+                  <p className="relative shrink-0 text-[#bbbfc1]" style={{ fontVariationSettings: "'wdth' 100" }}>
+                    {isSignUp ? '¿Ya tienes cuenta?' : '¿Aún no eres miembro?'}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsSignUp(!isSignUp);
+                      setError('');
+                      setNombre('');
+                      setEmail('');
+                      setPassword('');
+                    }}
+                    className="relative shrink-0 text-[#004179] text-center hover:underline"
+                    style={{ fontVariationSettings: "'wdth' 100" }}
+                  >
+                    {isSignUp ? 'Iniciar sesión' : 'Crear cuenta'}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
