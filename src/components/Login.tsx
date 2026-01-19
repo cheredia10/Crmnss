@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { signIn, signUp } from '../services/authService';
 
-//arreglo final
-
 interface LoginProps {
   onLoginSuccess: () => void;
   onForgotPassword: () => void;
@@ -15,6 +13,11 @@ export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Rutas de imágenes corregidas
+  const imgFondo = "/assets/34a2d73dc65cdd75feb21a18c485bd573552fb65.png";
+  const imgLogoGrande = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
+  const imgLogoPequeno = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,185 +51,144 @@ export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
   };
 
   return (
-  <div className="bg-white relative w-full h-screen overflow-hidden" data-name="Login">
-      {/* Imagen de fondo */}
-      <div className="absolute h-full left-0 top-0 w-[722px]" data-name="pexels-steve-28947852 1">
+    // AQUÍ ESTÁ EL ARREGLO: h-screen para ocupar toda la pantalla
+    <div className="bg-white relative w-full h-screen overflow-hidden" data-name="Login">
+      
+      {/* 1. Imagen de fondo (Izquierda) */}
+      <div className="absolute h-full left-0 top-0 w-[722px]" data-name="Fondo Izquierdo">
         <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
           <img 
-            alt="" 
-            className="absolute max-w-none object-50%-50% object-cover size-full" 
-            src="/assets/34a2d73dc65cdd75feb21a18c485bd573552fb65.png" 
+            alt="Fondo oficina" 
+            className="absolute max-w-none object-cover size-full" 
+            src={imgFondo} 
           />
           <div className="absolute bg-[rgba(0,65,121,0.8)] inset-0" />
         </div>
       </div>
       
-      {/* Logo grande izquierdo */}
-      <div className="absolute h-[488px] left-[161px] top-[268px] w-[400px]" data-name="Logo-Syntax-Corto 1">
+      {/* 2. Logo Grande (Sobre el fondo azul) */}
+      <div className="absolute h-[488px] left-[161px] top-[268px] w-[400px]" data-name="Logo Syntax Grande">
         <img 
-          alt="" 
-          className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" 
-          src="/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png" 
+          alt="Logo Grande" 
+          className="absolute inset-0 object-cover pointer-events-none size-full" 
+          src={imgLogoGrande} 
         />
       </div>
 
-      {/* Contenedor del formulario */}
-      <div className="absolute content-stretch flex flex-col gap-[100px] items-center left-[911px] top-[81px] w-[374px]">
-        {/* Logo y título CRM */}
-        <div className="content-stretch flex flex-col gap-[20px] items-center relative shrink-0 w-full">
-          <div className="h-[82px] relative shrink-0 w-[232px]" data-name="Logo-Sytax 1">
+      {/* 3. Contenedor del formulario (Derecha) */}
+      <div className="absolute flex flex-col gap-[100px] items-center left-[911px] top-[81px] w-[374px]">
+        
+        {/* Encabezado del Formulario */}
+        <div className="flex flex-col gap-[20px] items-center w-full">
+          <div className="h-[82px] w-[232px] relative">
             <img 
-              alt="" 
-              className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" 
-              src="/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png" 
+              alt="Logo CRM" 
+              className="absolute inset-0 object-cover size-full" 
+              src={imgLogoPequeno} 
             />
           </div>
-          <p className="font-['Open_Sans:Bold',sans-serif] font-bold leading-[normal] min-w-full relative shrink-0 text-[#333333] text-[24px] text-center w-[min-content]" style={{ fontVariationSettings: "'wdth' 100" }}>
+          <p className="font-bold text-[#333333] text-[24px] text-center">
             CRM
           </p>
         </div>
 
-        {/* Formulario */}
-        <div className="content-stretch flex flex-col gap-[40px] items-center relative shrink-0 w-full">
-          <p className="font-['Open_Sans:Bold',sans-serif] font-bold leading-[normal] relative shrink-0 text-[#333333] text-[24px] text-center w-full" style={{ fontVariationSettings: "'wdth' 100" }}>
+        {/* Inputs y Botones */}
+        <div className="flex flex-col gap-[40px] items-center w-full">
+          <p className="font-bold text-[#333333] text-[24px] text-center w-full">
             {isSignUp ? 'Crear cuenta' : 'Inicio de sesión'}
           </p>
 
-          <form onSubmit={handleSubmit} className="content-stretch flex flex-col gap-[50px] items-center relative shrink-0 w-full">
-            <div className="content-stretch flex flex-col gap-[30px] items-start relative shrink-0 w-full">
-              {/* Campo Nombre - solo en registro */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-[50px] items-center w-full">
+            <div className="flex flex-col gap-[30px] w-full">
+              
+              {/* Nombre (Solo si es registro) */}
               {isSignUp && (
-                <div className="content-stretch flex flex-col gap-[8px] h-[80px] items-start justify-center relative shrink-0 w-full" data-name="Input-text">
-                  <div className="content-stretch flex gap-[10px] h-[19px] items-center relative shrink-0 w-full" data-name="Texto">
-                    <p className="font-['Open_Sans:SemiBold',sans-serif] font-semibold leading-[normal] relative shrink-0 text-[14px] text-black text-nowrap whitespace-pre" style={{ fontVariationSettings: "'wdth' 100" }}>
-                      Nombre
-                    </p>
-                  </div>
-                  <div className="basis-0 bg-sky-50 grow min-h-px min-w-px relative rounded-[8px] shrink-0 w-full">
-                    <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
-                      <input
-                        type="text"
-                        value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
-                        placeholder="Ingrese su nombre"
-                        className="box-border content-stretch flex gap-[10px] items-center p-[10px] relative size-full bg-transparent border-none outline-none font-['Open_Sans:Regular',sans-serif] font-normal leading-[normal] text-[#000] text-[14px] placeholder:text-[#bbbfc1]"
-                        style={{ fontVariationSettings: "'wdth' 100" }}
-                        required={isSignUp}
-                      />
-                    </div>
+                <div className="flex flex-col gap-[8px] w-full">
+                  <p className="font-semibold text-[14px] text-black">Nombre</p>
+                  <div className="bg-sky-50 rounded-[8px] p-[10px]">
+                    <input
+                      type="text"
+                      value={nombre}
+                      onChange={(e) => setNombre(e.target.value)}
+                      placeholder="Ingrese su nombre"
+                      className="w-full bg-transparent outline-none text-[14px]"
+                      required={isSignUp}
+                    />
                   </div>
                 </div>
               )}
 
-              {/* Campo Usuario */}
-              <div className="content-stretch flex flex-col gap-[8px] h-[80px] items-start justify-center relative shrink-0 w-full" data-name="Input-text">
-                <div className="content-stretch flex gap-[10px] h-[19px] items-center relative shrink-0 w-full" data-name="Texto">
-                  <p className="font-['Open_Sans:SemiBold',sans-serif] font-semibold leading-[normal] relative shrink-0 text-[14px] text-black text-nowrap whitespace-pre" style={{ fontVariationSettings: "'wdth' 100" }}>
-                    Usuario
-                  </p>
-                </div>
-                <div className="basis-0 bg-sky-50 grow min-h-px min-w-px relative rounded-[8px] shrink-0 w-full">
-                  <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Ingrese su nombre de usuario"
-                      className="box-border content-stretch flex gap-[10px] items-center p-[10px] relative size-full bg-transparent border-none outline-none font-['Open_Sans:Regular',sans-serif] font-normal leading-[normal] text-[#000] text-[14px] placeholder:text-[#bbbfc1]"
-                      style={{ fontVariationSettings: "'wdth' 100" }}
-                      required
-                    />
-                  </div>
+              {/* Usuario / Email */}
+              <div className="flex flex-col gap-[8px] w-full">
+                <p className="font-semibold text-[14px] text-black">Usuario</p>
+                <div className="bg-sky-50 rounded-[8px] p-[10px]">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Ingrese su nombre de usuario"
+                    className="w-full bg-transparent outline-none text-[14px]"
+                    required
+                  />
                 </div>
               </div>
 
-              {/* Campo Contraseña */}
-              <div className="content-stretch flex flex-col gap-[8px] h-[80px] items-start justify-center relative shrink-0 w-full" data-name="Input-text">
-                <div className="content-stretch flex gap-[10px] h-[19px] items-center relative shrink-0 w-full" data-name="Texto">
-                  <p className="font-['Open_Sans:SemiBold',sans-serif] font-semibold leading-[normal] relative shrink-0 text-[14px] text-black text-nowrap whitespace-pre" style={{ fontVariationSettings: "'wdth' 100" }}>
-                    Contraseña
-                  </p>
-                </div>
-                <div className="basis-0 bg-sky-50 grow min-h-px min-w-px relative rounded-[8px] shrink-0 w-full">
-                  <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Introduzca su contraseña"
-                      className="box-border content-stretch flex gap-[10px] items-center p-[10px] relative size-full bg-transparent border-none outline-none font-['Open_Sans:Regular',sans-serif] font-normal leading-[normal] text-[#000] text-[14px] placeholder:text-[#bbbfc1]"
-                      style={{ fontVariationSettings: "'wdth' 100" }}
-                      required
-                    />
-                  </div>
+              {/* Contraseña */}
+              <div className="flex flex-col gap-[8px] w-full">
+                <p className="font-semibold text-[14px] text-black">Contraseña</p>
+                <div className="bg-sky-50 rounded-[8px] p-[10px]">
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Introduzca su contraseña"
+                    className="w-full bg-transparent outline-none text-[14px]"
+                    required
+                  />
                 </div>
               </div>
 
-              {/* Mensaje de error */}
+              {/* Mensaje de Error */}
               {error && (
-                <div className="w-full p-[12px] bg-red-50 border border-red-200 rounded-[8px]">
-                  <p className="font-['Open_Sans:Regular',sans-serif] text-[14px] text-red-600 text-center" style={{ fontVariationSettings: "'wdth' 100" }}>
-                    {error}
-                  </p>
+                <div className="w-full p-3 bg-red-50 border border-red-200 rounded text-red-600 text-sm text-center">
+                  {error}
                 </div>
               )}
 
-              {/* Botón Iniciar sesión */}
+              {/* Botón Principal */}
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-[#015ca8] h-[48px] min-w-[136px] relative rounded-[8px] shrink-0 w-full hover:bg-[#004179] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                data-name="Botones"
+                className="bg-[#015ca8] h-[48px] rounded-[8px] w-full text-white font-semibold hover:bg-[#004179] transition-colors disabled:opacity-50"
               >
-                <div className="flex flex-col items-center justify-center min-w-inherit size-full">
-                  <div className="box-border content-stretch flex flex-col gap-[10px] h-[48px] items-center justify-center min-w-inherit p-[10px] relative w-full">
-                    <div className="box-border content-stretch flex items-center justify-center px-[6px] py-0 relative shrink-0">
-                      <p className="font-['Open_Sans:SemiBold',sans-serif] font-semibold leading-[normal] relative shrink-0 text-[14px] text-center text-nowrap text-white whitespace-pre" style={{ fontVariationSettings: "'wdth' 100" }}>
-                        {loading ? 'Cargando...' : (isSignUp ? 'Crear cuenta' : 'Iniciar sesión')}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                {loading ? 'Cargando...' : (isSignUp ? 'Crear cuenta' : 'Iniciar sesión')}
               </button>
             </div>
 
-            {/* Enlaces inferiores */}
-            <div className="content-stretch flex flex-col gap-[30px] items-center relative shrink-0 w-full">
+            {/* Enlaces de pie de página */}
+            <div className="flex flex-col gap-[30px] items-center w-full">
               {!isSignUp && (
-                <button
-                  type="button"
-                  onClick={onForgotPassword}
-                  className="[white-space-collapse:collapse] block font-['Open_Sans:SemiBold',sans-serif] font-semibold leading-[0] relative shrink-0 text-[#bbbfc1] text-[0px] text-nowrap hover:text-[#004179] transition-colors"
-                  style={{ fontVariationSettings: "'wdth' 100" }}
-                >
-                  <p className="cursor-pointer leading-[normal] text-[14px] whitespace-pre" style={{ fontVariationSettings: "'wdth' 100" }}>
-                    ¿Olvidaste la contraseña?
-                  </p>
+                <button type="button" onClick={onForgotPassword} className="text-[#bbbfc1] text-[14px] font-semibold hover:text-[#004179]">
+                  ¿Olvidaste la contraseña?
                 </button>
               )}
-
-              <div className="content-stretch flex gap-[10px] items-start justify-center relative shrink-0 w-full">
-                <div className="content-stretch flex font-['Open_Sans:SemiBold',sans-serif] font-semibold gap-[10px] items-center leading-[normal] relative shrink-0 text-[14px] text-nowrap whitespace-pre">
-                  <p className="relative shrink-0 text-[#bbbfc1]" style={{ fontVariationSettings: "'wdth' 100" }}>
-                    {isSignUp ? '¿Ya tienes cuenta?' : '¿Aún no eres miembro?'}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsSignUp(!isSignUp);
-                      setError('');
-                      setNombre('');
-                      setEmail('');
-                      setPassword('');
-                    }}
-                    className="relative shrink-0 text-[#004179] text-center hover:underline"
-                    style={{ fontVariationSettings: "'wdth' 100" }}
-                  >
-                    {isSignUp ? 'Iniciar sesión' : 'Crear cuenta'}
-                  </button>
-                </div>
+              <div className="flex gap-[10px] text-[14px] font-semibold">
+                <span className="text-[#bbbfc1]">
+                  {isSignUp ? '¿Ya tienes cuenta?' : '¿Aún no eres miembro?'}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsSignUp(!isSignUp);
+                    setError('');
+                  }}
+                  className="text-[#004179] hover:underline"
+                >
+                  {isSignUp ? 'Iniciar sesión' : 'Crear cuenta'}
+                </button>
               </div>
             </div>
+
           </form>
         </div>
       </div>
