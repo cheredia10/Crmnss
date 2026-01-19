@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Toaster, toast } from 'sonner';
 
 // Imports from Figma assets
-const imgBackground = "/images/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
-const imgSideLogo = "/images/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
-const imgFormLogo = "/images/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
+const imgBackground = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
+const imgSideLogo = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
+const imgFormLogo = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
 
 export default function App() {
   const [username, setUsername] = useState('');
