@@ -1,7 +1,7 @@
 import { useState } from 'react';
-const imgLogoSytax1 = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
+const imgLogoSytax1 = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
 const imgPexelsSteve289478521 = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
-const imgLogoSyntaxCorto1 = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
+const imgLogoSyntaxCorto1 = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
 
 interface LoginProps {
   onLoginSuccess: () => void;
