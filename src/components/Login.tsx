@@ -46,144 +46,258 @@ export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
   };
 
   return (
-    <div className="min-h-screen w-full bg-white flex">
-      {/* IZQUIERDA: imagen full height */}
-      <div className="hidden lg:block lg:w-[722px] relative">
-        <img
-          src={imgLeftX}
-          alt="Background"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      </div>
+    <>
+      <style>{`
+        .loginRoot{
+          min-height:100vh;
+          width:100%;
+          display:flex;
+          background:#fff;
+          font-family: "Open Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        }
+        .leftPanel{
+          width:722px;
+          position:relative;
+          overflow:hidden;
+          flex:0 0 722px;
+          background:#004179;
+        }
+        .leftPanel img{
+          position:absolute;
+          inset:0;
+          width:100%;
+          height:100%;
+          object-fit:cover;
+        }
+        .rightPanel{
+          flex:1;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          padding:40px 24px;
+        }
+        .card{
+          width:374px;
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          gap:32px;
+        }
+        .logoBox{
+          width:232px;
+          height:82px;
+          position:relative;
+        }
+        .logoBox img{
+          position:absolute;
+          inset:0;
+          width:100%;
+          height:100%;
+          object-fit:contain;
+        }
+        .titleCRM{
+          margin:0;
+          font-size:24px;
+          font-weight:700;
+          color:#333;
+          text-align:center;
+        }
+        .titleLogin{
+          margin:0;
+          font-size:24px;
+          font-weight:700;
+          color:#333;
+          text-align:center;
+        }
+        form{
+          width:100%;
+          display:flex;
+          flex-direction:column;
+          gap:18px;
+        }
+        .field{
+          width:100%;
+          display:flex;
+          flex-direction:column;
+          gap:8px;
+        }
+        .label{
+          font-size:14px;
+          font-weight:600;
+          color:#000;
+        }
+        .input{
+          width:100%;
+          box-sizing:border-box;
+          padding:12px 12px;
+          border-radius:8px;
+          border:1px solid transparent;
+          background:#f0f9ff;
+          outline:none;
+          font-size:14px;
+          color:#000;
+        }
+        .input:focus{
+          border-color:#015ca8;
+          background:#fff;
+        }
+        .btn{
+          width:100%;
+          height:48px;
+          border:none;
+          border-radius:8px;
+          background:#015ca8;
+          color:#fff;
+          font-weight:600;
+          cursor:pointer;
+          transition:background .15s ease;
+          margin-top:6px;
+        }
+        .btn:hover{ background:#004179; }
+        .btn:disabled{ opacity:.6; cursor:not-allowed; }
+        .errorBox{
+          width:100%;
+          box-sizing:border-box;
+          padding:12px;
+          background:#FEF2F2;
+          border:1px solid #FECACA;
+          border-radius:8px;
+          color:#DC2626;
+          font-size:14px;
+          text-align:center;
+        }
+        .links{
+          width:100%;
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          gap:14px;
+          margin-top:8px;
+        }
+        .linkBtn{
+          border:none;
+          background:transparent;
+          color:#bbbfc1;
+          font-weight:600;
+          font-size:14px;
+          cursor:pointer;
+        }
+        .linkBtn:hover{ color:#004179; }
+        .signupRow{
+          display:flex;
+          gap:8px;
+          align-items:center;
+          font-size:14px;
+          font-weight:600;
+        }
+        .muted{ color:#bbbfc1; }
+        .primary{
+          border:none;
+          background:transparent;
+          color:#004179;
+          font-weight:700;
+          cursor:pointer;
+        }
+        .primary:hover{ text-decoration:underline; }
 
-      {/* DERECHA: formulario centrado */}
-      <div className="flex-1 flex items-center justify-center px-6 py-10">
-        <div className="w-full max-w-[374px] flex flex-col items-center gap-10">
-          {/* Logo + CRM */}
-          <div className="flex flex-col items-center gap-5 w-full">
-            <div className="w-[232px] h-[82px] relative">
-              <img
-                src={imgLogoHamar}
-                alt="HamarX"
-                className="absolute inset-0 w-full h-full object-contain"
-              />
+        /* MOBILE: ocultar panel izquierdo */
+        @media (max-width: 1023px){
+          .leftPanel{ display:none; }
+          .card{ width:min(374px, 100%); }
+        }
+      `}</style>
+
+      <div className="loginRoot">
+        <div className="leftPanel" aria-hidden="true">
+          <img src={imgLeftX} alt="" />
+        </div>
+
+        <div className="rightPanel">
+          <div className="card">
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+              <div className="logoBox">
+                <img src={imgLogoHamar} alt="HamarX" />
+              </div>
+              <p className="titleCRM">CRM</p>
             </div>
-            <p className="font-['Open_Sans:Bold',sans-serif] font-bold text-[#333] text-[24px] text-center">
-              CRM
-            </p>
-          </div>
 
-          {/* Título + form */}
-          <div className="w-full flex flex-col items-center gap-8">
-            <p className="font-['Open_Sans:Bold',sans-serif] font-bold text-[#333] text-[24px] text-center w-full">
-              {isSignUp ? "Crear cuenta" : "Inicio de sesión"}
-            </p>
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: 18 }}>
+              <p className="titleLogin">{isSignUp ? "Crear cuenta" : "Inicio de sesión"}</p>
 
-            <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
-              {/* Nombre */}
-              {isSignUp && (
-                <div className="flex flex-col gap-2">
-                  <label className="font-['Open_Sans:SemiBold',sans-serif] font-semibold text-[14px] text-black">
-                    Nombre
-                  </label>
-                  <div className="bg-sky-50 rounded-[8px]">
+              <form onSubmit={handleSubmit}>
+                {isSignUp && (
+                  <div className="field">
+                    <div className="label">Nombre</div>
                     <input
+                      className="input"
                       type="text"
                       value={nombre}
                       onChange={(e) => setNombre(e.target.value)}
                       placeholder="Ingrese su nombre"
-                      className="w-full bg-transparent p-[10px] outline-none text-[14px] placeholder:text-[#bbbfc1]"
                       required
                     />
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Usuario */}
-              <div className="flex flex-col gap-2">
-                <label className="font-['Open_Sans:SemiBold',sans-serif] font-semibold text-[14px] text-black">
-                  Usuario
-                </label>
-                <div className="bg-sky-50 rounded-[8px]">
+                <div className="field">
+                  <div className="label">Usuario</div>
                   <input
+                    className="input"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Ingrese su nombre de usuario"
-                    className="w-full bg-transparent p-[10px] outline-none text-[14px] placeholder:text-[#bbbfc1]"
                     required
                   />
                 </div>
-              </div>
 
-              {/* Contraseña */}
-              <div className="flex flex-col gap-2">
-                <label className="font-['Open_Sans:SemiBold',sans-serif] font-semibold text-[14px] text-black">
-                  Contraseña
-                </label>
-                <div className="bg-sky-50 rounded-[8px]">
+                <div className="field">
+                  <div className="label">Contraseña</div>
                   <input
+                    className="input"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Introduzca su contraseña"
-                    className="w-full bg-transparent p-[10px] outline-none text-[14px] placeholder:text-[#bbbfc1]"
                     required
                   />
                 </div>
-              </div>
 
-              {/* Error */}
-              {error && (
-                <div className="w-full p-[12px] bg-red-50 border border-red-200 rounded-[8px]">
-                  <p className="text-[14px] text-red-600 text-center">{error}</p>
+                {error && <div className="errorBox">{error}</div>}
+
+                <button className="btn" type="submit" disabled={loading}>
+                  {loading ? "Cargando..." : isSignUp ? "Crear cuenta" : "Iniciar sesión"}
+                </button>
+
+                <div className="links">
+                  {!isSignUp && (
+                    <button type="button" className="linkBtn" onClick={onForgotPassword}>
+                      ¿Olvidaste la contraseña?
+                    </button>
+                  )}
+
+                  <div className="signupRow">
+                    <span className="muted">{isSignUp ? "¿Ya tienes cuenta?" : "¿Aún no eres miembro?"}</span>
+                    <button
+                      type="button"
+                      className="primary"
+                      onClick={() => {
+                        setIsSignUp(!isSignUp);
+                        setError("");
+                        setNombre("");
+                        setEmail("");
+                        setPassword("");
+                      }}
+                    >
+                      {isSignUp ? "Iniciar sesión" : "Crear cuenta"}
+                    </button>
+                  </div>
                 </div>
-              )}
-
-              {/* Botón */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-[#015ca8] h-[48px] rounded-[8px] w-full hover:bg-[#004179] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-[14px]"
-              >
-                {loading ? "Cargando..." : isSignUp ? "Crear cuenta" : "Iniciar sesión"}
-              </button>
-            </form>
-
-            {/* Links */}
-            <div className="w-full flex flex-col items-center gap-6">
-              {!isSignUp && (
-                <button
-                  type="button"
-                  onClick={onForgotPassword}
-                  className="text-[#bbbfc1] text-[14px] font-semibold hover:text-[#004179] transition-colors"
-                >
-                  ¿Olvidaste la contraseña?
-                </button>
-              )}
-
-              <div className="flex items-center gap-2 text-[14px] font-semibold">
-                <span className="text-[#bbbfc1]">
-                  {isSignUp ? "¿Ya tienes cuenta?" : "¿Aún no eres miembro?"}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsSignUp(!isSignUp);
-                    setError("");
-                    setNombre("");
-                    setEmail("");
-                    setPassword("");
-                  }}
-                  className="text-[#004179] hover:underline"
-                >
-                  {isSignUp ? "Iniciar sesión" : "Crear cuenta"}
-                </button>
-              </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
