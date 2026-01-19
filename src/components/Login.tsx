@@ -1,7 +1,7 @@
 import { useState } from 'react';
-const imgLogoSytax1 = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
-const imgPexelsSteve289478521 = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
-const imgLogoSyntaxCorto1 = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
+const imgLogoSytax1 = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png"; //25 
+const imgPexelsSteve289478521 = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png"; //bc
+const imgLogoSyntaxCorto1 = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png"; //bc
 
 interface LoginProps {
   onLoginSuccess: () => void;
@@ -58,10 +58,10 @@ export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
       </div>
       
       {/* Logo grande izquierdo */}
-      <div className="absolute h-[488px] left-[161px] top-[268px] w-[400px]" data-name="Logo-Syntax-Corto 1">
-        <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgLogoSyntaxCorto1} />
+      <div className="absolute inset-0 w-[722px] h-full">
+        <img alt="" src={imgLogoSyntaxCorto1} className="absolute inset-0 w-full h-full object-cover"/>
       </div>
-
+      
       {/* Contenedor del formulario */}
       <div className="absolute content-stretch flex flex-col gap-[100px] items-center left-[911px] top-[81px] w-[374px]">
         {/* Logo y título CRM */}
