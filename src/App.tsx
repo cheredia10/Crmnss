@@ -168,15 +168,12 @@ export default function App() {
         userEmail={user?.email}
       />
       
-      {/* Main Content */}
      {/* Main Content */}
         <div className="lg:ml-[100px] pt-[60px] md:pt-[80px] min-h-screen bg-[#fafbfc]">
           <div className="p-[16px] md:p-[24px] lg:p-[32px]">
             {renderView()}
           </div>
         </div>
-
-      </div>
-    </div>
+    
   );
 }
