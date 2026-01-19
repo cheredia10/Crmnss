@@ -1,7 +1,4 @@
 import { useState } from 'react';
-import imgLogoSytax1 from "figma:asset/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
-import imgPexelsSteve289478521 from "figma:asset/34a2d73dc65cdd75feb21a18c485bd573552fb65.png";
-import imgLogoSyntaxCorto1 from "figma:asset/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
 import { signIn, signUp } from '../services/authService';
 
 interface LoginProps {
@@ -53,14 +50,22 @@ export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
       {/* Imagen de fondo */}
       <div className="absolute h-full left-0 top-0 w-[722px]" data-name="pexels-steve-28947852 1">
         <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
-          <img alt="" className="absolute max-w-none object-50%-50% object-cover size-full" src={imgPexelsSteve289478521} />
+          <img 
+            alt="" 
+            className="absolute max-w-none object-50%-50% object-cover size-full" 
+            src="/assets/34a2d73dc65cdd75feb21a18c485bd573552fb65.png" 
+          />
           <div className="absolute bg-[rgba(0,65,121,0.8)] inset-0" />
         </div>
       </div>
       
       {/* Logo grande izquierdo */}
       <div className="absolute h-[488px] left-[161px] top-[268px] w-[400px]" data-name="Logo-Syntax-Corto 1">
-        <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgLogoSyntaxCorto1} />
+        <img 
+          alt="" 
+          className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" 
+          src="/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png" 
+        />
       </div>
 
       {/* Contenedor del formulario */}
@@ -68,7 +73,11 @@ export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
         {/* Logo y título CRM */}
         <div className="content-stretch flex flex-col gap-[20px] items-center relative shrink-0 w-full">
           <div className="h-[82px] relative shrink-0 w-[232px]" data-name="Logo-Sytax 1">
-            <img alt="" className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" src={imgLogoSytax1} />
+            <img 
+              alt="" 
+              className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full" 
+              src="/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png" 
+            />
           </div>
           <p className="font-['Open_Sans:Bold',sans-serif] font-bold leading-[normal] min-w-full relative shrink-0 text-[#333333] text-[24px] text-center w-[min-content]" style={{ fontVariationSettings: "'wdth' 100" }}>
             CRM
