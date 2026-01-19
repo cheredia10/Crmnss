@@ -1,5 +1,10 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { signIn, signUp } from '../services/authService';
+
+// Definimos las rutas de tus imágenes locales
+const imgBackground = "/assets/34a2d73dc65cdd75feb21a18c485bd573552fb65.png";
+const imgSideLogo = "/assets/bc16a6151697106091ba6148dc7779a0c13a0ec1.png";
+const imgFormLogo = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png";
 
 interface LoginProps {
   onLoginSuccess: () => void;
@@ -7,170 +12,195 @@ interface LoginProps {
 }
 
 export function Login({ onLoginSuccess, onForgotPassword }: LoginProps) {
+  // Mantenemos la lógica de tu aplicación (estados)
   const [isSignUp, setIsSignUp] = useState(false);
   const [nombre, setNombre] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState(''); // Usamos username como email
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Asegúrate de que estas rutas sean las correctas en tu proyecto
-  const imgFondoIzquierdo = "/assets/34a2d73dc65cdd75feb21a18c485bd573552fb65.png"; // Imagen azul con la X
-  const imgLogoHamar = "/assets/25757e1cf266f3931e35c0dce4d580fa318a1eb6.png"; // Logo Hamar X (arriba derecha)
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
       let result;
+      // Lógica de autenticación real
       if (isSignUp) {
         if (!nombre.trim()) {
-          setError('Por favor ingrese su nombre');
-          setLoading(false);
-          return;
+           setError('Por favor complete todos los campos');
+           setLoading(false);
+           return;
         }
-        result = await signUp(nombre, email, password);
+        result = await signUp(nombre, username, password);
       } else {
-        result = await signIn(email, password);
+        result = await signIn(username, password);
       }
 
       if (result.success) {
         onLoginSuccess();
       } else {
-        setError(result.error || 'Error al autenticar');
+        setError(result.error || 'Error en la autenticación');
       }
     } catch (err) {
-      setError('Error de conexión. Por favor intente nuevamente.');
+      setError('Error de conexión');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex w-full h-screen bg-white overflow-hidden font-sans">
+    <div className="flex min-h-screen w-full bg-white font-sans text-[#333]">
       
-      {/* === LADO IZQUIERDO (Branding) === */}
-      <div className="hidden md:flex relative w-1/2 h-full bg-[#0E3D6B] items-center justify-center">
-        {/* Usamos object-cover para llenar todo el fondo azul */}
-        <img 
-          alt="Fondo Branding" 
-          className="absolute inset-0 w-full h-full object-cover"
-          src={imgFondoIzquierdo}
-        />
-        {/* Capa de protección por si la imagen tarda en cargar */}
-        <div className="absolute inset-0 bg-[#0E3D6B] -z-10"></div>
+      {/* Panel Izquierdo - Branding & Background */}
+      {/* Oculto en móviles, visible en pantallas grandes */}
+      <div className="hidden lg:flex lg:w-1/2 relative flex-col items-center justify-center overflow-hidden bg-[#004179]">
+        {/* Contenedor Imagen de Fondo */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={imgBackground} 
+            alt="Background Office" 
+            className="w-full h-full object-cover"
+          />
+          {/* Capa Azul: rgba(0,65,121,0.8) */}
+          <div className="absolute inset-0 bg-[#004179]/80" />
+        </div>
+
+        {/* Logo Lateral Grande */}
+        <div className="relative z-10 p-12 w-full max-w-[500px] flex items-center justify-center">
+          <img 
+            src={imgSideLogo} 
+            alt="New Stage Solutions Branding" 
+            className="w-full h-auto object-contain max-w-[400px]"
+          />
+        </div>
       </div>
 
-      {/* === LADO DERECHO (Formulario) === */}
-      <div className="w-full md:w-1/2 h-full flex flex-col items-center justify-center bg-white px-8 py-12">
-        
-        <div className="w-full max-w-[400px]">
+      {/* Panel Derecho - Formulario de Login */}
+      <div className="flex flex-1 flex-col items-center justify-center p-6 sm:p-12 w-full">
+        <div className="w-full max-w-[400px] flex flex-col items-center gap-10">
           
-          {/* Logo Superior */}
-          <div className="flex flex-col items-center mb-10">
-            <img 
-              alt="Hamar X Logo" 
-              className="h-[60px] object-contain mb-2" // Ajusta h-[60px] según el tamaño real deseado
-              src={imgLogoHamar} 
-            />
-            <p className="font-bold text-[#333333] text-xl tracking-wide">CRM</p>
+          {/* Header: Logo Pequeño y Título */}
+          <div className="flex flex-col items-center gap-5 w-full">
+            <div className="w-[232px] h-auto">
+              <img 
+                src={imgFormLogo} 
+                alt="HamarX CRM" 
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <h2 className="text-2xl font-bold text-[#333]">CRM</h2>
           </div>
 
-          {/* Título */}
-          <h2 className="text-2xl font-bold text-[#333333] text-center mb-8">
-            {isSignUp ? 'Crear cuenta' : 'Inicio de sesión'}
-          </h2>
+          <div className="flex flex-col items-center w-full gap-8">
+            <h1 className="text-2xl font-bold text-[#333]">
+              {isSignUp ? 'Crear cuenta' : 'Inicio de sesión'}
+            </h1>
 
-          {/* Formulario */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-            
-            {/* Campo Nombre (Solo Registro) */}
-            {isSignUp && (
+            {/* Formulario */}
+            <form onSubmit={handleLogin} className="w-full flex flex-col gap-6">
+              
+              {/* Campo Nombre (Solo visible en Registro) */}
+              {isSignUp && (
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-semibold text-black pl-1">
+                    Nombre
+                  </label>
+                  <div className="bg-[#f0f9ff] rounded-lg border border-transparent focus-within:border-[#015ca8] transition-colors">
+                    <input
+                      type="text"
+                      value={nombre}
+                      onChange={(e) => setNombre(e.target.value)}
+                      placeholder="Ingrese su nombre completo"
+                      className="w-full bg-transparent px-4 py-3 outline-none text-sm text-[#333] placeholder-[#bbbfc1]"
+                      required={isSignUp}
+                    />
+                  </div>
+                </div>
+              )}
+              
+              {/* Campo Usuario */}
               <div className="flex flex-col gap-2">
-                <label className="text-[14px] font-bold text-black ml-1">Nombre</label>
-                <input
-                  type="text"
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
-                  placeholder="Ingrese su nombre completo"
-                  className="w-full h-[50px] px-4 bg-[#F2F8FD] rounded-[6px] text-gray-700 placeholder-gray-400 outline-none focus:ring-1 focus:ring-blue-500 transition-all"
-                  required={isSignUp}
-                />
+                <label className="text-sm font-semibold text-black pl-1">
+                  Usuario
+                </label>
+                <div className="bg-[#f0f9ff] rounded-lg border border-transparent focus-within:border-[#015ca8] transition-colors">
+                  <input
+                    type="text" // Cambiado a text para aceptar usuario o email
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Ingrese su nombre de usuario"
+                    className="w-full bg-transparent px-4 py-3 outline-none text-sm text-[#333] placeholder-[#bbbfc1]"
+                    required
+                  />
+                </div>
               </div>
-            )}
 
-            {/* Campo Usuario */}
-            <div className="flex flex-col gap-2">
-              <label className="text-[14px] font-bold text-black ml-1">Usuario</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Ingrese su nombre de usuario"
-                className="w-full h-[50px] px-4 bg-[#F2F8FD] rounded-[6px] text-gray-700 placeholder-gray-400 outline-none focus:ring-1 focus:ring-blue-500 transition-all"
-                required
-              />
-            </div>
-
-            {/* Campo Contraseña */}
-            <div className="flex flex-col gap-2">
-              <label className="text-[14px] font-bold text-black ml-1">Contraseña</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Introduzca su contraseña"
-                className="w-full h-[50px] px-4 bg-[#F2F8FD] rounded-[6px] text-gray-700 placeholder-gray-400 outline-none focus:ring-1 focus:ring-blue-500 transition-all"
-                required
-              />
-            </div>
-
-            {/* Mensaje de Error */}
-            {error && (
-              <div className="p-3 bg-red-50 text-red-600 text-sm rounded text-center">
-                {error}
+              {/* Campo Contraseña */}
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold text-black pl-1">
+                  Contraseña
+                </label>
+                <div className="bg-[#f0f9ff] rounded-lg border border-transparent focus-within:border-[#015ca8] transition-colors">
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Introduzca su contraseña"
+                    className="w-full bg-transparent px-4 py-3 outline-none text-sm text-[#333] placeholder-[#bbbfc1]"
+                    required
+                  />
+                </div>
               </div>
-            )}
 
-            {/* Botón Principal */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="mt-4 w-full h-[50px] bg-[#0C5D9E] hover:bg-[#094b80] text-white font-bold rounded-[6px] transition-colors shadow-sm disabled:opacity-70"
-            >
-              {loading ? 'Cargando...' : (isSignUp ? 'Crear cuenta' : 'Iniciar sesión')}
-            </button>
-          </form>
+              {/* Mensaje de Error (Visualización nativa simple) */}
+              {error && (
+                <div className="text-red-500 text-sm text-center bg-red-50 p-2 rounded">
+                  {error}
+                </div>
+              )}
 
-          {/* Links Inferiores */}
-          <div className="mt-8 flex flex-col items-center gap-3 text-sm font-medium">
-            {!isSignUp && (
+              {/* Botón Submit */}
               <button 
-                type="button" 
-                onClick={onForgotPassword} 
-                className="text-[#bbbfc1] hover:text-[#0C5D9E] transition-colors"
+                type="submit"
+                disabled={loading}
+                className="mt-4 w-full bg-[#015ca8] hover:bg-[#014b8a] text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-sm disabled:opacity-70"
               >
-                ¿Olvidaste la contraseña?
+                {loading ? 'Cargando...' : (isSignUp ? 'Crear cuenta' : 'Iniciar sesión')}
               </button>
-            )}
-            
-            <div className="flex gap-1 text-[#bbbfc1]">
-              <span>{isSignUp ? '¿Ya tienes cuenta?' : '¿Aún no eres miembro?'}</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsSignUp(!isSignUp);
-                  setError('');
-                }}
-                className="text-[#0E3D6B] font-bold hover:underline"
-              >
-                {isSignUp ? 'Iniciar sesión' : 'Crear cuenta'}
-              </button>
+            </form>
+
+            {/* Footer Actions */}
+            <div className="flex flex-col items-center gap-8 w-full">
+              {!isSignUp && (
+                <button 
+                  type="button"
+                  onClick={onForgotPassword}
+                  className="text-sm text-[#bbbfc1] hover:text-[#015ca8] transition-colors font-semibold"
+                >
+                  ¿Olvidaste la contraseña?
+                </button>
+              )}
+              
+              <div className="flex items-center gap-2 text-sm font-semibold">
+                <span className="text-[#bbbfc1]">
+                    {isSignUp ? '¿Ya tienes cuenta?' : '¿Aún no eres miembro?'}
+                </span>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setIsSignUp(!isSignUp);
+                    setError('');
+                  }}
+                  className="text-[#004179] hover:underline"
+                >
+                  {isSignUp ? 'Iniciar sesión' : 'Crear cuenta'}
+                </button>
+              </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
