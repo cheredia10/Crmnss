@@ -89,6 +89,13 @@ export default function App() {
         return <TableroSeguimientoView onNavigateToLlamadas={handleNavigateToLlamadas} />;
       case 'configuracion':
         return <CloudTalkSettings />;
+      case "dashboard":
+        return (
+          <div style={{ padding: 24 }}>
+            <h1>Dashboard OK</h1>
+            <pre>{JSON.stringify(user, null, 2)}</pre>
+          </div>
+        );
       default:
         return <DashboardView />;
     }
@@ -162,10 +169,13 @@ export default function App() {
       />
       
       {/* Main Content */}
-      <div className="absolute left-0 lg:left-[100px] top-[60px] md:top-[80px] right-0 bottom-0 overflow-auto">
-        <div className="min-h-full p-[16px] md:p-[24px] lg:p-[32px]">
-          {renderView()}
+     {/* Main Content */}
+        <div className="lg:ml-[100px] pt-[60px] md:pt-[80px] min-h-screen bg-[#fafbfc]">
+          <div className="p-[16px] md:p-[24px] lg:p-[32px]">
+            {renderView()}
+          </div>
         </div>
+
       </div>
     </div>
   );
