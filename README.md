@@ -1,7 +1,7 @@
 
-  # CRM con seguimiento de clientes
+  # CRM HAMAR
 
-  This is a code bundle for CRM con seguimiento de clientes. The original project is available at https://www.figma.com/design/JSJz36JQyNnNMKj77lPfWc/CRM-con-seguimiento-de-clientes.
+  This is a code bundle for CRM HAMAR. The original project is available at https://www.figma.com/design/JSJz36JQyNnNMKj77lPfWc/CRM-HAMAR.
 
   ## Running the code
 
