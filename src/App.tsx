@@ -159,11 +159,20 @@ export default function App() {
       />
 
       {/* Main Content */}
-      <div className="lg:ml-[100px] pt-[60px] md:pt-[80px] min-h-screen bg-[#fafbfc]">
-        <div className="p-[16px] md:p-[24px] lg:p-[32px]">
-          {renderView()}
+        <div className={[ "pt-[60px] md:pt-[80px] min-h-screen bg-[#fafbfc] transition-all duration-300",
+            // desktop
+            isSidebarOpen ? "lg:ml-[280px]" : "lg:ml-[100px]",
+            // mobile: nunca margin-left, porque es overlay
+            "ml-0",
+          ].join(" ")}
+        >
+          <div className="relative w-full min-h-[calc(100vh-80px)] p-[16px] md:p-[24px] lg:p-[32px]">
+            {renderView()}
+          </div>
         </div>
-      </div>
+
+    
+    
     </div>
   );
 }
