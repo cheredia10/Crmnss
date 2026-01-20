@@ -28,7 +28,6 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
-  // Verificar sesión al cargar
   useEffect(() => {
     const checkSession = async () => {
       const session = await getSession();
@@ -40,7 +39,6 @@ export default function App() {
 
     checkSession();
 
-    // Escuchar cambios en la autenticación
     const { data } = onAuthStateChange((newUser) => {
       setUser(newUser);
     });
@@ -72,50 +70,55 @@ export default function App() {
 
     switch (currentView) {
       case 'dashboard':
-        return <DashboardView userName={user?.nombre} />;
-      case 'clientes':
-        return <ClientesView onClientSelect={handleClientSelect} />;
-      case 'llamadas':
-        return <LlamadasView prefilledData={llamadaPrefilledData || undefined} />;
-      case 'sms':
-        return <SMSView />;
-      case 'voicemails':
-        return <VoicemailsView />;
-      case 'documentos':
-        return <DocumentosView />;
-      case 'archivos':
-        return <SeguimientoView />;
-      case 'tablero':
-        return <TableroSeguimientoView onNavigateToLlamadas={handleNavigateToLlamadas} />;
-      case 'configuracion':
-        return <CloudTalkSettings />;
-      case "dashboard":
+        // DEBUG temporal: si quieres, deja esto para confirmar que renderiza
         return (
           <div style={{ padding: 24 }}>
             <h1>Dashboard OK</h1>
             <pre>{JSON.stringify(user, null, 2)}</pre>
           </div>
         );
+
+      case 'clientes':
+        return <ClientesView onClientSelect={handleClientSelect} />;
+
+      case 'llamadas':
+        return <LlamadasView prefilledData={llamadaPrefilledData || undefined} />;
+
+      case 'sms':
+        return <SMSView />;
+
+      case 'voicemails':
+        return <VoicemailsView />;
+
+      case 'documentos':
+        return <DocumentosView />;
+
+      case 'archivos':
+        return <SeguimientoView />;
+
+      case 'tablero':
+        return <TableroSeguimientoView onNavigateToLlamadas={handleNavigateToLlamadas} />;
+
+      case 'configuracion':
+        return <CloudTalkSettings />;
+
       default:
-        return <DashboardView />;
+        return <DashboardView userName={user?.nombre} />;
     }
   };
 
   const handleViewChange = (view: string) => {
-    // Limpiar datos prellenados cuando se cambia de vista
     if (view !== 'llamadas') {
       setLlamadaPrefilledData(null);
     }
     setCurrentView(view);
-    // Cerrar sidebar en móvil después de seleccionar
     setIsSidebarOpen(false);
   };
 
   const handleLoginSuccess = () => {
-    // La sesión se actualizará automáticamente por el listener
+    // la sesión se actualiza por el listener
   };
 
-  // Mostrar pantalla de carga
   if (loading) {
     return (
       <div className="size-full bg-white flex items-center justify-center">
@@ -129,51 +132,47 @@ export default function App() {
     );
   }
 
-  // Mostrar login o recuperación de contraseña si no hay usuario autenticado
   if (!user) {
     if (showForgotPassword) {
       return <ForgotPassword onBackToLogin={() => setShowForgotPassword(false)} />;
     }
+
     return (
-      <Login 
+      <Login
         onLoginSuccess={handleLoginSuccess}
         onForgotPassword={() => setShowForgotPassword(true)}
       />
     );
   }
 
-  // Mostrar CRM si hay usuario autenticado
   return (
     <div className="size-full bg-[#fafbfc] relative">
-      {/* Overlay para móvil */}
       {isSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
-      <Sidebar 
-        currentView={currentView} 
+      <Sidebar
+        currentView={currentView}
         onViewChange={handleViewChange}
         isOpen={isSidebarOpen}
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
       />
-      
-      {/* Navbar */}
-      <Navbar 
+
+      <Navbar
         onMenuClick={() => setIsSidebarOpen(true)}
         userName={user?.nombre}
         userEmail={user?.email}
       />
-      
-     {/* Main Content */}
-        <div className="lg:ml-[100px] pt-[60px] md:pt-[80px] min-h-screen bg-[#fafbfc]">
-          <div className="p-[16px] md:p-[24px] lg:p-[32px]">
-            {renderView()}
-          </div>
+
+      {/* Main Content */}
+      <div className="lg:ml-[100px] pt-[60px] md:pt-[80px] min-h-screen bg-[#fafbfc]">
+        <div className="p-[16px] md:p-[24px] lg:p-[32px]">
+          {renderView()}
         </div>
-    
+      </div>
+    </div>
   );
 }
