@@ -64,19 +64,10 @@ export default function App() {
   };
 
   const renderView = () => {
-    if (currentView === 'cliente-detail' && selectedClienteId) {
-      return <ClienteDetailView clienteId={selectedClienteId} onBack={handleBackToClientes} />;
-    }
-
+        
     switch (currentView) {
       case 'dashboard':
-        // DEBUG temporal: si quieres, deja esto para confirmar que renderiza
-        return (
-          <div style={{ padding: 24 }}>
-            <h1>Dashboard OK</h1>
-            <pre>{JSON.stringify(user, null, 2)}</pre>
-          </div>
-        );
+          return <DashboardView userName={user?.nombre} />
 
       case 'clientes':
         return <ClientesView onClientSelect={handleClientSelect} />;
