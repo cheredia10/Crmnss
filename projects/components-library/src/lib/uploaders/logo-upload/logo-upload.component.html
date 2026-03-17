@@ -1,0 +1,54 @@
+<div class="logo-upload-container">
+  <div
+    class="upload-area"
+    [class.has-file]="hasFile()"
+    [class.drag-over]="isDragOver()"
+    [class.disabled]="disabled()"
+    [class.error]="hasError()"
+    (click)="triggerFileInput()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)">
+
+    @if (hasFile() && previewUrl()) {
+      <!-- Preview de la imagen -->
+      <div class="image-preview">
+        <img [src]="previewUrl()" [alt]="selectedFile()?.name" class="preview-image">
+        <button
+          class="remove-button"
+          (click)="removeFile(); $event.stopPropagation()"
+          [disabled]="disabled()"
+          type="button">
+          ✕
+        </button>
+      </div>
+    } @else {
+      <!-- Estado sin archivo -->
+      <div class="upload-placeholder">
+        <div class="upload-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M4 16L4 17C4 18.1046 4.89543 19 6 19L18 19C19.1046 19 20 18.1046 20 17V16M16 8L12 4M12 4L8 8M12 4V16"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="upload-text">{{ placeholder() }}</span>
+      </div>
+    }
+
+    <!-- Input oculto -->
+    <input
+      #fileInput
+      type="file"
+      class="file-input"
+      [accept]="acceptedTypes()"
+      [disabled]="disabled()"
+      (change)="onFileSelect($event)">
+  </div>
+
+  <!-- Mensaje de error -->
+  @if (hasError()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+  }
+</div>

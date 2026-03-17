@@ -1,0 +1,126 @@
+@use '../../styles/index' as styles;
+
+.indicator-card {
+    background-color: styles.get-color('success', 'dark');
+    /* Verde por defecto */
+    border-radius: 8px;
+    padding: 8px;
+    color: #FFF;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    &.clickable {
+        cursor: pointer;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+.indicator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.indicator-title {
+    @include styles.typography('body');
+    font-weight: 700;
+}
+
+.indicator-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+
+    svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+    }
+}
+
+.indicator-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.indicator-value-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr 20fr;
+    align-items: center;
+    width: 100%;
+}
+
+.indicator-label {
+    @include styles.typography('h3', 'semi-bold');
+    grid-column: 1; // izquierda
+    justify-self: start;
+}
+
+.indicator-value {
+    @include styles.typography('h2', 'semi-bold');
+    word-break: break-word;
+    grid-column: 2 / 4; // ocupa columnas 2 y 3 para centrar
+    justify-self: center;
+    text-align: center;
+}
+
+
+.indicator-trend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    opacity: 0.9;
+    margin-top: auto;
+}
+
+.trend-icon {
+    font-size: 14px;
+
+    &.trend-up {
+        color: #c8e6c9;
+    }
+
+    &.trend-down {
+        color: #ffcdd2;
+    }
+
+    &.trend-neutral {
+        color: #f5f5f5;
+    }
+}
+
+.trend-value {
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .indicator-card {
+        min-height: 100px;
+        padding: 16px;
+    }
+
+    .indicator-title {
+        font-size: 14px;
+    }
+
+    .indicator-value {
+        font-size: 16px;
+    }
+}

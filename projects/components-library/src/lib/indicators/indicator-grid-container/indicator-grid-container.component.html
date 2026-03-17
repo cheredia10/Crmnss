@@ -1,0 +1,17 @@
+<div class="indicators-grid" [ngClass]="gridClass()">
+  @for (indicator of indicators(); track indicator; let i = $index) {
+    <lib-indicator-1
+      [title]="indicator.title"
+      [value]="indicator.value"
+      [label]="indicator.label || 'Nº'"
+      [color]="indicator.color || 'primary'"
+      [customColor]="indicator.customColor || ''"
+      [icon]="indicator.icon || ''"
+      [iconSvg]="indicator.iconSvg || ''"
+      [trend]="indicator.trend || 'neutral'"
+      [trendValue]="indicator.trendValue || ''"
+      [clickable]="indicator.clickable || false"
+      (click)="onIndicatorClick(indicator, i)"
+    ></lib-indicator-1>
+  }
+</div>

@@ -1,0 +1,24 @@
+<button [class]="buttonClasses()" [disabled]="disabled()" [style.width]="formattedWidth()"
+    [style.height]="formattedHeight()">
+    <!-- Renderiza el icono si se ha proporcionado uno -->
+    @if (hasIcon()) {
+    <span class="icon-wrapper">
+        <!-- 
+        Aquí está la corrección: anidamos los @if para poder usar el alias 'as'
+        en cada bloque primario.
+      -->
+        @if (iconName(); as name) {
+        <lib-icon [name]="name" [size]="iconSize()" color="currentColor" />
+        } @else {
+        @if (matIconName(); as name) {
+        <mat-icon [style.color]="matIconColor()">{{name}}</mat-icon>
+        }
+        }
+    </span>
+    }
+
+    <!-- El contenido del botón (texto) va dentro de un span para un mejor control del layout -->
+    <span class="content-wrapper">
+        <ng-content></ng-content>
+    </span>
+</button>

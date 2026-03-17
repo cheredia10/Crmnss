@@ -1,0 +1,111 @@
+@use '../../styles/index' as styles;
+.input-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  &.small {
+    .input-icon {
+      width: styles.get-spacing('16');
+      height: styles.get-spacing('16');
+    }
+  }
+
+  &.medium {
+    .input-icon {
+      width: styles.get-spacing('24');
+      height: styles.get-spacing('24');
+    }
+  }
+
+  &.large {
+    .input-icon {
+      width: styles.get-spacing('32');
+      height: styles.get-spacing('32');
+    }
+  }
+}
+
+.input-icon {
+  position: absolute;
+  color: styles.get-color('secondary-text');
+  pointer-events: none;
+  fill: currentColor;
+
+  &.left-icon {
+    left: styles.get-spacing('16');
+  }
+
+  &.right-icon {
+    right: styles.get-spacing('16');
+  }
+}
+
+.custom-input {
+  width: 100%;
+  border: 1px solid styles.get-color('stroke','grey');
+  border-radius: styles.get-spacing('8');
+  padding: styles.get-spacing('8');
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: styles.get-color('white-background');
+  color: styles.get-color('primary-text');
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: styles.get-color('primary-blue');
+    box-shadow: 0 0 0 2px rgba(styles.get-color('primary-blue', 'light'), 0.25);
+  }
+
+  &.primary {
+    border-color: styles.get-color('stroke','grey');
+    &:focus {
+      border-color: styles.get-color('primary-blue', 'dark');
+    }
+  }
+
+  &.secondary {
+    border-color: styles.get-color('secondary-blue');
+    &:focus {
+      border-color: styles.get-color('secondary-blue', 'dark');
+    }
+  }
+
+  &.danger {
+    border-color: styles.get-color('error');
+    &:focus {
+      border-color: styles.get-color('error', 'dark');
+    }
+  }
+
+  &.small {
+    padding: 14px styles.get-spacing('16');
+    font-size: 14px;
+  }
+
+  &.medium {
+    padding: styles.get-spacing('16') styles.get-spacing('24');
+    font-size: 16px;
+  }
+
+  &.large {
+    padding: styles.get-spacing('24') styles.get-spacing('32');
+    font-size: 18px;
+  }
+
+  &:disabled {
+    background-color: styles.get-color('light-background');
+    cursor: not-allowed;
+    opacity: 0.65;
+    border-color: styles.get-color('stroke', 'grey');
+    color: styles.get-color('secondary-text');
+  }
+
+  &.has-left-icon {
+    padding-left: styles.get-spacing('48');
+  }
+
+  &.has-right-icon {
+    padding-right: styles.get-spacing('48');
+  }
+}

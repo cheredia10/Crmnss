@@ -1,0 +1,28 @@
+<div class="input-container" [class]="size()" [style.width]="width()">
+    @if(leftIcon() && leftIcon() !== ''){
+        <lib-icon 
+            class="input-icon left-icon"
+            [name]="leftIcon()"
+            [size]="leftIconSize()"
+            [color]="'currentColor'"
+        />
+    }
+    <input 
+    [type]="type()" 
+    [class]="'custom-input ' + variant() + ' ' + size() + (leftIcon() ? ' has-left-icon' : '') + (rightIcon() ? ' has-right-icon' : '')" 
+    [placeholder]="placeholder()"
+    [(ngModel)]="value" 
+    [disabled]="disabled()" 
+    [style.height]="height()"
+    (blur)="onBlur()" 
+    (keydown.enter)="keyEnter.emit()">
+
+    @if(rightIcon() && rightIcon() !== ''){ 
+        <lib-icon 
+            class="input-icon right-icon"
+            [name]="rightIcon()"
+            [size]="rightIconSize()"
+            [color]="'currentColor'"
+        />
+    }
+</div>

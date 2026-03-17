@@ -1,0 +1,53 @@
+@use "sass:map";
+
+// Familias de fuente
+$font-family: 'Open Sans';
+
+// Definición de pesos
+$font-weights: (
+  'regular': 400,
+  'semi-bold': 600
+);
+
+// Definición de tamaños
+$font-sizes: (
+  'h1': 48px,
+  'h2': 32px,
+  'h3': 24px,
+  'body': 16px,
+  'label': 14px,
+  'small': 12px
+);
+
+// Mixins para tipografía
+@mixin typography($size, $weight: 'regular') {
+  font-family: $font-family;
+  font-size: map.get($font-sizes, $size);
+  font-weight: map.get($font-weights, $weight);
+}
+
+
+// Clases de utilidad
+.text-h1 {
+  @include typography('h1', 'semi-bold');
+}
+
+.text-h2 {
+  @include typography('h2', 'semi-bold');
+}
+
+.text-h3 {
+  @include typography('h3', 'semi-bold');
+}
+
+.text-body {
+  @include typography('body', 'regular');
+}
+
+.text-label {
+  @include typography('label', 'regular');
+}
+
+.text-small {
+  @include typography('small', 'regular');
+}

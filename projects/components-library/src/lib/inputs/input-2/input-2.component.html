@@ -1,0 +1,13 @@
+<div class="search-container">
+    @if (size() === 'full') {
+    <div [class]="'search-input-container ' + variant()">
+        <lib-icon [name]="iconName()"></lib-icon>
+        <input class="search-input" [placeholder]="placeholder()" [value]="searchValue()" [disabled]="disabled()"
+            (input)="onInput($event)" (focus)="onFocus.emit()" (blur)="onBlur.emit()" type="text" />
+    </div>
+    } @else {
+    <div [class]="'search-button ' + variant()">
+        <lib-icon [name]="iconName()"></lib-icon>
+    </div>
+    }
+</div>

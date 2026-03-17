@@ -1,0 +1,16 @@
+<div class="checkbox-container">
+  @switch (mode) {
+    @case ('header') {
+      <div class="checkbox-header">
+        <input type="checkbox" class="checkbox" [id]="id()" [checked]="allSelected()" (change)="toggleAll.emit()" />
+        <label [for]="id()" class="checkbox-label"></label>
+      </div>
+    }
+    @case ('row') {
+      <div>
+        <input type="checkbox" class="checkbox" [id]="id()" [checked]="checked()" (change)="toggleOne.emit(id())" />
+        <label [for]="id()" class="checkbox-label"></label>
+      </div>
+    }
+  }
+</div>

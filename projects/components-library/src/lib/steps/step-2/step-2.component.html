@@ -1,0 +1,13 @@
+<div class="step-item" [ngClass]="['status-' + status(), 'size-' + size()]" (click)="onClick()">
+  <div class="step-indicator">
+    @if (!icon()) {
+      <span class="step-content">{{ number() }}</span>
+    }
+    @if (icon()) {
+      <span class="step-icon">{{ icon() }}</span>
+    }
+  </div>
+  <div class="step-label">
+    {{ label() }}
+  </div>
+</div>

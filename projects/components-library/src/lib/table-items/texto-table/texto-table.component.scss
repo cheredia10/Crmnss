@@ -1,0 +1,27 @@
+@use '../../styles/index' as styles;
+
+.text-table-container {
+    display: flex;
+    width: 98px;
+    max-height: 44px;
+    padding: 4px;
+    align-items: center;
+    //gap: 12px;
+    @include styles.typography('label', 'regular');
+}
+
+.variant- {
+
+    &edit {
+        background-color: styles.get-color('primary-blue', 'light');
+    }
+
+    &error {
+        background-color: styles.get-color('primary-blue', 'light');
+        border: 1px solid styles.get-color('error', 'light');
+    }
+
+    &focused {
+        border: 1px solid styles.get-color('medium-blue', 'light');
+    }
+}

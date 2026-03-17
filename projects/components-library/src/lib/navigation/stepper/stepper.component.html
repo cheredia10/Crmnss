@@ -1,0 +1,25 @@
+<div class="stepper-container">
+  @for (step of steps(); track step.number; let isLast = $last) {
+    <div class="step-item">
+      <div
+        class="step-circle"
+        [class.step-done]="step.status === 'done'"
+        [class.step-active]="step.status === 'active'"
+        [class.step-inactive]="step.status === 'inactive'">
+        @if (step.status === 'done') {
+          <span class="step-check">✓</span>
+        } @else {
+          <span class="step-number">{{ step.number }}</span>
+        }
+      </div>
+
+      @if (!isLast) {
+        <div
+          class="step-line"
+          [class.step-line-active]="step.status === 'done'"
+          [class.step-line-inactive]="step.status !== 'done'">
+        </div>
+      }
+    </div>
+  }
+</div>

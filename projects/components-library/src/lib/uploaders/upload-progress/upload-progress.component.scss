@@ -1,0 +1,84 @@
+@use '../../styles/index' as styles;
+
+.upload-progress-container {
+    background: styles.get-color('white-background', 'light');
+    border: 1px solid styles.get-color('stroke', 'grey');
+    border-radius: 12px;
+    padding: styles.get-spacing('16');
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    gap: 8px;
+}
+.upload-progress-container-left-content{
+    display: flex;
+    //justify-content: space-between;
+}
+
+.upload-info {
+    flex: 1;
+
+    .upload-text {
+        display: block;
+        @include styles.typography('small', 'semi-bold');
+        color: styles.get-color('primary', 'light');
+        margin-bottom: 4px;
+    }
+
+    .upload-details {
+        @include styles.typography('small');
+        color: styles.get-color('stroke','grey');
+    }
+}
+
+.progress-bar {
+    height: 8px;
+    background: styles.get-color('light-grey', 'light');
+    border-radius: 100px;
+    overflow: hidden;
+
+    .progress-fill {
+        height: 100%;
+        background: styles.get-color('medium-blue', 'light');
+        border-radius: 100px;
+        transition: width 0.3s ease;
+    }
+}
+
+.upload-controls {
+    display: flex;
+}
+
+.control-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .upload-progress-container {
+        flex-direction: column;
+        gap: 12px;
+
+        .progress-bar {
+            margin: 0;
+            order: 2;
+        }
+
+        .upload-controls {
+            order: 3;
+            justify-content: center;
+        }
+    }
+}

@@ -1,0 +1,6 @@
+<div class="status-item" (click)="onClick()">
+    <span class="status-icon" [ngClass]="'status-' + iconType()">
+        {{ getIconText() }}
+    </span>
+    <span class="item-text">{{ text() }}</span>
+</div>

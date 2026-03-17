@@ -1,0 +1,70 @@
+<div class="organigrama-upload-container">
+  <!-- Header -->
+  <div class="upload-header">
+    <h2 class="upload-title">{{ title() }}</h2>
+
+    <div class="header-controls">
+      <!-- Dropdown Container -->
+      <div class="dropdown-container">
+        <!-- Falso select que abre el explorador de archivos. ESTE ES EL CORRECTO -->
+        <div class="organigrama-select-facade" (click)="triggerFileInput()">
+          <span [class.placeholder]="!selectedFileName()">
+            {{ selectedFileName() || searchPlaceholder() }}
+          </span>
+          <div class="dropdown-arrow">
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+              <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action buttons - SEPARADOS del dropdown -->
+      <div class="action-buttons">
+        <button class="icon-button download-btn" (click)="onDownload()" [disabled]="!hasDocument()"
+          [title]="downloadButtonLabel()">
+          <lib-icon name="file-download"></lib-icon>
+        </button>
+
+        <button class="icon-button info-btn" (click)="onInfo()" [title]="infoButtonLabel()">
+          <lib-icon name="info"></lib-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drag & Drop Area -->
+  <div class="drop-zone" [class.drag-over]="isDragOver()" (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" (click)="triggerFileInput()">
+    <div class="drop-zone-content">
+      <div class="drop-zone-text">
+        {{ dropZoneText() }}
+      </div>
+    </div>
+
+    <!-- Hidden file input -->
+    <input #fileInput type="file" class="file-input" [accept]="acceptedTypes()" [multiple]="allowMultiple()"
+      (change)="onFileSelect($event)" />
+  </div>
+
+  <!-- Footer -->
+  <div class="upload-footer">
+    <div class="file-count">
+      {{ fileCount() }} {{ fileCount() === 1 ? fileLabelSingular() : fileLabelPlural() }}
+    </div>
+
+    <div class="footer-buttons">
+      <button class="action-button delete-btn" (click)="onDelete()" [disabled]="fileCount() === 0">
+        {{ deleteButtonText() }}
+      </button>
+
+      <button class="action-button upload-btn" (click)="onUploadFiles()"
+        [disabled]="fileCount() === 0 || disableUpload()">
+        <lib-icon name="cloud_upload"></lib-icon>
+        {{ uploadButtonText() }}
+      </button>
+
+    </div>
+  </div>
+</div>

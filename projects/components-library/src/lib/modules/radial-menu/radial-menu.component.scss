@@ -1,0 +1,180 @@
+.radial-menu-container {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+
+    // Extender el área de hover para cubrir las opciones radiales
+    padding: 89px 136px; // Área de hover: 89px vertical, 136px horizontal
+    margin: -89px -136px; // Compensar el padding para no afectar el layout
+}
+
+.radial-menu-container.disabled .central-button svg circle {
+  fill: #cccccc !important;
+}
+
+.central-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.central-button:hover {
+    transform: scale(1.05);
+}
+
+.center-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.center-icon svg {
+    width: 36px;
+    height: 36px;
+}
+
+.menu-label {
+    margin-top: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+    transition: opacity 0.2s ease;
+}
+
+/* Ocultar label durante hover */
+.radial-menu-container:hover .menu-label {
+    opacity: 0;
+}
+
+.radial-options {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.radial-options.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.radial-option {
+    position: absolute;
+    top: -24px;
+    left: -24px;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-drag: none;
+    z-index: 10;
+}
+
+.option-background {
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+
+.option-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 11;
+    transition: opacity 0.2s ease;
+}
+
+/* Normal state - show normal icon, hide hover icon */
+.option-icon.normal {
+    opacity: 1;
+}
+
+.option-icon.hover {
+    opacity: 0;
+}
+
+/* Hover state - hide normal icon, show hover icon, change background */
+.radial-option:hover .option-background circle {
+    fill: #004179 !important;
+    fill-opacity: 1 !important;
+}
+
+.radial-option:hover .option-icon.normal {
+    opacity: 0;
+}
+
+.radial-option:hover .option-icon.hover {
+    opacity: 1;
+}
+
+/* Simple tooltip styles */
+.simple-tooltip {
+    position: absolute;
+    bottom: 60px; /* Position above the option */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 1000;
+}
+
+/* Arrow for tooltip */
+.simple-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #333;
+}
+
+/* Show tooltip on hover */
+.radial-option:hover .simple-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.option-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Animaciones simplificadas - solo opacity */
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .radial-menu-container {
+        transform: scale(0.9);
+    }
+
+    .menu-label {
+        font-size: 14px;
+    }
+}

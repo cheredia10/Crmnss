@@ -1,0 +1,50 @@
+<div class="radial-menu-container"
+     [class.disabled]="isDisabled"
+     (mouseenter)="onCenterHover(true)"
+     (mouseleave)="onCenterHover(false)">
+
+    <!-- Central Button -->
+    <div class="central-button">
+        <svg [attr.width]="size" [attr.height]="size" viewBox="0 0 75 75" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <circle cx="37.5001" cy="37.5009" r="37.5009" transform="rotate(90 37.5001 37.5009)" fill="#1465BB" />
+        </svg>
+
+        <!-- Center Icon -->
+        <div class="center-icon">
+            <lib-icon [name]="centerIcon" [size]="36"></lib-icon>
+        </div>
+    </div>
+
+    <!-- Label -->
+    <div class="menu-label">{{ label }}</div>
+
+    <!-- Radial Options -->
+    <div class="radial-options" [class.visible]="isActive">
+        <div *ngFor="let option of options; let i = index" class="radial-option"
+            [style.transform]="'translate(' + getOptionPosition(i).x + 'px, ' + getOptionPosition(i).y + 'px)'"
+            (click)="onOptionClick(option, $event)">
+
+            <!-- Option Button Background -->
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
+                class="option-background">
+                <circle cx="24" cy="24" r="23.5" fill="#1465BB" fill-opacity="0.1" stroke="#004179" />
+            </svg>
+
+            <!-- Option Icon for normal state -->
+            <div class="option-icon normal">
+                <lib-icon [name]="option.icon" [size]="24"></lib-icon>
+            </div>
+
+            <!-- Option Icon for hover state (white version) -->
+            <div class="option-icon hover" *ngIf="option.icon === 'file-plus-02'">
+                <lib-icon name="file-plus-02-white" [size]="24"></lib-icon>
+            </div>
+
+            <!-- Simple CSS Tooltip -->
+            <div class="simple-tooltip" *ngIf="option.label">
+                {{ option.label }}
+            </div>
+        </div>
+    </div>
+</div>

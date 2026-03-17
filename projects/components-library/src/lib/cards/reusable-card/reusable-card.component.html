@@ -1,0 +1,12 @@
+<div class="card-container" [style.width.px]="width()" [style.height.px]="height()" (click)="handleCardClick()"
+    role="button" tabindex="0" (keydown.enter)="handleCardClick()" (keydown.space)="handleCardClick()">
+    <div class="card-content">
+        <div class="image-container">
+            <img [ngSrc]="imageUrl()" [alt]="imageAlt()" width="140" height="140" class="card-image" priority />
+        </div>
+
+        <h2 class="card-title">{{ title() }}</h2>
+
+        <p class="card-content-text">{{ content() }}</p>
+    </div>
+</div>

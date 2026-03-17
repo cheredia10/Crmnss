@@ -1,0 +1,123 @@
+@use '../../styles/index' as styles;
+
+:host {
+    --button-size: 40px; // Default a 'medium'
+    --icon-size: 20px; // Default icon size para 'medium'
+}
+
+.icon-button {
+    //
+    width: var(--button-size);
+    height: var(--button-size);
+    //
+    border: none;
+    border-radius: 50%;
+    /* Hace el botón redondo */
+    padding: 0;
+    /* Eliminar padding por defecto */
+    display: flex; //antes inline-flex
+    /* Para centrar el ícono */
+    align-items: center;
+    /* Centra el ícono verticalmente */
+    justify-content: center;
+    /* Centra el ícono horizontalmente */
+    cursor: pointer;
+    font-size: 18px;
+    /* Tamaño del ícono (ajustar según sea necesario) */
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    outline: none;
+    /* Quitar el outline por defecto al hacer foco, considera alternativas de foco */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    -webkit-tap-highlight-color: transparent; // Mejora para móviles
+
+    /* Sombra sutil */
+    &.primary {
+        background-color: styles.get-color('medium-blue', 'light');
+        color: white;
+
+        // @include dark-mode {
+        //     background-color: get-color('primary-blue', 'dark');
+        //     color: get-color('white-background', 'dark');
+        // }
+    }
+
+    &.secondary {
+        background-color: styles.get-color('secondary-blue', 'light');
+        color: styles.get-color('white-background', 'light');
+
+        @include styles.dark-mode {
+            background-color: styles.get-color('secondary-blue', 'dark');
+            color: styles.get-color('white-background', 'dark');
+        }
+    }
+
+    &.success {
+        background-color: styles.get-color('success', 'light');
+        color: styles.get-color('white-background', 'light');
+
+        @include styles.dark-mode {
+            background-color: styles.get-color('success', 'dark');
+            color: styles.get-color('white-background', 'dark');
+        }
+    }
+
+    &.danger {
+        background-color: styles.get-color('error', 'light');
+        color: styles.get-color('white-background', 'light');
+
+        @include styles.dark-mode {
+            background-color: styles.get-color('error', 'dark');
+            color: styles.get-color('white-background', 'dark');
+        }
+    }
+
+    // Variantes de tamaño
+    &.large {
+        --button-size: 60px;
+        --icon-size: 32px; // Icono más grande para botón grande
+    }
+
+    &.medium {
+        --button-size: 40px;
+        --icon-size: 20px; // Icono mediano para botón mediano
+    }
+
+    &.small {
+        --button-size: 28px; // Un poco más grande para ser "tappable"
+        --icon-size: 16px; // Icono pequeño para botón pequeño
+    }
+
+    &:hover {
+        filter: brightness(1.1); // Efecto de hover genérico y elegante
+    }
+
+    &:active {
+        transform: scale(0.95); // Feedback visual al presionar
+    }
+
+    &:focus-visible {
+        // Mejor que quitar el outline, es estilizarlo
+        outline: 2px solid styles.get-color('primary-blue', 'light');
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+        filter: none;
+    }
+
+    // ✅ SOLUCIÓN: Asegurar que el ícono interno también se comporte bien.
+    // Esto aplica a cualquier elemento hijo directo del botón.
+    &>* {
+        // Usar la variable de tamaño de ícono
+        font-size: var(--icon-size);
+        // A veces los iconos SVG necesitan esto para escalar bien
+        width: var(--icon-size);
+        height: var(--icon-size);
+        // Forzar que el color sea heredado o blanco
+        color: white;
+    }
+}

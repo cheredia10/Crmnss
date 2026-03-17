@@ -1,0 +1,27 @@
+<div
+  class="module-card"
+  [class.module-card--active]="module().isActive"
+  (click)="onModuleClick()">
+
+  <!-- Círculo principal del módulo -->
+  <div class="module-main">
+    <div class="module-circle">
+      <span class="module-icon">{{ module().icon }}</span>
+    </div>
+    <div class="module-title">{{ module().title }}</div>
+  </div>
+
+  <!-- Submódulos (solo visible cuando está activo) -->
+  @if (module().isActive && module().subModules && module().subModules!.length > 0) {
+    <div class="submodules-container">
+      @for (subModule of module().subModules!; track subModule.id) {
+        <button
+          class="submodule-circle"
+          (click)="onSubModuleClick(subModule); $event.stopPropagation()"
+          [title]="subModule.title">
+          <span class="submodule-icon">{{ subModule.icon }}</span>
+        </button>
+      }
+    </div>
+  }
+</div>

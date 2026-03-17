@@ -1,0 +1,84 @@
+<div class="toolbar" role="region" [attr.aria-label]="tableControlsAriaLabel()">
+    <div class="left">
+        <div class="control">
+            <button type="button" class="select-like" [class.open]="isSizeOpen()" aria-haspopup="menu" [attr.aria-expanded]="isSizeOpen()"
+                (click)="toggleSizeMenu()" (keydown.enter)="toggleSizeMenu()" (keydown.space)="toggleSizeMenu()">
+                <span class="label">{{ labelPageSize() }}</span>
+                <span class="caret caret-blue" aria-hidden="true">
+                    <span class="material-icons">keyboard_arrow_down</span>
+                </span>
+            </button>
+
+            @if (isSizeOpen()) {
+            <ul class="dropdown" role="menu" [attr.aria-label]="pageSizeAriaLabel()">
+                @for (opt of pageSizeOptions(); track opt) {
+                <li role="none">
+                    <button type="button" class="menu-item" role="menuitem" [class.selected]="opt === pageSize()"
+                        (click)="selectPageSize(opt)">
+                        <span class="item-count">{{
+                            opt < 100 ? ('' + opt).padStart(2, '0' ) : opt }}</span>
+                                <span class="item-text">{{ itemsPerPageLabel() }}</span>
+                    </button>
+                </li>
+                }
+            </ul>
+            }
+        </div>
+
+        @if (showDownload()) {
+        <div class="control">
+            <button type="button" class="download-btn" [class.open]="isDownloadOpen()" aria-haspopup="menu" [attr.aria-expanded]="isDownloadOpen()"
+                (click)="toggleDownloadMenu()" (keydown.enter)="toggleDownloadMenu()"
+                (keydown.space)="toggleDownloadMenu()">
+                <span>{{ downloadTableLabel() }}</span>
+                <span class="caret caret-white" aria-hidden="true">
+                    <span class="material-icons">keyboard_arrow_down</span>
+                </span>
+            </button>
+
+            @if (isDownloadOpen()) {
+            <ul class="dropdown" role="menu" [attr.aria-label]="downloadOptionsAriaLabel()">
+                @for (opt of downloadOptions(); track opt.value) {
+                <li role="none">
+                    <button type="button" class="menu-item" role="menuitem" (click)="selectDownload(opt.value)">
+                        {{ opt.label }}
+                    </button>
+                </li>
+                }
+            </ul>
+            }
+        </div>
+        }
+    </div>
+
+    <div class="right">
+        @if (totalPages() > 1) {
+        <nav class="paginator" role="navigation" [attr.aria-label]="paginationAriaLabel()" tabindex="0"
+            (keydown.arrowLeft)="goToPrevious()" (keydown.arrowRight)="goToNext()">
+            <button class="nav-button" type="button" [disabled]="currentPage() === 1" (click)="goToPrevious()"
+                [attr.aria-label]="previousPageAriaLabel()" [attr.title]="previousPageAriaLabel()">
+                <span class="material-icons">chevron_left</span>
+            </button>
+
+            <div class="pages" role="list">
+                @for (page of pages(); track trackByPage($index, page)) {
+                @if (typeof page === 'string') {
+                <span class="ellipsis" aria-hidden="true">…</span>
+                } @else {
+                <button class="page-button" type="button" [class.active]="page === currentPage()"
+                    (click)="goToPage(page)" [attr.aria-current]="page === currentPage() ? 'page' : null"
+                    [attr.aria-label]="goToPageAriaLabel() + ' ' + page" role="listitem">
+                    {{ page }}
+                </button>
+                }
+                }
+            </div>
+
+            <button class="nav-button" type="button" [disabled]="currentPage() === totalPages()" (click)="goToNext()"
+                [attr.aria-label]="nextPageAriaLabel()" [attr.title]="nextPageAriaLabel()">
+                <span class="material-icons">chevron_right</span>
+            </button>
+        </nav>
+        }
+    </div>
+</div>

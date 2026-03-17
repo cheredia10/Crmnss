@@ -1,0 +1,21 @@
+<div class="label-container" [ngStyle]="{ width: width() }">
+  <label [attr.for]="forId()" class="label">
+    {{ text() }}
+    @if (required()) {
+      <span class="required">*</span>
+    }
+  </label>
+  
+  <!-- Ícono de información -->
+  @if (showInfoIcon() && infoTooltip()) {
+    <button 
+      type="button"
+      class="info-icon-btn" 
+      libTooltip="{{ infoTooltip() }}"
+      [tooltipPosition]="tooltipPosition()"
+      [tooltipTheme]="tooltipTheme()"
+      (click)="onInfoClick()">
+      <lib-icon [name]="infoIconName()"></lib-icon>
+    </button>
+  }
+</div>

@@ -1,0 +1,15 @@
+<div class="stage-circle-container">
+  <!-- Círculo simple con color configurable -->
+  <svg 
+    [attr.width]="size()" 
+    [attr.height]="size()" 
+    [attr.viewBox]="'0 0 ' + size() + ' ' + size()" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg">
+    <circle 
+      [attr.cx]="size() / 2" 
+      [attr.cy]="size() / 2" 
+      [attr.r]="size() / 2" 
+      [attr.fill]="status().color" />
+  </svg>
+</div>

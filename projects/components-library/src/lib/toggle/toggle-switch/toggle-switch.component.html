@@ -1,0 +1,16 @@
+<div
+  class="toggle-switch"
+  [class.toggle-switch--checked]="isChecked()"
+  [class.toggle-switch--disabled]="disabled()"
+  [class.toggle-switch--small]="size() === 'small'"
+  [class.toggle-switch--medium]="size() === 'medium'"
+  [class.toggle-switch--large]="size() === 'large'"
+  (click)="toggle()"
+  [attr.aria-checked]="isChecked()"
+  [attr.aria-disabled]="disabled()"
+  role="switch">
+
+  <div class="toggle-switch__track">
+    <div class="toggle-switch__thumb"></div>
+  </div>
+</div>

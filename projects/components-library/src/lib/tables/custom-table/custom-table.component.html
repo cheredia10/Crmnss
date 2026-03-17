@@ -1,0 +1,140 @@
+<div class="custom-table-container">
+    @if(config().showTableTitle) {
+    <lib-table-title [title]="tableTitle()"></lib-table-title>
+    }
+    <div class="table-scroll-wrapper">
+        <table class="custom-table">
+        <thead>
+            <tr>
+                @for (column of allColumns(); track column.key) {
+                @switch (column.type) {
+                @case ('data') {
+                <!-- ACTUALIZACIÓN: Añadido binding de clases para sticky -->
+                <th [class.sortable]="column.sortable" [class.sticky-left]="column.sticky === 'left'"
+                    [class.sticky-right]="column.sticky === 'right'" [class.fixed-width]="!!column.width"
+                    [class.allow-wrap]="column.allowWrap" [style.width]="column.width" 
+                    [style.min-width]="column.minWidth" [style.max-width]="column.maxWidth"
+                    [style.text-align]="column.headerAlign || 'left'"
+                    [style.padding-left]="column.headerPaddingLeft || null"
+                    [style.padding-right]="column.headerPaddingRight || null"
+                    [style.padding-top]="column.headerPaddingTop || null"
+                    [style.padding-bottom]="column.headerPaddingBottom || null"
+                    (click)="column.sortable && onSort(column.key)">
+                    <lib-table-header [label]="column.header" [sortable]="column.sortable ?? false"
+                        [active]="sortState().column === column.key" [direction]="sortState().direction"
+                        [align]="column.headerAlign || 'left'">
+                    </lib-table-header>
+                </th>
+                }
+                @case ('status') {
+                <!-- ACTUALIZACIÓN: Añadido binding de clases para sticky y width -->
+                <th class="status-column" [class.sortable]="column.sortable"
+                    [class.sticky-left]="column.sticky === 'left'" [class.sticky-right]="column.sticky === 'right'"
+                    [class.fixed-width]="!!column.width"
+                    [style.width]="column.width" 
+                    [style.min-width]="column.minWidth" 
+                    [style.max-width]="column.maxWidth"
+                    [style.text-align]="column.headerAlign || 'left'"
+                    [style.padding-left]="column.headerPaddingLeft || null"
+                    [style.padding-right]="column.headerPaddingRight || null"
+                    [style.padding-top]="column.headerPaddingTop || null"
+                    [style.padding-bottom]="column.headerPaddingBottom || null"
+                    (click)="column.sortable && onSort(column.key)">
+                    <lib-table-header [label]="column.header" [sortable]="column.sortable ?? false"
+                        [active]="sortState().column === column.key" [direction]="sortState().direction"
+                        [align]="column.headerAlign || 'left'">
+                    </lib-table-header>
+                </th>
+                }
+                @case ('checkbox') {
+                <!-- ACTUALIZACIÓN: Añadido binding de clases para sticky -->
+                <th class="checkbox-column" [class.sticky-left]="column.sticky === 'left'">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" [checked]="allSelected()" (change)="toggleAll.emit()">
+                        <span class="checkmark"></span>
+                    </label>
+                </th>
+                }
+                @case ('actions') {
+                <!-- ACTUALIZACIÓN: Añadido binding de clases para sticky -->
+                <th class="actions-column" [class.sticky-right]="column.sticky === 'right'"></th>
+                }
+                }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @if (loading()) {
+            <tr>
+                <td [attr.colspan]="allColumns().length" class="loading-cell">
+                    <div class="loading-indicator">Cargando...</div>
+                </td>
+            </tr>
+            } @else if (data().length === 0) {
+            <tr>
+                <td [attr.colspan]="allColumns().length" class="empty-cell">
+                    {{ resolvedNoDataMessage() }}
+                </td>
+            </tr>
+            } @else {
+            @for (item of data(); let i = $index; track trackByFn(i, item)) {
+            <tr>
+                @for (column of allColumns(); track column.key) {
+                @switch (column.type) {
+                @case ('data') {
+                <!-- ACTUALIZACIÓN: Añadido binding de clases para sticky -->
+                <td [class.sticky-left]="column.sticky === 'left'" [class.sticky-right]="column.sticky === 'right'" 
+                    [class.fixed-width]="!!column.width" [class.allow-wrap]="column.allowWrap"
+                    [style.width]="column.width" [style.min-width]="column.minWidth" [style.max-width]="column.maxWidth"
+                    [style.text-align]="column.cellAlign || 'left'">
+                    @if (columnTemplates()[column.key]; as customTemplate) {
+                    <ng-container [ngTemplateOutlet]="customTemplate"
+                        [ngTemplateOutletContext]="{$implicit: item, column: column.key}"></ng-container>
+                    } @else {
+                    <lib-table-cell
+                        [data]="item[column.key]"
+                        [type]="column.cellTemplate"
+                        [align]="column.cellAlign || 'left'"
+                        [maxWidth]="column.maxWidth || column.minWidth || '400px'"></lib-table-cell>
+                    }
+                </td>
+                }
+                @case ('status') {
+                <!-- ACTUALIZACIÓN: Añadido binding de clases para sticky y width -->
+                <td class="status-cell" [class.sticky-left]="column.sticky === 'left'"
+                    [class.sticky-right]="column.sticky === 'right'"
+                    [class.fixed-width]="!!column.width"
+                    [style.width]="column.width" 
+                    [style.min-width]="column.minWidth" 
+                    [style.max-width]="column.maxWidth"
+                    [style.text-align]="column.cellAlign || 'left'">
+                    <lib-table-status [status]="item[config().statusKey || 'status']" [options]="statusOptions()"
+                        [editable]="config().statusIsEditable ?? true"
+                        (statusChange)="onStatusChange(item, $event)"></lib-table-status>
+                </td>
+                }
+                @case ('checkbox') {
+                <!-- ACTUALIZACIÓN: Añadido binding de clases para sticky -->
+                <td class="checkbox-cell" [class.sticky-left]="column.sticky === 'left'">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" [checked]="isSelected(item)" (change)="toggleOne.emit(item.id)">
+                        <span class="checkmark"></span>
+                    </label>
+                </td>
+                }
+                @case ('actions') {
+                <!-- ACTUALIZACIÓN: Añadido binding de clases para sticky -->
+                <td class="actions-cell" [class.sticky-right]="column.sticky === 'right'">
+                    <lib-table-actions [actions]="actions()" [item]="item"
+                        (actionClick)="onActionClick(item, $event)"></lib-table-actions>
+                </td>
+                }
+                }
+                }
+            </tr>
+            }
+            }
+        </tbody>
+        </table>
+    </div>
+</div>

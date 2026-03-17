@@ -1,0 +1,253 @@
+@use '../../styles/index' as styles;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: styles.get-spacing('24');
+  padding: styles.get-spacing('16');
+  background-color: styles.get-color('white-background', 'light');
+  border-radius: 8px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: styles.get-spacing('16');
+  }
+
+  &--disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  &__page-size {
+    display: flex;
+    align-items: center;
+    gap: styles.get-spacing('16');
+  }
+
+  &__label {
+    @include styles.typography('label', 'semi-bold');
+    color: styles.get-color('secondary-text', 'light');
+    white-space: nowrap;
+  }
+
+  &__navigation {
+    display: flex;
+    align-items: center;
+    gap: styles.get-spacing('8');
+  }
+
+  &__nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    //width: 40px;
+    //height: 40px;
+    border: none; //1px solid styles.get-color('stroke', 'light');
+    background-color: styles.get-color('white-background', 'light');
+    border-radius: 4px;
+    cursor: pointer;
+    color: styles.get-color('primary-text', 'light');
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: styles.get-color('light-background', 'light');
+      border-color: styles.get-color('medium-blue', 'light');
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  &__pages {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__page-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 styles.get-spacing('8');
+    border: 1px solid transparent;
+    background-color: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    @include styles.typography('body', 'semi-bold');
+    color: styles.get-color('primary-text', 'light');
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled):not(&--active):not(&--ellipsis) {
+      background-color: styles.get-color('light-background', 'light');
+      border-color: styles.get-color('stroke', 'light');
+    }
+
+    &--active {
+      color: styles.get-color('light-blue', 'light');
+    }
+
+    &--ellipsis {
+      cursor: default;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  &__goto {
+    display: flex;
+    align-items: center;
+    gap: styles.get-spacing('8');
+  }
+
+  &__goto-input {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  &__input {
+    @include styles.typography('body', 'semi-bold');
+    border: none;
+    border-bottom: 2px solid styles.get-color('stroke', 'light');
+    background-color: styles.get-color('white-background', 'light');
+    color: styles.get-color('primary-text', 'light');
+
+    &:focus {
+      outline: none;
+    }
+
+    &:disabled {
+      background-color: styles.get-color('light-background', 'light');
+      cursor: not-allowed;
+    }
+
+    /* Hide number input arrows */
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      /* Para Chrome, Safari, Edge, Opera */
+      margin: 0;
+    }
+
+    &[type=number] {
+      -moz-appearance: textfield;
+      /* Específico para Firefox */
+      appearance: none;
+      /* Estándar, para mayor compatibilidad y para el linter */
+    }
+  }
+
+  &__goto-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  // Dark theme
+  .date-picker--dark & {
+    background-color: styles.get-color('white-background', 'dark');
+
+    &__label {
+      color: styles.get-color('primary-text', 'dark');
+    }
+
+    &__select {
+      border-color: styles.get-color('stroke', 'dark');
+      background-color: styles.get-color('white-background', 'dark');
+      color: styles.get-color('primary-text', 'dark');
+
+      &:focus {
+        border-color: styles.get-color('medium-blue', 'dark');
+      }
+
+      &:disabled {
+        background-color: styles.get-color('light-background', 'dark');
+      }
+    }
+
+    &__nav-btn {
+      border-color: styles.get-color('stroke', 'dark');
+      background-color: styles.get-color('white-background', 'dark');
+      color: styles.get-color('primary-text', 'dark');
+
+      &:hover:not(:disabled) {
+        background-color: styles.get-color('light-background', 'dark');
+        border-color: styles.get-color('medium-blue', 'dark');
+      }
+    }
+
+    &__page-btn {
+      color: styles.get-color('primary-text', 'dark');
+
+      &:hover:not(:disabled):not(&--active):not(&--ellipsis) {
+        background-color: styles.get-color('light-background', 'dark');
+        border-color: styles.get-color('stroke', 'dark');
+      }
+
+      &--active {
+        background-color: styles.get-color('medium-blue', 'dark');
+
+        &:hover {
+          background-color: styles.get-color('secondary-turquoise', 'dark');
+        }
+      }
+    }
+
+    &__goto-input {
+      border-color: styles.get-color('stroke', 'dark');
+
+      &:focus-within {
+        border-color: styles.get-color('medium-blue', 'dark');
+      }
+    }
+
+    &__input {
+      background-color: styles.get-color('white-background', 'dark');
+      color: styles.get-color('primary-text', 'dark');
+
+      &:disabled {
+        background-color: styles.get-color('light-background', 'dark');
+      }
+    }
+
+    &__goto-btn {
+      background-color: styles.get-color('medium-blue', 'dark');
+
+      &:hover:not(:disabled) {
+        background-color: styles.get-color('secondary-turquoise', 'dark');
+      }
+    }
+
+    &__info {
+      color: styles.get-color('secondary-text', 'dark');
+    }
+  }
+}

@@ -1,0 +1,11 @@
+<!-- src/lib/textarea/form-textarea/form-textarea.component.html -->
+
+<div class="form-textarea-wrapper">
+    <textarea class="form-textarea" [id]="id()" [formControl]="control()" [attr.placeholder]="placeholder()"
+        [style.height]="height()" [class.error]="control().invalid && control().touched">
+    </textarea>
+
+    <!-- @if (control().invalid && control().touched) {
+    <div class="error-message">Este campo es obligatorio.</div>
+    } -->
+</div>

@@ -1,0 +1,106 @@
+@use "sass:map";
+
+// Main Colors
+$theme-colors: (
+  'primary-blue': (
+    'light': #F0F9FF,
+    'dark': #00437B
+  ),
+  'secondary-blue': (
+    'light': #FCFEFF,
+    'dark': #015CA8
+  ),
+  'medium-blue': (
+    'light': #1465BB,
+    'dark': #6CC5FF
+  ),
+  'light-blue': (
+    'light': #2196F3,
+    'dark': #A5DBFF
+  ),
+  
+  // Turquesa colors
+  'primary-turquoise': (
+    'light': #239EBC,
+    'dark': #0AB4DE
+  ),
+  'secondary-turquoise': (
+    'light': #26B8DC,
+    'dark': #31CEF4
+  ),
+  'light-turquoise': (
+    'light': #E0F0FA,
+    'dark': #F8FAFE
+  ),
+
+  // Text colors
+  'primary-text': (
+    'light': #333333,
+    'dark': #DAF0FF
+  ),
+  'secondary-text': (
+    'light': #999999,
+    'dark': #BBCCE5
+  ),
+  'stroke': (
+    'light': #E5e5e5,
+    'dark': #28506D,
+    'grey': #BBBFC1
+  ),
+  'light-grey': (
+    'light': #FAFAFA,
+    'dark': #241352
+  ),
+    
+  // Background colors
+  'white-background': (
+    'light': #FFFFFF,
+    'dark': #220050
+  ),
+  'light-background': (
+    'light': #FAFBFC,
+    'dark': #1B003F
+  ),
+
+  // Status colors
+  'success': (
+    'light': #1F7713,
+    'dark': #90DF96
+  ),
+  'error': (
+    'light': #D70100,
+    'dark': #FF7466
+  ),
+  'warning': (
+    'light': #FB8500,
+    'dark': #FFC4B8
+  ),
+
+  // Graphics Blue
+  'graphics-blue': (
+    'primary': #6DADDC,
+    'secondary': #179BB8,
+    'terciary': #888057
+  )
+);
+
+// Función para obtener colores del tema
+@function get-color($variant, $mode: 'light') {
+  @if map.has-key($theme-colors, $variant) {
+    @return map.get(map.get($theme-colors, $variant), $mode);
+  }
+  @return null;
+}
+
+// Mixins para modo claro/oscuro
+@mixin light-mode {
+  @media (prefers-color-scheme: light) {
+    @content;
+  }
+}
+
+@mixin dark-mode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}

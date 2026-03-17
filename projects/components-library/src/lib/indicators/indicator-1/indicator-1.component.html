@@ -1,0 +1,39 @@
+<div class="indicator-card" [ngClass]="{
+        'clickable': clickable(),
+        'has-trend': trend()
+      }" [style.background-color]="computedBackgroundColor()" (click)="onClick()">
+  <!-- Header con título e icono opcional -->
+  <div class="indicator-header">
+    <span class="indicator-title">{{ title() }}</span>
+    @if (icon() || iconSvg()) {
+      <div class="indicator-icon">
+        @if (icon()) {
+          <span>{{ icon() }}</span>
+        }
+        @if (iconSvg()) {
+          <span [innerHTML]="iconSvg()"></span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="indicator-content">
+    <div class="indicator-value-section">
+      @if (label()) {
+        <span class="indicator-label">{{ label() }}:</span>
+      }
+      <span class="indicator-value">{{ value() }}</span>
+    </div>
+
+    <!-- Tendencia opcional -->
+    @if (trend() && trendValue()) {
+      <div class="indicator-trend">
+        <span class="trend-icon" [ngClass]="'trend-' + trend()">
+          {{ getTrendIcon() }}
+        </span>
+        <span class="trend-value">{{ trendValue() }}</span>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="upload-container">
+  <input type="file" multiple (change)="onFileSelected($event)">
+
+  @for (upload of uploads; track upload) {
+    <div class="file-card">
+      @if (upload.preview) {
+        <img [src]="upload.preview" class="preview" />
+      }
+      <div class="progress-info">
+        <div class="filename">{{ upload.file.name }}</div>
+        <progress [value]="upload.progress" max="100"></progress>
+        <div class="details">
+          <span>{{ upload.progress }}%</span>
+          @if (upload.estimatedTime) {
+            <span>~{{ upload.estimatedTime }}</span>
+          }
+          @if (upload.error) {
+            <span class="error">{{ upload.error }}</span>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

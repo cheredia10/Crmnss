@@ -1,0 +1,18 @@
+<div class="tags-group" [ngClass]="groupClass()">
+  @for (tag of tags(); track trackByFn(i, tag); let i = $index) {
+    <lib-tag-1
+      [label]="tag.label"
+      [value]="tag.value"
+      [color]="tag.color || 'primary'"
+      [customColor]="tag.customColor || ''"
+      [size]="tag.size || size()"
+      [variant]="tag.variant || variant()"
+      [icon]="tag.icon || ''"
+      [iconSvg]="tag.iconSvg || ''"
+      [clickable]="tag.clickable || clickable()"
+      [removable]="tag.removable || removable()"
+      (tagClick)="onTagClick(tag, i)"
+      (tagRemove)="onTagRemove(tag, i)"
+    ></lib-tag-1>
+  }
+</div>

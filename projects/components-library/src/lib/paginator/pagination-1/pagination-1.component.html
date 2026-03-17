@@ -1,0 +1,80 @@
+<div class="pagination" [class.pagination--disabled]="disabled()">
+  <!-- Page Size Selector -->
+  @if (showPageSizeSelector()) {
+    <div class="pagination__page-size">
+      <label class="pagination__label">{{ rowsPerPageLabel() }}</label>
+      <lib-select-3 [options]="numberOptions" placeholder="" [selected]="10" [disabled]="disabled()"
+      (selectionChange)="onPageSizeChange($event)"></lib-select-3>
+    </div>
+  }
+
+  <!-- Navigation Controls -->
+  <div class="pagination__navigation">
+    <!-- First Page -->
+    @if (showFirstLast()) {
+      <button type="button" class="pagination__nav-btn pagination__nav-btn--first"
+        [disabled]="!canGoFirst()" (click)="goToFirst()" [attr.aria-label]="firstPageAriaLabel()">
+        <span class="material-icons">keyboard_double_arrow_left</span>
+      </button>
+    }
+
+    <!-- Previous Page -->
+    @if (showPrevNext()) {
+      <button type="button" class="pagination__nav-btn pagination__nav-btn--prev"
+        [disabled]="!canGoPrevious()" (click)="goToPrevious()" [attr.aria-label]="previousPageAriaLabel()">
+        <span class="material-icons">chevron_left</span>
+      </button>
+    }
+
+    <!-- Page Numbers -->
+    <div class="pagination__pages">
+      @for (page of visiblePages(); track page; let i = $index) {
+        <button type="button" class="pagination__page-btn"
+          [class.pagination__page-btn--active]="isPageActive(page)"
+          [class.pagination__page-btn--ellipsis]="page === '...'" [disabled]="isPageDisabled(page)"
+          (click)="handlePageClick(page)" [attr.aria-label]="typeof page === 'number' ? pageAriaLabel() + ' ' + page : null"
+          [attr.aria-current]="isPageActive(page) ? 'page' : null">
+          {{ page }}
+        </button>
+      }
+    </div>
+
+    <!-- Next Page -->
+    @if (showPrevNext()) {
+      <button type="button" class="pagination__nav-btn pagination__nav-btn--next"
+        [disabled]="!canGoNext()" (click)="goToNext()" [attr.aria-label]="nextPageAriaLabel()">
+        <span class="material-icons">chevron_right</span>
+      </button>
+    }
+
+    <!-- Last Page -->
+    @if (showFirstLast()) {
+      <button type="button" class="pagination__nav-btn pagination__nav-btn--last"
+        [disabled]="!canGoLast()" (click)="goToLast()" [attr.aria-label]="lastPageAriaLabel()">
+        <span class="material-icons">keyboard_double_arrow_right</span>
+      </button>
+    }
+  </div>
+
+  <!-- Go to Page -->
+  @if (showGoToPage()) {
+    <div class="pagination__goto">
+      <label class="pagination__label">{{ goToPageLabel() }}</label>
+      <div class="pagination__goto-input">
+        <!-- AÑADIMOS UN FORM Y USAMOS (ngSubmit) -->
+        <form class="pagination__goto-input" (ngSubmit)="onGoToPageSubmit()">
+          <input type="number" class="pagination__input" [(ngModel)]="goToPageValue" name="goToPageInput"
+            [disabled]="disabled()"
+            [min]="1"
+            [max]="totalPages()"
+            #goToInput> <!-- Le damos una referencia local -->
+            <!-- El botón ahora es de tipo 'submit' implícito -->
+            <button type="submit" class="pagination__goto-btn" [disabled]="disabled() || !goToPageValue"
+              aria-label="Ir a página">
+              <span class="material-icons">chevron_right</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    }
+  </div>

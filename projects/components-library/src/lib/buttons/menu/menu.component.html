@@ -1,0 +1,8 @@
+<div class="menu-container" [ngClass]="variant()">
+  @for (item of items(); track item; let i = $index) {
+    <lib-text-menu [label]="item.label" [icon]="item.icon || ''"
+      [iconSvg]="item.iconSvg || ''" [disabled]="item.disabled || false"
+      [selected]="item.selected || selectedIndex() === i" [url]="item.url || ''"
+    (itemClick)="onItemClick(item, i)"></lib-text-menu>
+  }
+</div>

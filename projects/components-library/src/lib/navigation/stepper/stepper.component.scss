@@ -1,0 +1,107 @@
+// Stepper Component - Based on Figma Design
+// Colors from Figma: #1465bb (Color-Medium-Light), #D1D5DB (colour/grey-100)
+
+.stepper-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  width: 112px; // 28*4 from Figma
+
+  &:last-child {
+    width: auto;
+  }
+}
+
+.step-circle {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  flex-shrink: 0;
+
+  &.step-done {
+    background-color: #1465bb;
+    border: 2px solid #1465bb;
+
+    .step-check {
+      color: white;
+      font-size: 14px;
+    }
+  }
+
+  &.step-active {
+    background-color: white;
+    border: 2px solid #1465bb;
+
+    .step-number {
+      color: #1465bb;
+    }
+  }
+
+  &.step-inactive {
+    background-color: #D1D5DB;
+    border: 2px solid #D1D5DB;
+
+    .step-number {
+      color: white;
+    }
+  }
+}
+
+.step-number,
+.step-check {
+  line-height: 1;
+  user-select: none;
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  margin: 0 8px;
+
+  &.step-line-active {
+    background-color: #1465bb;
+  }
+
+  &.step-line-inactive {
+    background-color: #D1D5DB;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .stepper-container {
+    gap: 0;
+  }
+
+  .step-item {
+    width: 80px;
+  }
+
+  .step-circle {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+
+    .step-check {
+      font-size: 12px;
+    }
+  }
+
+  .step-line {
+    margin: 0 4px;
+  }
+}

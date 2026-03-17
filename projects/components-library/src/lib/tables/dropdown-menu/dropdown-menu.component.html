@@ -1,0 +1,19 @@
+<div class="dropdown-container" #dropdownContainer>
+    <button class="dropdown-trigger" [class.active]="isOpen" (click)="toggle($event)" #triggerButton>
+        <ng-content select="[slot=trigger]"></ng-content>
+        @if (!hasCustomTrigger()) {
+        <lib-icon [name]="'More Horiz'"></lib-icon>
+        }
+    </button>
+
+    @if (isOpen) {
+    <div class="dropdown-menu" [class.position-up]="verticalPosition === 'up'"
+        [class.position-down]="verticalPosition === 'down'" [style.left.px]="getMenuLeft()"
+        [style.top.px]="getMenuTop()" (click)="$event.stopPropagation()">
+        @for (item of getVisibleItems(); track item.id; let isLast = $last) {
+        <lib-dropdown-menu-item [item]="item" [showSeparator]="!isLast" (itemClick)="onItemClick($event)">
+        </lib-dropdown-menu-item>
+        }
+    </div>
+    }
+</div>

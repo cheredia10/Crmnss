@@ -1,0 +1,23 @@
+/* syntax-menu.component.scss */
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    
+    &.compact {
+      syntax-menu-item ::ng-deep .menu-item {
+        padding: 10px 16px;
+        font-size: 14px;
+      }
+    }
+    
+    &.bordered {
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+      
+      syntax-menu-item:last-child ::ng-deep .menu-item {
+        margin-bottom: 0;
+      }
+    }
+  }

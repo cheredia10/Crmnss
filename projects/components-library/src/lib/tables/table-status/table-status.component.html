@@ -1,0 +1,21 @@
+<!-- En table-status.component.html -->
+
+<div class="status-container" [class.editable]="editable()" (click)="toggleStatusMenu()">
+  <div class="status-badge" [style.background-color]="currentOption().backgroundColor"
+    [style.color]="currentOption().textColor">
+    {{ currentOption().label }}
+  </div>
+
+  <!-- El menú solo se muestra si `showStatusMenu` es true Y el componente es editable -->
+  @if (showStatusMenu() && editable()) {
+  <div class="status-menu" (click)="$event.stopPropagation()">
+    @for (option of optionList(); track option.value) {
+    <div class="status-option" [class.active]="status().toLowerCase() === option.value"
+      (click)="selectStatus(option.value)">
+      <span class="status-dot" [style.background-color]="option.backgroundColor"></span>
+      <span>{{ option.label }}</span>
+    </div>
+    }
+  </div>
+  }
+</div>

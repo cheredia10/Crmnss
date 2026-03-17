@@ -1,0 +1,19 @@
+<div class="upload-progress-container">
+    <div class="upload-progress-container-left-content">
+        <div class="upload-info">
+            <span class="upload-text">{{ text() }}</span>
+            <span class="upload-details">{{ details() }}</span>
+        </div>
+        <div class="upload-controls">
+            <button type="button" class="control-btn pause-btn" (click)="onPause()" [attr.aria-label]="'Pausar carga'">
+                <lib-icon name="pause_circle"></lib-icon>
+            </button>
+            <button type="button" class="control-btn cancel-btn" (click)="onCancel()" [attr.aria-label]="'Cancelar carga'">
+                <lib-icon name="highlight_off_red"></lib-icon>
+            </button>
+        </div>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progress()"></div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="url-input-container" [ngClass]="{
+        'focused': status() === 'focused',
+        'uploading': status() === 'uploading'
+      }">
+    <input type="url" class="url-input" [placeholder]="placeholder()" [(ngModel)]="urlValue" (focus)="onFocus()"
+        (blur)="onBlur()" (keyup.enter)="onUpload()" [disabled]="status() === 'uploading'" />
+    <button type="button" class="upload-btn" [ngClass]="{
+          'active': urlValue().trim() !== '' && status() !== 'uploading',
+          'uploading': status() === 'uploading'
+        }" [disabled]="urlValue().trim() === '' || status() === 'uploading'" (click)="onUpload()">
+        {{ status() === 'uploading' ? loadingText() : buttonText() }}
+    </button>
+</div>

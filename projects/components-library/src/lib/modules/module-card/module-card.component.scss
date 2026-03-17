@@ -1,0 +1,156 @@
+@use '../../styles/index' as styles;
+
+.module-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 200px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Open Sans', sans-serif;
+
+  &:hover {
+    .module-circle {
+      transform: scale(1.05);
+    }
+  }
+
+  .module-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  .module-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    // Estado inactivo - azul claro
+    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+
+    .module-icon {
+      font-size: 48px;
+      color: white;
+    }
+  }
+
+  .module-title {
+    margin-top: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    text-align: center;
+  }
+
+  // Estado activo
+  &--active {
+    .module-circle {
+      width: 140px;
+      height: 140px;
+      // Azul más oscuro para el estado activo
+      background: linear-gradient(135deg, #2C5282 0%, #1A365D 100%);
+      box-shadow: 0 6px 20px rgba(44, 82, 130, 0.3);
+
+      .module-icon {
+        font-size: 56px;
+      }
+    }
+  }
+
+  // Submódulos alrededor del módulo principal
+  .submodules-container {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+
+    .submodule-circle {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(26, 188, 156, 0.8);
+      border: 2px solid #1ABC9C;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      pointer-events: all;
+
+      &:hover {
+        background: #1ABC9C;
+        transform: scale(1.1);
+      }
+
+      .submodule-icon {
+        font-size: 20px;
+        color: white;
+      }
+
+      // Posicionamiento circular alrededor del módulo principal
+      &:nth-child(1) { top: 20px; right: 60px; } // Superior derecha
+      &:nth-child(2) { top: 60px; right: 20px; } // Derecha superior
+      &:nth-child(3) { bottom: 60px; right: 20px; } // Derecha inferior
+      &:nth-child(4) { bottom: 20px; right: 60px; } // Inferior derecha
+      &:nth-child(5) { bottom: 20px; left: 60px; } // Inferior izquierda
+      &:nth-child(6) { bottom: 60px; left: 20px; } // Izquierda inferior
+      &:nth-child(7) { top: 60px; left: 20px; } // Izquierda superior
+      &:nth-child(8) { top: 20px; left: 60px; } // Superior izquierda
+    }
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 150px;
+
+    .module-circle {
+      width: 100px;
+      height: 100px;
+
+      .module-icon {
+        font-size: 36px;
+      }
+    }
+
+    &--active {
+      .module-circle {
+        width: 120px;
+        height: 120px;
+
+        .module-icon {
+          font-size: 42px;
+        }
+      }
+    }
+
+    .submodules-container {
+      width: 220px;
+      height: 220px;
+
+      .submodule-circle {
+        width: 45px;
+        height: 45px;
+
+        .submodule-icon {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+<div class="input-container" [ngStyle]="{ width: inputWidth(), height: inputHeight() }">
+  <input
+    [id]="id()"
+    [formControl]="$any(control())"
+    [placeholder]="placeholder()"
+    [type]="type()"
+    [disabled]="disabled()"
+    class="form-input"
+    [class.with-suffix]="suffix()"
+    [class.error]="control().invalid && control().touched"
+    [ngStyle]="{ height: inputHeight() }" />
+  
+  @if (suffix()) {
+    <span class="input-suffix">{{ suffix() }}</span>
+  }
+</div>

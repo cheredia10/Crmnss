@@ -1,0 +1,26 @@
+<!-- REFACTOR: Contenedor principal con position: relative -->
+<div class="form-date-picker-wrapper">
+
+    <!-- El input y el botón -->
+    <div class="form-field">
+        <div class="date-input-wrapper" [style.width]="inputWidth()">
+            <!-- BEST PRACTICE: Evita $any. El tipo del control es ahora más estricto. -->
+            <input [id]="id()" [formControl]="control()" [placeholder]="placeholder()" type="text" class="date-input"
+                [class.error]="control().invalid && control().touched" (focus)="isCalendarOpen.set(true)" />
+            <div class="calendar-button" (click)="toggleCalendar()">
+                <lib-icon name="fi-ss-calendar"></lib-icon>
+            </div>
+        </div>
+    </div>
+
+    <!-- REFACTOR: El calendario está DENTRO del wrapper y se controla con bindings -->
+    <lib-date-picker [theme]="'light'" [selectionMode]="'single'" [(isOpen)]="isCalendarOpen"
+        [(selectedDate)]="selectedDate">
+    </lib-date-picker>
+
+    <!-- Control de errores con el nuevo @if -->
+    @if (control().invalid && control().touched) {
+    <!-- Aquí podrías tener un mensaje de error más dinámico -->
+    <div class="error-message">Este campo es inválido.</div>
+    }
+</div>

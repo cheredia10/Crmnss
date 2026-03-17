@@ -1,0 +1,380 @@
+@use '../../styles/index' as styles;
+
+.date-picker {
+    position: absolute;
+    z-index: 1000;
+    width: 284px; // Ancho fijo para evitar que se comprima con inputs pequeños
+    max-width: 284px;
+
+    // Posicionamiento por defecto (abajo)
+    top: calc(100% + 4px);
+    left: 0;
+
+    // Posicionamiento cuando debe aparecer arriba
+    &--position-top {
+        top: auto;
+        bottom: calc(100% + 4px);
+    }
+
+    // Mejora para diálogos: usar position fixed con z-index alto
+    &--in-dialog {
+        position: fixed;
+        z-index: 10000; // Más alto que el modal (típicamente 1000-2000)
+    }
+
+    // Responsive: en móviles, centrar y usar más espacio
+    @media (max-width: 480px) {
+        position: fixed;
+        top: 50% !important;
+        left: 50% !important;
+        bottom: auto !important;
+        transform: translate(-50%, -50%);
+        width: calc(100vw - 32px);
+        max-width: 284px;
+    }
+
+    // Para inputs muy pequeños, permitir que el calendario se extienda fuera del contenedor
+    @media (min-width: 481px) {
+        min-width: 284px; // Ancho mínimo para mostrar todos los días de la semana
+    }
+
+    &__container {
+        background-color: styles.get-color('white-background', 'light');
+        border-radius: 12px;
+        box-shadow:
+            0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06),
+            0 0 0 1px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+
+        // Animación de entrada
+        animation: slideIn 0.15s ease-out;
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 12px 0px 12px;
+        background-color: #FFF;
+    }
+
+    &__nav-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        border-radius: 6px;
+        cursor: pointer;
+        color: styles.get-color('primary-text', 'light');
+        transition: all 0.15s ease;
+
+        &:hover {
+            background-color: styles.get-color('light-background', 'light');
+            transform: scale(1.05);
+        }
+
+        &:focus-visible {
+            outline: 2px solid styles.get-color('primary-turquoise', 'light');
+            outline-offset: 2px;
+        }
+
+        .material-icons {
+            font-size: 18px;
+        }
+    }
+
+    &__header-title {
+        @include styles.typography('body', 'semi-bold');
+        color: #0E0E0F;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    &__title-btn {
+        background: none;
+        border: none;
+        padding: 4px 8px;
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.15s ease;
+
+        &:hover {
+            color: styles.get-color('medium-blue', 'light');
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        &:focus-visible {
+            outline: 2px solid styles.get-color('primary-turquoise', 'light');
+            outline-offset: 2px;
+        }
+    }
+
+    &__view {
+        padding: 12px 12px 16px 12px;
+    }
+
+    &__weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        margin-bottom: styles.get-spacing('8');
+        gap: 2px;
+    }
+
+    &__weekday {
+        @include styles.typography('small', 'medium');
+        color: #797B86;
+        text-align: center;
+        padding: 8px 4px;
+    }
+
+    &__days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+    }
+
+    &__day {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: transparent;
+        border-radius: 6px;
+        cursor: pointer;
+        @include styles.typography('body', 'regular');
+        color: #45454A;
+        transition: all 0.15s ease;
+        position: relative;
+
+        &:hover:not(:disabled) {
+            background-color: styles.get-color('light-background', 'light');
+            transform: scale(1.05);
+        }
+
+        &:focus-visible {
+            outline: 2px solid styles.get-color('primary-turquoise', 'light');
+            outline-offset: 2px;
+        }
+
+        &--other-month {
+            color: styles.get-color('stroke', 'light');
+            opacity: 0.5;
+        }
+
+        &--today {
+            @include styles.typography('body', 'semi-bold');
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 2px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 4px;
+                height: 4px;
+                background-color: styles.get-color('primary-turquoise', 'light');
+                border-radius: 50%;
+            }
+        }
+
+        &--selected {
+            background-color: styles.get-color('primary-turquoise', 'light');
+            color: white;
+            @include styles.typography('body', 'semi-bold');
+
+            &:hover {
+                background-color: styles.get-color('secondary-turquoise', 'light');
+                transform: scale(1.05);
+            }
+        }
+
+        &--in-range {
+            background-color: rgba(styles.get-color('primary-turquoise', 'light'), 0.1);
+            color: styles.get-color('primary-turquoise', 'light');
+            @include styles.typography('body', 'medium');
+        }
+
+        &--range-start {
+            background-color: styles.get-color('primary-turquoise', 'light');
+            color: white;
+            @include styles.typography('body', 'semi-bold');
+        }
+
+        &--range-end {
+            background-color: styles.get-color('primary-turquoise', 'light');
+            color: white;
+            @include styles.typography('body', 'semi-bold');
+        }
+
+        &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+
+            &:hover {
+                transform: none;
+                background: transparent;
+            }
+        }
+    }
+
+    &__months,
+    &__years {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: styles.get-spacing('8');
+    }
+
+    &__month,
+    &__year {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 48px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        cursor: pointer;
+        @include styles.typography('body', 'regular');
+        color: styles.get-color('primary-text', 'light');
+        transition: all 0.15s ease;
+
+        &:hover {
+            background-color: styles.get-color('light-background', 'light');
+            transform: translateY(-1px);
+        }
+
+        &:focus-visible {
+            outline: 2px solid styles.get-color('primary-turquoise', 'light');
+            outline-offset: 2px;
+        }
+
+        &--selected {
+            background-color: styles.get-color('primary-turquoise', 'light');
+            color: white;
+            @include styles.typography('body', 'semi-bold');
+
+            &:hover {
+                background-color: styles.get-color('secondary-turquoise', 'light');
+            }
+        }
+    }
+
+    // Dark theme
+    &--dark {
+        .date-picker__container {
+            background-color: #0E0E0F;
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.3),
+                0 2px 4px -1px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .date-picker__header {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .date-picker__nav-btn {
+            color: styles.get-color('primary-text', 'dark');
+
+            &:hover {
+                background-color: styles.get-color('light-background', 'dark');
+            }
+        }
+
+        .date-picker__header-title {
+            color: styles.get-color('primary-text', 'dark');
+        }
+
+        .date-picker__title-btn {
+            &:hover {
+                color: styles.get-color('medium-blue', 'dark');
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        .date-picker__weekday {
+            color: styles.get-color('secondary-text', 'dark');
+        }
+
+        .date-picker__day {
+            color: #ABB0BD;
+
+            &:hover:not(:disabled) {
+                background-color: styles.get-color('light-background', 'dark');
+            }
+
+            &--other-month {
+                color: #45454A;
+            }
+
+            &--today {
+                color: styles.get-color('primary-text', 'dark');
+
+                &::after {
+                    background-color: styles.get-color('light-turquoise', 'dark');
+                }
+            }
+
+            &--selected {
+                background-color: styles.get-color('light-turquoise', 'dark');
+                color: styles.get-color('primary-text', 'light');
+
+                &:hover {
+                    background-color: styles.get-color('secondary-turquoise', 'dark');
+                }
+            }
+
+            &--in-range {
+                background-color: rgba(styles.get-color('light-turquoise', 'dark'), 0.2);
+                color: styles.get-color('light-turquoise', 'dark');
+            }
+
+            &--range-start,
+            &--range-end {
+                background-color: styles.get-color('light-turquoise', 'dark');
+                color: styles.get-color('primary-text', 'light');
+            }
+        }
+
+        .date-picker__month,
+        .date-picker__year {
+            color: styles.get-color('primary-text', 'dark');
+
+            &:hover {
+                background-color: styles.get-color('light-background', 'dark');
+            }
+
+            &--selected {
+                background-color: styles.get-color('light-turquoise', 'dark');
+                color: styles.get-color('primary-text', 'light');
+
+                &:hover {
+                    background-color: styles.get-color('secondary-turquoise', 'dark');
+                }
+            }
+        }
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,86 @@
+<div class="file-item" [ngClass]="'status-' + status()">
+  <!-- File Icon -->
+  <div class="file-icon">
+    <div class="icon-container" [ngClass]="getFileTypeClass()">
+      @if(getFileTypeClass()==='word'){
+        <lib-docx-file></lib-docx-file>
+      }
+      @if(getFileTypeClass()==='excel'){
+        <lib-xls-file></lib-xls-file>
+      }
+      @if(getFileTypeClass()==='pdf'){
+        <lib-pdf-file></lib-pdf-file>
+      }
+      <!-- Mostrar miniatura si es imagen y estado es 'done' o 'view' -->
+      @if(getFileTypeClass() === 'image' && (status() === 'done' || status() === 'view') && url()) {
+        <img [src]="url()" alt="preview" class="thumbnail" />
+      }
+      @else if(getFileTypeClass() === 'image') {
+      <lib-jpg-file></lib-jpg-file>
+    }
+    @if(getFileTypeClass()==='document'){
+      <span class="file-extension">{{ getFileExtension() }}</span>
+    }
+  </div>
+</div>
+
+<!-- File Info -->
+<div class="file-info">
+  <div class="file-name">{{ name() }}</div>
+  <div class="file-details">
+    @if(status() !== 'error'){
+      <span class="file-size">{{ formatFileSize(size()) }}</span>
+    }
+    @if (status() === 'error' && error()) {
+      <span class="file-error">
+        {{ error() }}
+      </span>
+    }
+  </div>
+
+  <!-- Progress Bar for uploading files -->
+  @if (status() === 'uploading' && progress() !== undefined) {
+    <div class="file-progress">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progress()"></div>
+      </div>
+      <span class="progress-text">{{ progress() }}%</span>
+    </div>
+  }
+</div>
+
+<!-- File Actions -->
+<div class="file-actions">
+  <!-- Remove/Cancel button -->
+  @if (status() === 'done' || status() === 'uploading') {
+    <button type="button" class="action-btn remove-btn"
+      (click)="onRemove()" [attr.aria-label]="'Eliminar archivo'" [disabled]="status()==='uploading'">
+      @if(status() === 'uploading'){
+        <lib-icon name="highlight_off_dis"></lib-icon>
+        }@else {
+        <lib-icon name="highlight_off"></lib-icon>
+      }
+    </button>
+  }
+
+  <!-- Error actions -->
+  @if (status() === 'error') {
+    <button type="button" class="action-btn delete-btn" (click)="onDelete()"
+      [attr.aria-label]="'Eliminar archivo'">
+      <lib-icon name="delete_outline"></lib-icon>
+    </button>
+    <button type="button" class="action-btn expand-btn" (click)="onExpand()"
+      [attr.aria-label]="'Expandir archivo'">
+      <lib-icon name="repeat"></lib-icon>
+    </button>
+  }
+
+  <!-- View button -->
+  @if (status() === 'view') {
+    <button type="button" class="action-btn view-btn" (click)="onView()"
+      [attr.aria-label]="'Ver archivo'">
+      <lib-icon name="visibility"></lib-icon>
+    </button>
+  }
+</div>
+</div>

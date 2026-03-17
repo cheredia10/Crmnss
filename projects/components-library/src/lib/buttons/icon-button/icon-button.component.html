@@ -1,0 +1,12 @@
+<button
+  class="lib-icon-button"
+  [ngStyle]="buttonStyles()"
+  [disabled]="disabled()"
+  [type]="type()">
+  <div class="button-content">
+    @if (sanitizedIcon()) {
+      <div class="button-icon" [innerHTML]="sanitizedIcon()"></div>
+    }
+    <ng-content></ng-content>
+  </div>
+</button>

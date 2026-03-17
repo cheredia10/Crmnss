@@ -1,0 +1,17 @@
+<div class="dropdown" [class.open]="isOpen()">
+  <!-- Cabecera -->
+  <div class="dropdown-header" (click)="toggle()">
+    <span class="dropdown-text">{{ title() }}</span>
+    <span
+      class="dropdown-icon"
+      [innerHTML]="isOpen() ? upIcon : downIcon"
+    ></span>
+  </div>
+
+  <!-- Contenido dinámico -->
+  @if (isOpen()) {
+  <div class="dropdown-body">
+    <ng-content></ng-content>
+  </div>
+  }
+</div>

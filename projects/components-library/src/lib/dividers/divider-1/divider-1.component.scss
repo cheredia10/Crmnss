@@ -1,0 +1,18 @@
+@use '../../styles/index' as styles;
+
+.divider-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.line{
+  width: 83px;
+  height: 0.5px;
+  border-bottom: 1px solid styles.get-color('stroke','light');
+  margin: 0 10px;
+}
+.center-item{
+  @include styles.typography('label');
+  color: styles.get-color('stroke','grey');
+}

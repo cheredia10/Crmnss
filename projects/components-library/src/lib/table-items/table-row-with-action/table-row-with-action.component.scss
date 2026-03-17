@@ -1,0 +1,50 @@
+@use '../../styles/index' as styles;
+.table-row {
+    display: inline-flex;
+    align-items: center;
+    //justify-content: space-between;
+    padding: 6px;
+    gap: 12px;
+    flex-shrink: 0;
+
+    &.edit {
+      background-color: styles.get-color('primary-blue','light');
+    }
+    
+    &.error {
+      background-color: styles.get-color('primary-blue','light');
+      border: 1px solid styles.get-color('error','light');
+    }
+
+    &.focused {
+      border: 1px solid styles.get-color('medium-blue','light');
+    }
+    
+    .row-actions {
+      display: flex;
+      gap: 4px;
+    }
+    
+    .action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 3px;
+      color: var(--color-primary);
+      transition: all 0.2s ease;
+      
+      &:hover:not(.disabled) {
+        background-color: rgba(25, 118, 210, 0.1);
+      }
+      
+      &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      
+      svg {
+        display: block;
+      }
+    }
+  }

@@ -1,0 +1,94 @@
+<!-- REFACTOR: El componente entero se renderiza o no según la señal `isOpen` -->
+@if (isOpen()) {
+<div class="date-picker" [class.date-picker--dark]="theme() === 'dark'">
+  <div class="date-picker__container">
+    <!-- Calendar Header -->
+    <div class="date-picker__header">
+      @if (viewMode() === 'day') {
+      <button type="button" class="date-picker__nav-btn" (click)="prevMonth()">
+        <span class="material-icons">chevron_left</span>
+      </button>
+      } @else {
+      <button type="button" class="date-picker__nav-btn" (click)="prevYear()">
+        <span class="material-icons">chevron_left</span>
+      </button>
+      }
+
+      <div class="date-picker__header-title">
+        @if (viewMode() === 'day') {
+        <button type="button" class="date-picker__title-btn" (click)="setViewMode('month')">
+          {{ monthName() }} 
+        </button>
+        }
+        @if (viewMode() !== 'year') {
+        <button type="button" class="date-picker__title-btn" (click)="setViewMode('year')">
+          {{ year() }}
+        </button>
+        } @else {
+        <span>{{ year() }}</span>
+        }
+      </div>
+
+      @if (viewMode() === 'day') {
+      <button type="button" class="date-picker__nav-btn" (click)="nextMonth()">
+        <span class="material-icons">chevron_right</span>
+      </button>
+      } @else {
+      <button type="button" class="date-picker__nav-btn" (click)="nextYear()">
+        <span class="material-icons">chevron_right</span>
+      </button>
+      }
+    </div>
+
+    <!-- Views with @switch -->
+    @switch (viewMode()) {
+    @case ('day') {
+    <div class="date-picker__view">
+      <div class="date-picker__weekdays">
+        @for (day of weekDays(); track day) {
+        <div class="date-picker__weekday">{{ day }}</div>
+        }
+      </div>
+
+      <div class="date-picker__days">
+        @for (day of calendarDays(); track day.date) {
+        <button type="button" class="date-picker__day" [class.date-picker__day--other-month]="!isCurrentMonth(day.date)"
+          [class.date-picker__day--today]="isToday(day.date)" [class.date-picker__day--selected]="isSelected(day.date)"
+          [class.date-picker__day--range-start]="isRangeStart(day.date)"
+          [class.date-picker__day--range-end]="isRangeEnd(day.date)"
+          [class.date-picker__day--in-range]="isInRange(day.date)" [disabled]="day.disabled"
+          (click)="selectDate(day.date)">
+          {{ day.date.getDate() }}
+        </button>
+        }
+      </div>
+    </div>
+    }
+    @case ('month') {
+    <div class="date-picker__view">
+      <div class="date-picker__months">
+        @for (month of monthsOfYear(); track month.value) {
+        <button type="button" class="date-picker__month"
+          [class.date-picker__month--selected]="isSelectedMonth(month.value)" (click)="selectMonth(month.value)">
+          {{ month.name }}
+        </button>
+        }
+      </div>
+    </div>
+    }
+    @case ('year') {
+    <div class="date-picker__view">
+      <div class="date-picker__years">
+        @for (year of yearsRange(); track year) {
+        <button type="button" class="date-picker__year" [class.date-picker__year--selected]="isSelectedYear(year)"
+          (click)="selectYear(year)">
+          {{ year }}
+        </button>
+        }
+      </div>
+    </div>
+    }
+    }
+  </div>
+</div>
+}

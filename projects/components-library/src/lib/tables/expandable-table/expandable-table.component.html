@@ -1,0 +1,81 @@
+<div class="expandable-table-container custom-scrollbar">
+    <table class="expandable-table">
+        <thead>
+            <tr>
+                @for(column of config().columns; track column.key) {
+                <th [class.sticky-col]="column.sticky"
+                    [class.fixed-width]="!!column.width"
+                    [style.left]="column.sticky === 'left' ? '0px' : null"
+                    [style.right]="column.sticky === 'right' ? '0px' : null"
+                    [style.width]="column.width"
+                    [style.min-width]="column.minWidth"
+                    [style.max-width]="column.maxWidth"
+                    [style.text-align]="column.headerAlign || 'left'"
+                    [style.padding-left]="column.headerPaddingLeft || null"
+                    [style.padding-right]="column.headerPaddingRight || null"
+                    [style.padding-top]="column.headerPaddingTop || null"
+                    [style.padding-bottom]="column.headerPaddingBottom || null"
+                    (click)="column.sortable && onSort(column.key)">
+                    <lib-table-header [label]="column.header" [sortable]="column.sortable ?? false"
+                        [active]="sortState().column === column.key" [direction]="sortState().direction"
+                        [align]="column.headerAlign || 'left'">
+                    </lib-table-header>
+                </th>
+                }
+                <!-- --- CORRECCIÓN AQUÍ --- -->
+            <!-- Añadimos la clase 'sticky-col' y el estilo 'right: 0' -->
+            <th class="sticky-col details-header" style="right: 0;"
+                [style.width]="config().detailsColumnWidth || '106px'"
+                [style.min-width]="config().detailsColumnMinWidth || null"
+                [style.max-width]="config().detailsColumnMaxWidth || null">
+                {{ config().detailsHeaderLabel || 'Detalles' }}
+            </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(item of data(); track trackByFn($index, item)) {
+            <!-- Fila principal -->
+            <tr class="main-row" [class.is-expanded]="isExpanded(item.id)">
+                @for(column of config().columns; track column.key) {
+                <td [class.sticky-col]="column.sticky"
+                    [class.fixed-width]="!!column.width"
+                    [style.left]="column.sticky === 'left' ? '0px' : null"
+                    [style.right]="column.sticky === 'right' ? '0px' : null"
+                    [style.width]="column.width"
+                    [style.min-width]="column.minWidth"
+                    [style.max-width]="column.maxWidth"
+                    [style.text-align]="column.cellAlign || 'left'">
+                    @if (columnTemplates()[column.key]; as customTemplate) {
+                    <ng-container [ngTemplateOutlet]="customTemplate"
+                        [ngTemplateOutletContext]="{$implicit: item}"></ng-container>
+                    } @else {
+                    {{ item[column.key] }}
+                    }
+                </td>
+                }
+                <td class="actions-cell sticky-col" style="right: 0;"
+                    [style.width]="config().detailsColumnWidth || '106px'"
+                    [style.min-width]="config().detailsColumnMinWidth || null"
+                    [style.max-width]="config().detailsColumnMaxWidth || null">
+                    <lib-table-actions [actions]="actions()" [item]="item"></lib-table-actions>
+                    <button class="expand-button" (click)="toggleRow(item.id)">
+                        <span class="chevron" [class.expanded]="isExpanded(item.id)"></span>
+                    </button>
+                </td>
+            </tr>
+
+            <!-- Fila expandida (condicional) -->
+            @if (isExpanded(item.id) && detailTemplateRef()) {
+            <tr class="expanded-row">
+                <td [attr.colspan]="config().columns.length + 1">
+                    <div class="expanded-content">
+                        <ng-container [ngTemplateOutlet]="detailTemplateRef()!"
+                            [ngTemplateOutletContext]="{$implicit: item}"></ng-container>
+                    </div>
+                </td>
+            </tr>
+            }
+            }
+        </tbody>
+    </table>
+</div>

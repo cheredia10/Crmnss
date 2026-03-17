@@ -1,0 +1,68 @@
+@use '../../styles/index' as styles;
+
+.breadcrumb {
+  padding: 8px; // Padding según Figma p-[8px]
+  box-sizing: border-box;
+  &.default{
+    color: styles.get-color('secondary-text','light');
+  }
+  &.variant4{
+    color: styles.get-color('graphics-blue','secondary');
+  }
+}
+
+.breadcrumb ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  gap: 10px; // Gap principal entre elementos (gap-2.5 en Figma)
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+  gap: 8px; // Gap interno entre ícono y texto (gap-2 en Figma)
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  &.default{
+    color: styles.get-color('secondary-text','light');
+    @include styles.typography('label');
+  }
+  &.variant4{
+    color: styles.get-color('graphics-blue','secondary');
+    @include styles.typography('label','semi-bold');
+  }
+}
+
+.breadcrumb a:hover {
+  color: styles.get-color('graphics-blue', 'secondary');
+  @include styles.typography('label', 'semi-bold');
+}
+
+.separator {
+  margin: 0; // Sin margin, el gap ya maneja el espaciado
+  width: 24px; // Tamaño size-6 según Figma
+  height: 24px;
+}
+
+.current {
+  @include styles.typography('label');
+  
+  &.default{
+    color: styles.get-color('secondary-text','light');
+  }
+  &.variant4{
+    color: styles.get-color('graphics-blue','secondary');
+    @include styles.typography('label','semi-bold');
+  }
+}
+
+.home-icon {
+  margin-right: 0; // Sin margin, el gap ya maneja el espaciado
+  width: 16px; // Tamaño según Figma
+  height: 16px;
+}

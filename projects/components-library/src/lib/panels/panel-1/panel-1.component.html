@@ -1,0 +1,69 @@
+<div class="strengths-panel" [id]="customId()" [style.background-color]="backgroundColor()" [style.width]="width()"
+  [style.height]="height()">
+
+  <div class="panel-header">
+    <div class="title-container">
+      <span class="panel-title">{{ title() }}</span>
+    </div>
+
+    @if (!isEditing()) {
+    <button class="edit-button" (click)="editingMode()" [attr.aria-label]="editButtonAriaLabelPrefix() + ' ' + title()">
+      <lib-icon name="editar_blue" color="#28506D" size="18"></lib-icon>
+    </button>
+    }
+  </div>
+
+  <div class="panel-content" [class.editing]="isEditing()">
+    <!-- Lista de elementos existentes -->
+    @if (displayItems().length > 0 && !isEditing()) {
+    <div class="items-list">
+      @for (item of displayItems(); track item.id; let i = $index) {
+      <div class="strength-item">
+        <div class="item-number">{{ getItemNumber(i) }}</div>
+        <div class="item-text">{{ item.text }}</div>
+        @if (tipo() === 'FODA') {
+        <div class="item-impact" [class]="getUrgencyClass(item.urgency)">
+          {{ getUrgencyShortLabel(item.urgency) }}
+        </div>
+        }
+      </div>
+      }
+    </div>
+    }
+
+    <!-- Formulario de edición -->
+    @if (isEditing()) {
+    <div class="edit-form">
+      <div class="form-container">
+        <div class="form-left-column">
+          @for (item of displayItems(); track item.id; let i = $index) {
+          <div class="form-row">
+            <div class="item-number">{{ getItemNumber(i) }}</div>
+            <input type="text" class="text-input" [placeholder]="textPlaceholder()" [(ngModel)]="item.text" (ngModelChange)="onItemTextChange(item)">
+
+            @if (tipo() === 'FODA') {
+            <lib-select-1 width="150px" [options]="impactOptions()" [label]="impactLabel()" [(ngModel)]="item.impact">
+            </lib-select-1>
+
+            <lib-select-1 [width]="'150px'" [options]="urgencyOptions()" [placeholder]="urgencyPlaceholder()"
+              [(ngModel)]="item.urgency">
+            </lib-select-1>
+            }
+
+            <lib-button-2 matIconName="delete" iconSize="20" variant="danger" size="medium"
+              [tooltipText]="deleteButtonTooltip()" [ariaLabel]="deleteButtonAriaLabel()" (click)="deleteItem(i)">
+            </lib-button-2>
+          </div>
+          }
+        </div>
+
+        <div class="form-right-column">
+          <lib-button-2 matIconName="add" iconSize="16" variant="primary" size="medium"
+            [tooltipText]="addButtonTooltip()" [ariaLabel]="addButtonAriaLabel()" (click)="startNewItem()">
+          </lib-button-2>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

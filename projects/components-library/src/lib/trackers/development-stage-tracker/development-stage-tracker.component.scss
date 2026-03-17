@@ -1,0 +1,37 @@
+:host {
+  display: block;
+}
+
+.stage-tracker-container {
+  display: flex;
+  align-items: flex-start; // Alinea los items al tope
+  justify-content: space-between; // Distribuye el espacio
+  gap: 8px;
+  width: 100%;
+}
+
+.stage-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+
+  .circle-container {
+    height: 26px; // Altura fija para alinear los SVGs
+    display: flex;
+    align-items: center;
+  }
+  
+  .label {
+    // --- ESTILOS DE TEXTO ACTUALIZADOS ---
+    color: #919191; // Color gris especificado
+    text-align: center;
+    font-family: "Corporate S BQ", sans-serif;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    max-width: 70px; // Aumentamos un poco el ancho
+  }
+}

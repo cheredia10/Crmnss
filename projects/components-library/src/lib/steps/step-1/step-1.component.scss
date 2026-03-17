@@ -1,0 +1,202 @@
+@use '../../styles/index' as styles;
+.steps-container {
+    display: flex;
+
+    &.vertical {
+        flex-direction: column;
+    }
+
+    &.horizontal {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+.step-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    transition: all 0.2s ease;
+
+    .steps-container.horizontal & {
+        flex-direction: column;
+        text-align: center;
+        padding: 0 16px;
+
+        &:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background-color: #e0e0e0;
+            z-index: 0;
+        }
+    }
+}
+
+.step-indicator {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+
+.step-number,
+.step-icon {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.step-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.step-label {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.step-connector {
+    position: absolute;
+    left: 15px;
+    top: 40px;
+    width: 2px;
+    height: 24px;
+    background-color: #e0e0e0;
+    z-index: 0;
+}
+
+/* Estados de los pasos */
+.step-item {
+    &.status-active {
+        .step-indicator {
+            background-color: #00bcd4;
+            /* Color turquesa/azul claro */
+            color: white;
+        }
+
+        .step-label {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .step-connector {
+            background-color: #e0e0e0;
+        }
+    }
+
+    &.status-completed {
+        .step-indicator {
+            background-color: #4caf50;
+            /* Color verde */
+            color: white;
+        }
+
+        .step-label {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .step-connector {
+            background-color: #4caf50;
+        }
+    }
+
+    &.status-disabled {
+        .step-indicator {
+            background-color: #9e9e9e;
+            /* Color gris */
+            color: white;
+        }
+
+        .step-label {
+            color: #9e9e9e;
+            font-weight: 400;
+        }
+
+        .step-connector {
+            background-color: #e0e0e0;
+        }
+    }
+
+    &.status-pending {
+        .step-indicator {
+            background-color: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            color: #666;
+        }
+
+        .step-label {
+            color: #666;
+            font-weight: 400;
+        }
+
+        .step-connector {
+            background-color: #e0e0e0;
+        }
+    }
+}
+
+/* Variantes de tamaño */
+.steps-container {
+    &.size-small {
+        .step-indicator {
+            width: 24px;
+            height: 24px;
+            font-size: 12px;
+        }
+
+        .step-label {
+            font-size: 12px;
+        }
+
+        .step-connector {
+            left: 11px;
+            height: 20px;
+        }
+    }
+
+    &.size-large {
+        .step-indicator {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+        }
+
+        .step-label {
+            font-size: 16px;
+        }
+
+        .step-connector {
+            left: 19px;
+            height: 28px;
+        }
+    }
+}
+
+/* Interactividad */
+.steps-container.clickable {
+    .step-item:not(.status-disabled) {
+        cursor: pointer;
+
+        &:hover {
+            .step-indicator {
+                transform: scale(1.05);
+            }
+        }
+    }
+}

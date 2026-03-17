@@ -1,0 +1,103 @@
+@use '../../styles/index.scss' as styles;
+
+.table-header {
+  display: flex;
+  align-items: center;
+  width: 100%; // Asegura que ocupe todo el espacio del <th>
+  height: 100%; // Ocupa toda la altura del th
+  font-family: 'Open Sans', sans-serif !important; // Forzar Open Sans
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  
+  span {
+    white-space: normal; // Permitir múltiples líneas por defecto
+    word-wrap: break-word; // Permitir ruptura de palabras si es necesario
+    line-height: 1.2; // Mejor espaciado entre líneas
+  }
+  
+  &.has-sort-icon {
+    justify-content: space-between; // Solo cuando hay icono, mantiene espacio entre texto e icono
+  }
+  
+  &.no-sort-icon {
+    justify-content: flex-start; // Sin icono, no reserva espacio adicional
+  }
+  
+  // Alineación con iconos de ordenamiento
+  &.has-sort-icon.align-center {
+    display: grid;
+    grid-template-columns: 1fr auto; // El texto ocupa todo el espacio disponible, el ícono solo el necesario
+    align-items: center;
+    height: 100%;
+    gap: 4px; // Pequeño espacio entre texto e ícono
+    
+    span:first-child { // El span del texto
+      text-align: center;
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      line-height: 1.2;
+      max-width: 160px; // Restricción para forzar wrap cuando sea necesario
+      justify-self: center; // Centrar dentro de su grid area
+    }
+    
+    .sort-icon {
+      justify-self: end; // Alinear a la derecha en su grid area
+      flex-shrink: 0;
+    }
+  }
+  
+  &.has-sort-icon.align-right {
+    justify-content: flex-end;
+    flex-direction: row-reverse;
+    
+    .sort-icon {
+      margin-left: 0;
+      margin-right: 8px;
+    }
+  }
+  
+  // Alineación sin iconos
+  &.no-sort-icon.align-center {
+    justify-content: center;
+  }
+  
+  &.no-sort-icon.align-right {
+    justify-content: flex-end;
+  }
+  
+  &.no-sort-icon.align-left {
+    justify-content: flex-start;
+  }
+}
+
+.sort-icon {
+  display: flex;
+  align-items: center;
+  margin-left: 8px; // Añade un espacio entre el texto y el icono
+  transition: opacity 0.2s ease-in-out; // Una transición suave para el cambio de opacidad
+  width: 16px;
+  height: 16px;
+  
+  // Forzar el tamaño del icono interno
+  lib-icon {
+    width: 16px;
+    height: 16px;
+    
+    svg {
+      width: 16px !important;
+      height: 16px !important;
+    }
+  }
+}
+
+// Estilo para el icono cuando la columna NO está activa
+.inactive-icon {
+  opacity: 0.35; // Lo hace visible pero atenuado
+}
+
+// Estilo para el icono cuando la columna SÍ está activa
+.active-icon {
+  opacity: 1; // Totalmente visible
+}
+

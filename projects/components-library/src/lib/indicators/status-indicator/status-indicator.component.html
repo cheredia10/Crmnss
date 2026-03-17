@@ -1,0 +1,22 @@
+<!-- Status indicator con círculo SVG y texto -->
+<div class="status-indicator-container">
+  <!-- Círculo indicador SVG -->
+  <svg 
+    class="status-circle"
+    [attr.width]="size()" 
+    [attr.height]="size()" 
+    [attr.viewBox]="'0 0 ' + size() + ' ' + size()" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg">
+    <circle 
+      [attr.cx]="size() / 2" 
+      [attr.cy]="size() / 2" 
+      [attr.r]="(size() / 2) - (needsBorder() ? 1 : 0)" 
+      [attr.fill]="config().color"
+      [attr.stroke]="needsBorder() ? borderColor() : 'none'"
+      [attr.stroke-width]="needsBorder() ? '1' : '0'" />
+  </svg>
+  
+  <!-- Texto del estado -->
+  <span class="status-label">{{ config().label }}</span>
+</div>

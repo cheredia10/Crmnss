@@ -1,0 +1,170 @@
+@use '../../styles/index' as styles;
+
+/* dropdown-select.component.scss */
+.dropdown-container {
+  position: relative;
+  width: 100%;
+  min-width: 120px;
+  border: 1px solid;
+  border-color: styles.get-color('stroke', 'grey');
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  user-select: none;
+  font-family: 'Open Sans', sans-serif;
+  box-sizing: border-box;
+
+  &:hover {
+    border-color: styles.get-color('stroke', 'grey');
+  }
+
+  &.open {
+    border-color: styles.get-color('stroke', 'grey');
+  }
+
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #FFF !important;
+  }
+
+  &.error {
+    border-color: #ef4444;
+    
+    &:hover {
+      border-color: #dc2626;
+    }
+    
+    &.open {
+      border-color: #dc2626;
+    }
+  }
+}
+
+.dropdown-selected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  min-height: 24px;
+  gap: 8px; // Añade un pequeño espacio entre el texto y la flecha
+  overflow: hidden; // Importante: el contenedor padre debe ocultar el desbordamiento
+  box-sizing: border-box;
+
+  // Cuando se especifica una altura personalizada
+  &.custom-height {
+    padding: 0 12px;
+    height: 100%;
+    min-height: unset;
+  }
+}
+
+.dropdown-label,
+.dropdown-placeholder {
+  // Aplicamos a ambos
+  color: styles.get-color('secondary-text', 'light');
+  font-weight: 400;
+  font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
+
+  // --- AÑADE ESTAS LÍNEAS PARA EL EFECTO DE ELIPSIS ---
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  // Opcional: Esto ayuda a que el texto no empuje a la flecha fuera
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.dropdown-arrow {
+  display: flex;
+  align-items: center;
+  color: #1a3c61;
+  transition: transform 0.2s;
+  flex-shrink: 0; // Evita que la flecha se encoja
+
+  .open & {
+    transform: rotate(180deg);
+  }
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background-color: white;
+  border: 1px solid;
+  border-color: styles.get-color('stroke', 'grey');
+  border-radius: 8px;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown-option {
+  padding: 10px 12px;
+  color: #333;
+  font-family: 'Open Sans', sans-serif;
+
+  &:hover {
+    background-color: #f0f7ff;
+  }
+
+  &.selected {
+    background-color: styles.get-color('light-turquoise', 'dark');
+    color: #1a3c61;
+    font-weight: 400;
+  }
+
+  // --> NUEVO: Estilo para la opción de "Añadir nuevo"
+  &.add-new-option {
+    font-style: italic;
+    color: styles.get-color('primary', 'main'); // O el color que prefieras
+  }
+}
+
+// --> NUEVO: Estilos para el contenedor del input y los botones
+.add-new-container {
+  display: flex;
+  align-items: center;
+  padding: 2px; // Un pequeño padding para que no quede pegado a los bordes
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.add-new-input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
+  background-color: transparent;
+  width: 100%; // Asegura que tome el espacio disponible
+}
+
+.add-new-confirm,
+.add-new-cancel {
+  flex-shrink: 0;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0 8px;
+  color: #555;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.add-new-confirm {
+  color: #28a745; // Verde para confirmar
+}
+
+.add-new-cancel {
+  color: #dc3545; // Rojo para cancelar
+}

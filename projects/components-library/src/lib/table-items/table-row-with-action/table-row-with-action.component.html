@@ -1,0 +1,19 @@
+<div class="table-row" [ngClass]="variant()">
+  <!-- <span class="row-text">{{ text() }}</span> -->
+  <div class="row-actions">
+    @for (action of actions(); track action) {
+      <button class="action-btn" [class.disabled]="action.disabled"
+        (click)="onActionClick(action)">
+        @if(action.type === 'edit'){
+          <lib-icon name="editar"></lib-icon>
+        }
+        @if(action.type === 'link'){
+          <lib-icon name="Expand-Resize-Arrow-Arrows-Direction"></lib-icon>
+        }
+        @if(action.type === 'delete'){
+          <lib-icon name="fi-sr-trash"></lib-icon>
+        }
+      </button>
+    }
+  </div>
+</div>

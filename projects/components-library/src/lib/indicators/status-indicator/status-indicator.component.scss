@@ -1,0 +1,20 @@
+.status-indicator-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; // Espacio entre círculo y texto como se ve en Figma
+}
+
+.status-circle {
+  flex-shrink: 0; // Evita que el SVG se deforme
+  display: block; // Elimina espacio extra del SVG
+  // El tamaño se establece dinámicamente desde el componente
+}
+
+.status-label {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600; // Semi-bold
+  font-size: 14px;
+  color: #333333;
+  line-height: 1;
+  white-space: nowrap; // Evita que el texto se corte
+}

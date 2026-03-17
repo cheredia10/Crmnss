@@ -1,0 +1,37 @@
+<div class="form-date-picker-wrapper" (scrollClose)="closeCalendar()">
+    <div class="form-field">
+        <div class="date-input-wrapper" [style.width]="inputWidth()" [style.height]="inputHeight()" [class.date-input-wrapper--disabled]="disabled()"
+            [class.date-input-wrapper--readonly]="readonly()"
+            [class.date-input-wrapper--error]="control().invalid && control().touched"
+            [class.date-input-wrapper--focused]="isCalendarOpen()">
+
+            <input #inputElement [id]="id()" [formControl]="control()" [placeholder]="placeholder()"
+                [readonly]="readonly()" type="text" class="date-input" autocomplete="off"
+                aria-haspopup="dialog" [attr.aria-expanded]="isCalendarOpen()"
+                [attr.aria-describedby]="control().invalid && control().touched ? id() + '-error' : null"
+                [attr.tabindex]="tabindex()" />
+
+            <button type="button" class="calendar-button" [disabled]="disabled() || control().disabled"
+                [attr.aria-label]="isCalendarOpen() ? 'Cerrar calendario' : 'Abrir calendario'"
+                (click)="toggleCalendar()">
+                <lib-icon name="fi-ss-calendar"></lib-icon>
+            </button>
+        </div>
+    </div>
+
+    <lib-date-picker-2 [theme]="theme()" [selectionMode]="'single'" [minDate]="minDate()" [maxDate]="maxDate()"
+        [triggerElement]="getTriggerElement()" [(isOpen)]="isCalendarOpen" [(selectedDate)]="selectedDate" (selectedDateChange)="onDateSelectedFromCalendar($event)">
+    </lib-date-picker-2>
+
+    <!-- @if (control().invalid && control().touched) {
+    <div class="error-message" [id]="id() + '-error'" role="alert" aria-live="polite">
+        @if (control().errors?.['required']) {
+        Este campo es obligatorio.
+        } @else if (control().errors?.['invalidDate']) {
+        Formato de fecha inválido.
+        } @else {
+        Este campo contiene errores.
+        }
+    </div>
+    } -->
+</div>

@@ -1,0 +1,13 @@
+@use '../../styles/index' as styles;
+
+.page-title {
+    @include styles.typography('h2', 'semi-bold');
+    font-family: 'Open Sans', sans-serif !important;
+    color: styles.get-color('primary-text', 'light');
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    height: 44px;
+}

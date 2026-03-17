@@ -1,0 +1,108 @@
+/* Rating Container */
+.rating-container {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: 'Corporate S BQ', sans-serif;
+}
+
+/* Star Button Base */
+.star-button {
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 2px;
+  outline: none;
+}
+
+.star-button:focus-visible {
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.5);
+}
+
+/* Star Icon */
+.star-icon {
+  display: block;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+/* Star Sizes */
+.star-small .star-icon {
+  font-size: 16px;
+}
+
+.star-medium .star-icon {
+  font-size: 20px;
+}
+
+.star-large .star-icon {
+  font-size: 24px;
+}
+
+/* Star States */
+.star-active {
+  transform: scale(1.1);
+}
+
+.star-empty {
+  opacity: 0.7;
+}
+
+.star-button:hover:not(.star-disabled):not(.star-readonly) {
+  transform: scale(1.15);
+}
+
+/* Disabled State */
+.rating-disabled,
+.star-disabled {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+}
+
+.star-disabled:hover {
+  transform: none !important;
+}
+
+/* Readonly State */
+.rating-readonly,
+.star-readonly {
+  cursor: default !important;
+}
+
+.star-readonly:hover {
+  transform: none !important;
+}
+
+/* Rating Value Display */
+.rating-value {
+  margin-left: 0.5rem;
+  font-size: 0.875rem;
+  color: #666666;
+  font-weight: 500;
+  min-width: 2rem;
+  text-align: left;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .star-button,
+  .star-icon {
+    transition: none;
+  }
+  
+  .star-button:hover:not(.star-disabled):not(.star-readonly),
+  .star-active {
+    transform: none;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.star-button:focus {
+  outline: 2px solid rgba(25, 118, 210, 0.5);
+  outline-offset: 2px;
+}

@@ -1,0 +1,72 @@
+@use '../../styles/index' as styles;
+.syntax-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    padding: styles.get-spacing('8');
+    
+    input[type="checkbox"] {
+      display: none;
+    }
+    
+    .checkmark {
+      width: 18px;
+      height: 18px;
+      border: 1px solid styles.get-color('stroke','grey');
+      border-radius: 4px;
+      position: relative;
+      transition: all 0.2s ease;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 2px;
+        width: 4px;
+        height: 8px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+    }
+    
+    input:checked + .checkmark {
+      //background-color: var(--color-primary);
+      //border-color: var(--color-primary);
+      
+      &::after {
+        opacity: 1;
+      }
+    }
+    
+    .label-text {
+      @include styles.typography('label');
+      color: styles.get-color('primary-text','light');
+    }
+    
+    &.variant-error {
+      .checkmark {
+        border-color: styles.get-color('stroke','grey');
+      }
+      
+      input:checked + .checkmark {
+        background-color: styles.get-color('error','light');
+        border-color: styles.get-color('error','light');
+      }
+    }
+    
+    &.variant-select {
+      .checkmark {
+        border-color: styles.get-color('stroke','grey');
+      }
+      
+      input:checked + .checkmark {
+        background-color: styles.get-color('secondary-blue','dark');
+        border-color: styles.get-color('secondary-blue','dark');
+      }
+    }
+  }

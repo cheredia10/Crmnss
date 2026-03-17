@@ -1,0 +1,25 @@
+<form [formGroup]="emailForm" (ngSubmit)="enviarCorreo()">
+    <div mat-dialog-content class="dialog-content">
+        <lib-header-1 [text]="headerText()"></lib-header-1>
+
+        <lib-text-input [label]="labelTo()" [placeholder]="placeholderTo()" formControlName="para" />
+        <lib-text-input [label]="labelCc()" [placeholder]="placeholderCc()" formControlName="cc" />
+        <lib-text-input [label]="labelSubject()" [placeholder]="placeholderSubject()" formControlName="asunto" />
+
+        <lib-rich-text-editor [placeholder]="placeholderContent()" formControlName="contenido"
+            (attachFile)="triggerFileInput()">
+        </lib-rich-text-editor>
+
+        <div class="attachments-section">
+            @for (att of attachments(); track att.file.name) {
+            <lib-file-chip [fileName]="att.file.name" [fileSize]="att.file.size" (remove)="removeAttachment(att)" />
+            }
+        </div>
+
+        <input type="file" #fileInput hidden multiple (change)="onFileSelected($event)">
+    </div>
+
+    <div mat-dialog-actions class="acciones">
+        <button type="submit" class="enviar-btn">{{ sendButtonText() }}</button>
+    </div>
+</form>

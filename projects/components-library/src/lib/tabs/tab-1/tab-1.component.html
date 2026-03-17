@@ -1,0 +1,15 @@
+<div class="tabs-container">
+    <div class="tabs-header">
+        <h1 class="page-title">{{ title() }}</h1>
+        <div class="tabs-nav">
+            @for (tab of tabs(); track tab.id) {
+            <button class="tab-button" [class.active]="tab.id === activeTabId()" (click)="selectTab(tab.id)">
+                {{ tab.title }}
+            </button>
+            }
+        </div>
+    </div>
+    <div class="tab-content">
+        <ng-content></ng-content>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+@use '../../styles/index' as styles;
+
+.btn {
+    @include styles.typography('small', 'semi-bold');
+    color: styles.get-color('secondary-blue', 'light');
+    width: 88px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    border: none;
+}
+
+.btn- {
+    &success {
+        background-color: styles.get-color('success', 'light');
+    }
+
+    &warning {
+        background-color: styles.get-color('warning', 'light');
+    }
+
+    &error {
+        background-color: styles.get-color('error', 'light');
+    }
+
+    &info {
+        background-color: styles.get-color('graphics-blue', 'secondary');
+    }
+}

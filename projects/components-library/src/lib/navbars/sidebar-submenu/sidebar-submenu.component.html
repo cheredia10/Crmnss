@@ -1,0 +1,52 @@
+<div class="submenu-container">
+    <div class="submenu-header" [class.collapsed]="collapsed()" [class.active]="isOpen()">
+        @if (icon() || matIcon()) {
+        <span class="item-icon"><lib-dynamic-icon [icon]="icon()" [matIcon]="matIcon()"></lib-dynamic-icon></span>
+        }
+        @if (!collapsed()) {
+        <span class="item-label">{{ label() }}</span>
+        <span class="chevron" [class.open]="isOpen()">
+            <lib-dynamic-icon matIcon='expand_more'></lib-dynamic-icon>
+        </span>
+        }
+    </div>
+
+    @if (isOpen() && !collapsed()) {
+    <div class="submenu-items">
+        @for (item of items(); track trackByItem(item, i); let i = $index) {
+        @if (!item.children) {
+        <div class="submenu-item" 
+          [routerLink]="item.route ?? null"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: false }"
+          (click)="$event.stopPropagation()">
+            @if (item.icon || item.matIcon) {
+            <span class="submenu-icon"><lib-dynamic-icon [icon]="item.icon" [matIcon]="item.matIcon"></lib-dynamic-icon></span>
+            }
+            <span class="submenu-label" [title]="item.label">{{ item.label }}</span>
+        </div>
+        } @else {
+        <div class="submenu-group">
+            <div class="submenu-group-header" (click)="toggleChildren(i);$event.stopPropagation()">
+                <span class="submenu-icon"><lib-dynamic-icon [icon]="item.icon" [matIcon]="item.matIcon"></lib-dynamic-icon></span>
+                <span class="submenu-label" [title]="item.label">{{ item.label }}</span>
+            </div>
+            @if(isChildrenOpen(i)) {
+            <div class="submenu-children">
+                @for (child of item.children; track trackByChild(child, j); let j = $index) {
+                <a class="submenu-child-item" 
+                   [routerLink]="[child.route ?? null]"
+                   routerLinkActive="active"
+                   [routerLinkActiveOptions]="{ exact: false }"
+                   (click)="$event.stopPropagation()">
+                    <span class="submenu-label" [title]="child.label">{{ child.label }}</span>
+                </a>
+                }
+            </div>
+            }
+        </div>
+        }
+        }
+    </div>
+    }
+</div>

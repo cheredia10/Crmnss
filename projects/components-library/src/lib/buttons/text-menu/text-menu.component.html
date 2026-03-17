@@ -1,0 +1,18 @@
+<div class="menu-item" [ngClass]="{
+        'disabled': disabled(),
+        'selected': selected(),
+        'active': active()
+      }" (click)="onClick()" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+  <span class="menu-label">{{ label() }}</span>
+
+  @if (icon() || iconSvg()) {
+    <div class="menu-icon">
+      @if (icon()) {
+        <span><lib-icon [name]="icon()"></lib-icon></span>
+      }
+      @if (iconSvg()) {
+        <span [innerHTML]="iconSvg()"></span>
+      }
+    </div>
+  }
+</div>

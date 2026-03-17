@@ -1,0 +1,55 @@
+@use "sass:map";
+
+// Sistema de espaciado base
+$base-unit: 8px;
+
+$spacing: (
+  '8': $base-unit,        // 1x
+  '16': $base-unit * 2,   // 2x
+  '24': $base-unit * 3,   // 3x
+  '32': $base-unit * 4,   // 4x
+  '48': $base-unit * 6,   // 6x
+  '64': $base-unit * 8,   // 8x
+  '80': $base-unit * 10,  // 10x
+  '96': $base-unit * 12,  // 12x
+  '128': $base-unit * 16, // 16x
+  '160': $base-unit * 20, // 20x
+  '192': $base-unit * 24  // 24x
+);
+
+// Función para obtener espaciado
+@function get-spacing($size) {
+  @return map.get($spacing, $size);
+}
+
+// Clases de utilidad para márgenes y padding
+@each $key, $value in $spacing {
+  .m-#{$key} {
+    margin: $value;
+  }
+  
+  .mt-#{$key} {
+    margin-top: $value;
+  }
+
+  .mb-#{$key} {
+    margin-bottom: $value;
+  }
+
+  .p-#{$key} {
+    padding: $value;
+  }
+}
+
+// Sistema de Grid
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  gap: get-spacing('16');
+}
+
+@for $i from 1 through 24 {
+  .col-#{$i} {
+    grid-column: span $i;
+  }
+}

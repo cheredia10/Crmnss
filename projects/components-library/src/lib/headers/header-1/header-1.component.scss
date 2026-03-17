@@ -1,0 +1,42 @@
+@use '../../styles/index' as styles;
+
+.header {
+    //@include styles.typography('label', 'semi-bold');
+    font-family: 'Open Sans';
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    color: styles.get-color('light-background', 'light');
+
+    &.small {
+        height: 22px;
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    &.medium {
+        height: 44px;
+        @include styles.typography('body', 'semi-bold');
+    }
+
+    &.large {
+        height: 66px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    &.primary {
+        background-color: styles.get-color('primary-turquoise', light);
+    }
+
+    &.secondary {
+        background-color: styles.get-color('secondary-turquoise', light);
+    }
+
+    &.danger {
+        background-color: styles.get-color('danger');
+    }
+}

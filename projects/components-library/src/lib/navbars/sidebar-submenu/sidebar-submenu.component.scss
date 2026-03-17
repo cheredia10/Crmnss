@@ -1,0 +1,188 @@
+@use '../../styles/index' as styles;
+.submenu-container {
+    margin: 2px 8px;
+  }
+
+  .submenu-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 16px;  // Ajustado para altura total de 60px
+    height: 60px;        // Altura fija de 60px
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    box-sizing: border-box;
+  }
+
+  .submenu-header:hover {
+    background-color: #f5f7fa;
+  }
+
+  .submenu-header.active {
+    background-color: #004179;
+    color: white;
+  }
+
+  .submenu-header.collapsed {
+    justify-content: center;
+    padding: 16px 0;     // Ajustado para altura total de 60px
+    height: 60px;        // Altura fija de 60px
+    box-sizing: border-box;
+  }
+
+  .item-icon {
+    margin-right: 12px;
+    font-size: 18px;
+  }
+
+  .submenu-header.collapsed .item-icon {
+    margin-right: 0;
+  }
+
+  .item-label {
+    flex: 1;
+    @include styles.typography('body', 'semi-bold');
+    color: styles.get-color('primary-text', 'light');
+  }
+
+  .submenu-header.active .item-label {
+    color: white;
+  }
+
+  .submenu-header.active .chevron {
+    color: white;
+  }
+
+  .chevron {
+    font-size: 10px;
+    transition: transform 0.3s;
+  }
+
+  .chevron.open {
+    transform: rotate(180deg);
+  }
+
+  .submenu-items {
+    background-color: styles.get-color('light-background', 'light');
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 4px 0;
+  }
+
+  .submenu-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 18px;
+    text-decoration: none;
+    color: styles.get-color('primary-text', 'light');
+    transition: background-color 0.2s;
+    min-height: 44px; // Altura mínima para consistencia
+    cursor: pointer;
+  }
+
+  .submenu-item:hover {
+    background-color: #e8eef7;
+  }
+
+  .submenu-icon {
+    margin-right: 12px;
+    font-size: 16px;
+    color: styles.get-color('primary-blue', 'dark');
+  }
+
+  .submenu-label {
+    @include styles.typography('body', 'semi-bold');
+    // Truncado con ellipsis para máximo 2 líneas
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    word-wrap: break-word;
+    hyphens: auto;
+    flex: 1; // Toma el espacio disponible
+  }
+
+  .submenu-group {
+    margin: 0px 0;
+  }
+
+  .submenu-group-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 16px 16px; // Ajustado para altura total de 60px
+    height: 60px;       // Altura fija de 60px
+    color: #666;
+    font-weight: 500;
+    background-color: #F0F9FF;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+
+  // .submenu-children {
+  //   margin-left: 16px;
+  // }
+
+  .submenu-child-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 16px 16px 56px; // Ajustado para altura total de 60px
+    height: 60px;                 // Altura fija de 60px
+    text-decoration: none;
+    color: styles.get-color('primary-text', 'light');
+    transition: background-color 0.2s;
+    @include styles.typography('label', 'regular');
+    box-sizing: border-box;
+    
+    .submenu-label {
+      // Truncado con ellipsis para máximo 2 líneas
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.3;
+      word-wrap: break-word;
+      hyphens: auto;
+      flex: 1; // Toma el espacio disponible
+    }
+    
+    &:hover {
+      background-color: #e8eef7;
+    }
+    
+    &.active {
+      background-color: #007bff;
+      color: white;
+      font-weight: 600;
+      
+      .submenu-label {
+        color: white;
+      }
+    }
+  }
+
+  .submenu-item.active {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    font-weight: 600;
+    border-left: 3px solid #007bff;
+    
+    .submenu-icon {
+      color: #1976d2;
+    }
+    
+    .submenu-label {
+      color: #1976d2;
+      // Mantener el truncado en estado activo
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.3;
+    }
+  }

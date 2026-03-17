@@ -1,0 +1,33 @@
+<div class="radio-group" 
+     [class.disabled]="disabled()"
+     [attr.data-direction]="direction()"
+     [attr.data-size]="size()">
+  @for (option of options(); track trackByValue(i, option); let i = $index) {
+    <div class="radio-option"
+      [class.disabled]="option.disabled || disabled()">
+      <label class="radio-label">
+        <input type="radio" class="radio-input" [name]="name()" [value]="option.value"
+          [checked]="isSelected(option.value)" [disabled]="option.disabled || disabled()"
+          (change)="onSelectionChange(option.value)" (focus)="onFocus()" (blur)="onBlur()" />
+          <span class="radio-custom">
+            <span class="radio-inner" [class.selected]="isSelected(option.value)"></span>
+          </span>
+          <span class="radio-text">{{ option.label }}</span>
+        </label>
+        
+        <!-- Ícono de información -->
+        @if (enableInfoIcons() && option.showInfoIcon) {
+          <button 
+            type="button"
+            class="info-icon-btn" 
+            libTooltip="{{ option.infoTooltip || 'Información' }}"
+            [tooltipPosition]="tooltipPosition()"
+            [tooltipTheme]="tooltipTheme()"
+            (click)="onInfoClick(option, i)"
+            [disabled]="option.disabled || disabled()">
+            <lib-icon [name]="infoIconName()"></lib-icon>
+          </button>
+        }
+      </div>
+    }
+  </div>

@@ -1,0 +1,62 @@
+<aside class="lib-sidebar" [class.lib-sidebar--open]="isOpen" [class.lib-sidebar--collapsed]="isCollapsed()">
+
+  <!-- Header: Logo + botón toggle -->
+  <div class="lib-sidebar__logo">
+    <div class="logo-svg">
+      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="32" viewBox="0 0 32 39" fill="none">
+        <path d="M9.29493 1.13825H1.553L23.5346 37.6359H31L19.6636 19.1106L30.447 1.13825L22.9816 1L15.9309 14.4101L9.29493 1.13825Z" fill="#004179"/>
+        <path d="M1 37.7742L10.6774 21.7373C11.3687 21.7373 13.1659 25.6083 13.1659 28.788L8.32719 37.7742H1Z" fill="#004179"/>
+      </svg>
+    </div>
+    @if (!isCollapsed()) {
+      <div class="logo-text">
+        <span class="logo-appname">{{ appName }}</span>
+        <span class="logo-tagline">by NEW STAGE SOLUTIONS</span>
+      </div>
+    }
+    <!-- Botón colapsar/expandir -->
+    <button class="lib-sidebar__toggle" (click)="toggleCollapse()" [title]="isCollapsed() ? 'Expandir' : 'Colapsar'">
+      <span class="material-icons">{{ isCollapsed() ? 'chevron_right' : 'chevron_left' }}</span>
+    </button>
+  </div>
+
+  <!-- Búsqueda (solo cuando está expandido) -->
+  @if (!isCollapsed()) {
+    <div class="lib-sidebar__search">
+      <span class="material-icons search-icon">search</span>
+      <span class="search-placeholder">Buscar...</span>
+    </div>
+  }
+
+  <!-- Menú de navegación -->
+  <nav class="lib-sidebar__nav">
+    @for (item of menuItems; track item.id) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="lib-sidebar__nav-item--active"
+        class="lib-sidebar__nav-item"
+        (click)="onItemClick(item)"
+        [title]="isCollapsed() ? item.label : ''"
+        [attr.aria-label]="item.label">
+        <span class="material-icons nav-icon">{{ item.icon }}</span>
+        @if (!isCollapsed()) {
+          <span class="nav-label">{{ item.label }}</span>
+          @if (item.badge) {
+            <span class="nav-badge">{{ item.badge }}</span>
+          }
+        }
+      </a>
+    }
+  </nav>
+
+  <!-- Footer: Cerrar sesión -->
+  <div class="lib-sidebar__footer">
+    <button class="lib-sidebar__logout" (click)="logoutClick.emit()" [title]="isCollapsed() ? 'Cerrar sesión' : ''">
+      <span class="material-icons">logout</span>
+      @if (!isCollapsed()) {
+        <span>Cerrar sesión</span>
+      }
+    </button>
+  </div>
+
+</aside>

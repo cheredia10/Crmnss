@@ -1,0 +1,29 @@
+@use '../../styles/index' as styles;
+.table-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 24px;
+    gap: 10px;
+    border-right: 1px solid var(--Color-Stroke-Grey, #BBBFC1);
+    border-bottom: 1px solid var(--Color-Stroke-Grey, #BBBFC1);
+    background: var(--Color-PrimaryBlue-Dark, #004179);
+    height: 34.863px;
+}
+
+.table-title-text {
+    display: flex;
+    height: 25px;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1 0 0;
+
+    overflow: hidden;
+    color: #FFF;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    /* 16px Bold 600 */
+    @include styles.typography('body', 'semi-bold');
+}

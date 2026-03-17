@@ -1,0 +1,32 @@
+@if (routerLink() && routerLink() !== '') {
+<!-- Item navegable con RouterLink -->
+<a class="sidebar-item" 
+   [class.collapsed]="collapsed()" 
+   [routerLink]="routerLink()"
+   routerLinkActive="active"
+   [routerLinkActiveOptions]="{ exact: false }">
+    <span class="item-icon">
+        <lib-dynamic-icon [icon]="icon()" [matIcon]="matIcon()"></lib-dynamic-icon>
+    </span>
+    @if (!collapsed()) {
+    <span class="item-label">{{ label() }}</span>
+    }
+    @if (badge() && !collapsed()) {
+    <span class="item-badge">{{ badge() }}</span>
+    } 
+</a>
+} @else {
+<!-- Item no navegable (sin RouterLink) -->
+<div class="sidebar-item non-navigable" 
+     [class.collapsed]="collapsed()">
+    <span class="item-icon">
+        <lib-dynamic-icon [icon]="icon()" [matIcon]="matIcon()"></lib-dynamic-icon>
+    </span>
+    @if (!collapsed()) {
+    <span class="item-label">{{ label() }}</span>
+    }
+    @if (badge() && !collapsed()) {
+    <span class="item-badge">{{ badge() }}</span>
+    } 
+</div>
+}

@@ -1,0 +1,32 @@
+<div class="tag-container"
+  [ngClass]="getClassObject()"
+  [style.background-color]="computedBackgroundColor()"
+  [style.color]="computedTextColor()"
+  [style.border-color]="computedBorderColor()"
+  (click)="onClick()">
+  <!-- Icono opcional -->
+  @if (icon() || iconSvg()) {
+    <div class="tag-icon">
+      @if (icon()) {
+        <span>{{ icon() }}</span>
+      }
+      @if (iconSvg()) {
+        <span [innerHTML]="iconSvg()"></span>
+      }
+    </div>
+  }
+
+  <!-- Contenido principal -->
+  <div class="tag-content">
+    <div class="tag-label">{{ label() }}</div>
+    <div class="tag-value">{{ value() }}</div>
+  </div>
+
+  <!-- Botón de eliminar -->
+  @if (removable()) {
+    <button class="tag-remove-btn" (click)="onRemove($event)" type="button"
+      aria-label="Eliminar tag">
+      ×
+    </button>
+  }
+</div>

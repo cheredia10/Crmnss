@@ -1,0 +1,31 @@
+<div class="steps-container" [ngClass]="orientation()">
+  @for (step of steps(); track step; let i = $index) {
+    <div
+      class="step-item"
+      [ngClass]="'status-' + step.status"
+      (click)="onStepClick(step, i)"
+      >
+      <div class="step-indicator">
+        @if (!step.icon) {
+          <span class="step-number">
+            {{ step.number || (i + 1) }}
+          </span>
+        }
+        @if (step.icon) {
+          <span class="step-icon">
+            {{ step.icon }}
+          </span>
+        }
+      </div>
+      <div class="step-content">
+        <span class="step-label">{{ step.label }}</span>
+      </div>
+      <!-- Línea conectora (solo para orientación vertical) -->
+      @if (orientation() === 'vertical' && i < steps().length - 1) {
+        <div
+          class="step-connector"
+        ></div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,49 @@
+<div class="evaluation-row" [class.expanded-state]="isExpanded()">
+    <!-- Main row content -->
+    <div class="row-header" [class.expanded]="isExpanded()" (click)="toggleExpanded()">
+        <div class="date-column">
+            <span class="date">{{ data().date | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="divider-line"></div>
+        <div class="name-column">
+            <span class="name">{{ data().name }}</span>
+        </div>
+        <div class="divider-line"></div>
+        <div class="status-column">
+            <span class="status" [class]="statusClass()">{{ data().status }}</span>
+        </div>
+        <div class="divider-line"></div>
+        <div class="expand-column">
+            <button type="button" class="expand-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" [class.rotated]="isExpanded()">
+                    <path d="M6 9L12 15L18 9" stroke="#464646" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Expanded content -->
+    @if (isExpanded()) {
+    <div class="expanded-content">
+        <div class="detail-item">
+            <span class="label">{{ labels().onTimeDeliveries }}</span>
+            <span class="value">{{ data().details.entregas_puntuales }}%</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="label">{{ labels().serviceQuality }}</span>
+            <span class="value">{{ data().details.calidad_servicio }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="label">{{ labels().reportedIncidents }}</span>
+            <span class="value">{{ data().details.incidentes_reportados }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="label">{{ labels().observations }}</span>
+            <span class="value">{{ data().details.observaciones }}</span>
+        </div>
+    </div>
+    }
+</div>

@@ -1,0 +1,156 @@
+/* syntax-step-flow.component.scss */
+.step-flow {
+    position: relative;
+    width: 100%;
+    background-color: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.flow-connections {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.flow-step {
+    position: absolute;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    transition: all 0.2s ease;
+
+    &.clickable {
+        cursor: pointer;
+
+        &:hover:not(.status-disabled) {
+            transform: translateY(-2px);
+
+            .step-indicator {
+                transform: scale(1.05);
+            }
+        }
+    }
+}
+
+.step-indicator {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid;
+    background-color: white;
+    transition: all 0.2s ease;
+
+    .step-default-icon {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.step-label {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Estados */
+.step-item {
+    &.status-completed {
+        .step-indicator {
+            border-color: #4caf50;
+            color: #4caf50;
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+        }
+
+        .step-label {
+            color: #333;
+        }
+    }
+
+    &.status-active {
+        .step-indicator {
+            border-color: #00bcd4;
+            color: #00bcd4;
+            box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.1);
+        }
+
+        .step-label {
+            color: #333;
+            font-weight: 600;
+        }
+    }
+
+    &.status-pending {
+        .step-indicator {
+            border-color: #ff9800;
+            color: #ff9800;
+            box-shadow: 0 0 0 4px rgba(255, 152, 0, 0.1);
+        }
+
+        .step-label {
+            color: #333;
+        }
+    }
+
+    &.status-disabled {
+        .step-indicator {
+            border-color: #bdbdbd;
+            color: #bdbdbd;
+        }
+
+        .step-label {
+            color: #bdbdbd;
+        }
+    }
+}
+
+/* Tamaños */
+.step-item {
+    &.size-small {
+        .step-indicator {
+            width: 32px;
+            height: 32px;
+            border-width: 2px;
+
+            .step-default-icon {
+                width: 14px;
+                height: 14px;
+            }
+        }
+
+        .step-label {
+            font-size: 12px;
+        }
+    }
+
+    &.size-large {
+        .step-indicator {
+            width: 64px;
+            height: 64px;
+            border-width: 4px;
+
+            .step-default-icon {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        .step-label {
+            font-size: 16px;
+        }
+    }
+}

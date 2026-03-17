@@ -1,0 +1,60 @@
+@use '../styles/index' as styles;
+
+    :host {
+      display: inline-block;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 400;
+      gap: 8px;
+      cursor: default;
+      
+      &--filled {
+        background-color: styles.get-color('light-blue', 'light');
+        border: 1px solid transparent;
+        color: white;
+
+        .chip__close {
+          color: white;
+        }
+      }
+
+      &--outline {
+        background-color: transparent;
+        border: 1px solid styles.get-color('secondary-blue', 'dark');
+        color: #015CA8;
+
+        .chip__close {
+          color: #015CA8;
+        }
+      }
+    }
+
+    .chip__image {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      margin-left: -4px;
+      object-fit: cover;
+    }
+
+    .chip__icon {
+      font-size: 18px;
+      height: 18px;
+      width: 18px;
+      margin-left: -4px;
+    }
+
+    .chip__close {
+      font-size: 18px;
+      height: 18px;
+      width: 18px;
+      margin-right: -4px;
+      cursor: pointer;
+    }

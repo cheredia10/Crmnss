@@ -1,0 +1,123 @@
+@use '../../styles/index' as styles;
+
+// (Opcional, pero recomendado) Mixin para estilos deshabilitados para no repetir código
+@mixin disabled-styles {
+    background-color: #f5f5f5; // Un gris claro en lugar de blanco puro es más común
+    color: #BBBFC1;
+    cursor: not-allowed;
+    border-color: #e0e0e0;
+    transform: none;
+    box-shadow: none;
+}
+
+.custom-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: styles.get-spacing('24');
+    padding-right: styles.get-spacing('24');
+    border-radius: 8px;
+    outline: none;
+    border: 2px solid transparent;
+    font-size: 16px;
+    cursor: pointer;
+    @include styles.typography('body', 'semi-bold');
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s; // Añadir transición para suavidad
+
+    // --- NUEVOS ESTILOS PARA ICONOS ---
+    &.with-icon {
+        gap: 8px; // Espacio entre el icono y el texto
+
+        // Ajustamos el padding para que no se vea demasiado espaciado
+        &.icon-left {
+            padding-left: styles.get-spacing('16');
+        }
+
+        &.icon-right {
+            padding-right: styles.get-spacing('16');
+            flex-direction: row-reverse; // ¡La magia para posicionar a la derecha!
+        }
+    }
+
+    // Wrappers para el icono y el contenido para asegurar la alineación
+    .icon-wrapper,
+    .content-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    // --- REFACTORIZACIÓN ---
+    // Los estados :focus y :disabled se mueven dentro de cada variante
+
+    &.large {
+        @include styles.typography('h2', 'semi-bold');
+    }
+
+    &.medium {
+        @include styles.typography('label', 'semi-bold');
+    }
+
+    &.small {
+        @include styles.typography('small', 'semi-bold');
+    }
+
+    // Variante Primaria
+    &.primary {
+        background-color: styles.get-color('secondary-blue', 'dark');
+        color: white;
+
+        &:focus-visible {
+            // Usa :focus-visible para accesibilidad
+            outline: 2px solid styles.get-color('medium-blue', 'dark');
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            @include disabled-styles; // Usamos el mixin
+        }
+    }
+
+    // Variante Secundaria
+    &.secondary {
+        background-color: white;
+        color: styles.get-color('medium-blue', 'light');
+        border-color: styles.get-color('medium-blue', 'light');
+
+        &:focus-visible {
+            outline: 2px solid styles.get-color('medium-blue', 'dark');
+            outline-offset: 2px;
+            background-color: #f0f8ff; // Un ligero fondo en focus
+        }
+
+        &:disabled {
+            @include disabled-styles;
+            background-color: white; // Quizás el fondo del secundario deshabilitado es blanco
+        }
+    }
+
+    // Variante Claro
+    &.light {
+        background-color: #2196F3;
+        color: white;
+    }
+
+    // Variante Peligro
+    &.danger {
+        background-color: styles.get-color('error', 'light');
+        color: white;
+
+        &:focus-visible {
+            outline: 2px solid styles.get-color('error', 'dark');
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            @include disabled-styles;
+            // Podrías darle un toque rojizo si quisieras
+            // background-color: #ffebee;
+            // color: #e57373;
+            // border-color: #e57373;
+        }
+    }
+}

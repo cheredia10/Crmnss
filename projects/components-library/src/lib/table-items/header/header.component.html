@@ -1,0 +1,51 @@
+<div class="table-header" [ngClass]="{
+    'sortable': sortable(),
+    'claro': backgroundType() === 'claro',
+    'oscuro': backgroundType() === 'oscuro'
+  }">
+  <!-- Checkbox para selección de todas las filas -->
+  @if (selectable()) {
+    <div class="header-checkbox">
+      <lib-checkbox-1 [checked]="allSelected()" (checkedChange)="onSelectAllChange($event)"></lib-checkbox-1>
+    </div>
+  }
+
+  <!-- Contenido y controles de ordenamiento -->
+  <div class="header-content" (click)="onSortClick()">
+    @if (sortable()) {
+      <div class="sort-controls">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          [ngClass]="getSortIconClass()">
+          <path d="M14 6.99V14H16V6.99H19L15 3L11 6.99H14Z" [attr.fill]="getUpArrowColor()" />
+          <path d="M13 17.01H10V10H8V17.01H5L9 21L13 17.01Z" [attr.fill]="getDownArrowColor()" />
+        </svg>
+      </div>
+    }
+    <span class="header-text">{{ text() }}</span>
+  </div>
+
+  <!-- Menú de opciones -->
+  @if (showOptions()) {
+    <div class="header-options">
+      <button class="options-button" (click)="toggleOptionsMenu($event)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M7 10L12 15L17 10H7Z" fill="#333333" />
+        </svg>
+      </button>
+      <!-- Menú desplegable -->
+      @if (optionsMenuOpen()) {
+        <div class="options-menu" (clickOutside)="closeOptionsMenu()">
+          @for (action of actions(); track action) {
+            <div class="option-item" [class.disabled]="action.disabled"
+              (click)="onActionClick(action)">
+              @if (action.icon) {
+                <span class="option-icon">{{ action.icon }}</span>
+              }
+              <span class="option-label">{{ action.label }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,22 @@
+<div class="stage-tracker-container">
+    @for (stage of stages(); track stage.name) {
+    <div class="stage-item">
+        <div class="circle-container">
+            @if (stage.status.key === 'iniciado') {
+            <!-- Estado con borde (anillo) -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="26" viewBox="0 0 25 26" fill="none">
+                <circle cx="12.5" cy="13.02" r="11.63" fill="white" [attr.stroke]="stage.status.color" stroke-width="1" />
+                <circle cx="12.5" cy="13.02" r="4.11" [attr.fill]="stage.status.color" />
+            </svg>
+            } @else {
+            <!-- Estado sólido (círculo completo) -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="26" viewBox="0 0 25 26" fill="none">
+                <circle cx="12.5" cy="13.02" r="12.13" [attr.fill]="stage.status.color" />
+                <circle cx="12.5" cy="13.02" r="4.55" fill="#FFFFFF" />
+            </svg>
+            }
+        </div>
+        <span class="label">{{ stage.name }}</span>
+    </div>
+    }
+</div>

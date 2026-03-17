@@ -1,0 +1,140 @@
+<div class="file-upload-container">
+  <!-- URL Input Section -->
+  @if (showUrlInput()) {
+<div class="url-input-section" [ngClass]="{
+        'focused': isUrlFocused(),
+        'uploading': urlUploadStatus() === 'uploading'
+      }">
+      <input type="url" class="url-input" [placeholder]="urlPlaceholder()" [(ngModel)]="urlValue"
+        (focus)="onUrlFocus()" (blur)="onUrlBlur()" (keyup.enter)="onUrlUpload()" />
+        <button type="button" class="upload-btn" [ngClass]="{
+          'active': urlValue().trim() !== '',
+          'uploading': urlUploadStatus() === 'uploading'
+        }" [disabled]="urlValue().trim() === '' || urlUploadStatus() === 'uploading'" (click)="onUrlUpload()">
+          {{ urlUploadStatus() === 'uploading' ? 'Cargando...' : 'Cargar' }}
+        </button>
+      </div>
+    }
+
+    <!-- Global Upload Progress -->
+    @if (globalUploadProgress() && globalUploadProgress()!.show) {
+      <div class="global-upload-progress">
+        <div class="upload-info">
+          <span class="upload-text">{{ globalUploadProgress()!.text }}</span>
+          <span class="upload-details">{{ globalUploadProgress()!.details }}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="globalUploadProgress()!.progress"></div>
+        </div>
+        <div class="upload-controls">
+          <button type="button" class="control-btn pause-btn" (click)="onPauseUpload()"
+            [attr.aria-label]="'Pausar carga'">
+            ⏸
+          </button>
+          <button type="button" class="control-btn cancel-btn" (click)="onCancelUpload()"
+            [attr.aria-label]="'Cancelar carga'">
+            ✕
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- File List -->
+    @if (files().length > 0) {
+      <div class="file-list">
+        @for (file of files(); track trackByFileId($index, file)) {
+          <div class="file-item" [ngClass]="'status-' + file.status">
+            <!-- File Icon -->
+            <div class="file-icon">
+              <div class="icon-container" [ngClass]="getFileTypeClass(file.type)">
+                <!-- <span class="file-extension">{{ getFileExtension(file.name) }}</span> -->
+                @if(getFileTypeClass(file.name)==='word'){
+                  <lib-docx-file></lib-docx-file>
+                }
+                @if(getFileTypeClass(file.name)==='excel'){
+                  <lib-xls-file></lib-xls-file>
+                }
+                @if(getFileTypeClass(file.name)==='pdf'){
+                  <lib-pdf-file></lib-pdf-file>
+                }
+                @if(getFileTypeClass(file.name)==='image' && file.status!=='done'){
+                  <lib-jpg-file></lib-jpg-file>
+                }
+                @if(getFileTypeClass(file.name)==='document'){
+                  <span class="file-extension">{{ getFileExtension(file.name) }}</span>
+                }
+              </div>
+            </div>
+            <!-- File Info -->
+            <div class="file-info">
+              <div class="file-name">{{ file.name }}</div>
+              <div class="file-details">
+                <span class="file-size">{{ formatFileSize(file.size) }}</span>
+                @if (file.status === 'error' && file.error) {
+                  <span class="file-error">
+                    {{ file.error }}
+                  </span>
+                }
+              </div>
+              <!-- Progress Bar for uploading files -->
+              @if (file.status === 'uploading' && file.progress !== undefined) {
+                <div class="file-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" [style.width.%]="file.progress"></div>
+                  </div>
+                  <span class="progress-text">{{ file.progress }}%</span>
+                </div>
+              }
+            </div>
+            <!-- File Actions -->
+            <div class="file-actions">
+              <!-- Remove/Cancel button -->
+              @if (file.status === 'done' || file.status === 'uploading') {
+                <button type="button"
+                  class="action-btn remove-btn" (click)="onRemoveFile(file)" [attr.aria-label]="'Eliminar archivo'">
+                  ✕
+                </button>
+              }
+              <!-- Error actions -->
+              @if (file.status === 'error') {
+                <button type="button" class="action-btn delete-btn" (click)="onDeleteFile(file)"
+                  [attr.aria-label]="'Eliminar archivo'">
+                  🗑
+                </button>
+                <button type="button" class="action-btn expand-btn" (click)="onExpandFile(file)"
+                  [attr.aria-label]="'Expandir archivo'">
+                  ⛶
+                </button>
+              }
+              <!-- View button -->
+              @if (file.status === 'view') {
+                <button type="button" class="action-btn view-btn"
+                  (click)="onViewFile(file)" [attr.aria-label]="'Ver archivo'">
+                  👁
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Drop Zone -->
+    @if (showDropZone()) {
+<div class="drop-zone" [ngClass]="{
+        'drag-over': isDragOver(),
+        'hidden': files().length > 0 && !showDropZone()
+      }" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)"
+        (click)="onDropZoneClick()">
+        <input #fileInput type="file" class="file-input" [multiple]="allowMultiple()" [accept]="acceptedTypes()"
+          (change)="onFileSelect($event)" />
+          <div class="drop-zone-content">
+            <div class="drop-icon">📁</div>
+            <div class="drop-text">
+              <span class="primary-text">Arrastra archivos aquí</span>
+              <span class="secondary-text">o haz clic para seleccionar</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>

@@ -1,0 +1,50 @@
+{
+  "name": "crm-hamar",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve crm-hamar",
+    "build": "ng build crm-hamar",
+    "build:lib": "ng build components-library",
+    "watch": "ng build crm-hamar --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/cdk": "^20.1.6",
+    "@angular/common": "^20.1.7",
+    "@angular/compiler": "^20.1.7",
+    "@angular/core": "^20.1.7",
+    "@angular/forms": "^20.1.7",
+    "@angular/material": "^20.1.6",
+    "@angular/platform-browser": "^20.1.7",
+    "@angular/platform-browser-dynamic": "^20.1.7",
+    "@angular/router": "^20.1.7",
+    "@supabase/supabase-js": "^2.49.1",
+    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/http-loader": "^17.0.0",
+    "chart.js": "^4.5.1",
+    "ng2-charts": "^8.0.0",
+    "material-icons": "^1.13.14",
+    "rxjs": "~7.8.0",
+    "sweetalert2": "^11.22.4",
+    "papaparse": "^5.5.3",
+    "@types/papaparse": "^5.3.16",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.1.6",
+    "@angular/cli": "^20.1.6",
+    "@angular/compiler-cli": "^20.1.7",
+    "@types/jasmine": "~5.1.0",
+    "jasmine-core": "~5.6.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "ng-packagr": "^20.1.0",
+    "typescript": "~5.8.3"
+  }
+}

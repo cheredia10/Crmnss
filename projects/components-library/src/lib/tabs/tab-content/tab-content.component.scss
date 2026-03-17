@@ -1,0 +1,10 @@
+.tab-pane {
+    display: none;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.tab-pane.active {
+    display: block;
+    height: auto; // Permite que crezca según su contenido
+    min-height: 100%; // Usa al menos toda la altura disponible
+}

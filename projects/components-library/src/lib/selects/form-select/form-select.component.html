@@ -1,0 +1,14 @@
+<div class="form-field">
+    <div class="select-container" [ngStyle]="{ width: inputWidth() }">
+        <select [id]="id()" [formControl]="$any(control())" class="form-select"
+            [class.error]="control().invalid && control().touched">
+            <option value="" disabled>{{ placeholder() }}</option>
+            @for (option of options(); track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+            }
+        </select>
+        <svg class="select-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="6,9 12,15 18,9"></polyline>
+        </svg>
+    </div>
+</div>

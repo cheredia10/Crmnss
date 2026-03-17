@@ -1,0 +1,42 @@
+/* syntax-tags-group.component.scss */
+.tags-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+
+    &.direction-vertical {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    &.no-wrap {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+
+        &::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 2px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 2px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tags-group {
+        gap: 6px;
+    }
+}

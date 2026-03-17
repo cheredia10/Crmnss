@@ -1,0 +1,21 @@
+<div class="table-header" [class.has-sort-icon]="sortable()" [class.no-sort-icon]="!sortable()" 
+     [class.align-left]="align() === 'left'" [class.align-center]="align() === 'center'" [class.align-right]="align() === 'right'">
+    <span>{{ label() }}</span>
+
+    <!-- 1. El @if solo comprueba si es ordenable en general -->
+    @if (sortable()) {
+
+    <!-- 2. Usamos clases condicionales para el estilo -->
+    <span class="sort-icon" [class.active-icon]="active()" [class.inactive-icon]="!active()">
+
+        <!-- 3. El @if interno decide si la flecha va hacia arriba o hacia abajo -->
+        @if (active() && direction() === 'asc') {
+        <lib-icon name="Arrow Up"></lib-icon>
+        } @else {
+        <!-- Esta es la parte elegante: tanto el estado 'desc' como el 'inactivo' usan la flecha hacia abajo -->
+        <lib-icon name="Arrow Down"></lib-icon>
+        }
+    </span>
+
+    }
+</div>

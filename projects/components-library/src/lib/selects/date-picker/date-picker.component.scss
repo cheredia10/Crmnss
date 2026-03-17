@@ -1,0 +1,329 @@
+@use '../../styles/index' as styles;
+
+.date-picker {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+
+    &__container {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        width: 280px;
+        background-color: styles.get-color('white-background', 'light');
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: styles.get-spacing('16');
+        //border-bottom: 1px solid styles.get-color('stroke', 'light');
+    }
+
+    &__nav-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        border-radius: 50%;
+        cursor: pointer;
+        color: styles.get-color('primary-text', 'light');
+
+        &:hover {
+            background-color: styles.get-color('light-background', 'light');
+        }
+
+        .material-icons {
+            font-size: 20px;
+        }
+    }
+
+    &__header-title {
+        @include styles.typography('body', 'semi-bold');
+        color: styles.get-color('primary-text', 'light');
+    }
+
+    &__title-btn {
+        background: none;
+        border: none;
+        padding: 0;
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+
+        &:hover {
+            color: styles.get-color('medium-blue', 'light');
+        }
+    }
+
+    &__view {
+        padding: styles.get-spacing('16');
+    }
+
+    &__weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        margin-bottom: styles.get-spacing('8');
+    }
+
+    &__weekday {
+        @include styles.typography('small', 'regular');
+        color: #797B86; //styles.get-color('secondary-text', 'light');
+        text-align: center;
+    }
+
+    &__days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        //gap: 2px;
+    }
+
+    &__day {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: transparent;
+        border-radius: 50%;
+        cursor: pointer;
+        @include styles.typography('body', 'regular');
+        color: styles.get-color('primary-text', 'light');
+
+        &:hover:not(&--disabled) {
+            background-color: styles.get-color('light-background', 'light');
+        }
+
+        &--other-month {
+            color: styles.get-color('stroke', 'light');
+        }
+
+        &--today {
+            @include styles.typography('body', 'semi-bold');
+        }
+
+        &--selected {
+            background-color: styles.get-color('primary-turquoise', 'light');
+            color: white;
+            border-radius: 8px;
+            width: 36px;
+            height: 32px;
+
+            &:hover {
+                background-color: styles.get-color('secondary-turquoise', 'light');
+            }
+        }
+
+        &--in-range {
+            background-color: styles.get-color('primary-blue', 'dark');
+            border-radius: 0;
+            color: styles.get-color('light-grey', 'light');
+            @include styles.typography('body','semi-bold');
+        }
+
+        &--range-start {
+            background-color: styles.get-color('primary-turquoise', 'light');
+            border-radius: 8px 0px 0px 8px;
+            color: styles.get-color('light-grey', 'light');
+            @include styles.typography('body','semi-bold');
+        }
+
+        &--range-end {
+            background-color: styles.get-color('primary-turquoise', 'light');
+            border-radius: 0px 8px 8px 0px;
+            color: styles.get-color('light-grey', 'light');
+            @include styles.typography('body','semi-bold');
+        }
+
+        &--disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+
+    &__months {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: styles.get-spacing('16');
+    }
+
+    &__month {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 48px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        cursor: pointer;
+        @include styles.typography('body', 'regular');
+        color: styles.get-color('primary-text', 'light');
+
+        &:hover {
+            background-color: styles.get-color('light-background', 'light');
+        }
+
+        &--selected {
+            background-color: styles.get-color('primary-turquoise', 'light');
+            color: white;
+
+            &:hover {
+                background-color: styles.get-color('secondary-turquoise', 'light');
+            }
+        }
+    }
+
+    &__years {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: styles.get-spacing('16');
+    }
+
+    &__year {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 48px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        cursor: pointer;
+        @include styles.typography('body', 'regular');
+        color: styles.get-color('primary-text', 'light');
+
+        &:hover {
+            background-color: styles.get-color('light-background', 'light');
+        }
+
+        &--selected {
+            background-color: styles.get-color('primary-turquoise', 'light');
+            color: white;
+
+            &:hover {
+                background-color: styles.get-color('secondary-turquoise', 'light');
+            }
+        }
+    }
+
+    // Dark theme
+    &--dark {
+        .date-picker__container {
+            background-color: #0E0E0F;//styles.get-color('light-background', 'dark');
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .date-picker__header {
+            border-bottom-color: styles.get-color('stroke', 'dark');
+        }
+
+        .date-picker__nav-btn {
+            color: styles.get-color('primary-text', 'dark');
+
+            &:hover {
+                background-color: styles.get-color('light-background', 'dark');
+            }
+        }
+
+        .date-picker__header-title {
+            color: styles.get-color('primary-text', 'dark');
+        }
+
+        .date-picker__title-btn {
+            &:hover {
+                color: styles.get-color('medium-blue', 'dark');
+            }
+        }
+
+        .date-picker__weekday {
+            color: styles.get-color('secondary-text', 'dark');
+        }
+
+        .date-picker__day {
+            color: #ABB0BD;//styles.get-color('primary-text', 'dark');
+
+            &:hover:not(.date-picker__day--disabled) {
+                background-color: styles.get-color('light-background', 'dark');
+            }
+
+            &--other-month {
+                color: #45454A;//styles.get-color('secondary-text', 'dark');
+            }
+
+            &--today {
+                @include styles.typography('body', 'semi-bold');
+                color: styles.get-color('primary-text','dark');
+            }
+
+            &--selected {
+                background-color: styles.get-color('light-background', 'light');
+                color: styles.get-color('light-grey', 'dark');
+
+                &:hover {
+                    background-color: styles.get-color('secondary-turquoise', 'dark');
+                }
+            }
+
+            &--in-range {
+                background-color: styles.get-color('light-turquoise', 'dark');
+                color: styles.get-color('primary-text', 'light');
+            }
+
+            &--range-start {
+                background-color: styles.get-color('light-turquoise', 'dark');
+                border-radius: 8px 0px 0px 8px;
+                color: styles.get-color('primary-text', 'light');
+            }
+
+            &--range-end {
+                background-color: styles.get-color('light-turquoise', 'dark');
+                border-radius: 0px 8px 8px 0px;
+                color: styles.get-color('primary-text', 'light');
+            }
+        }
+
+        .date-picker__month {
+            color: styles.get-color('primary-text', 'dark');
+
+            &:hover {
+                background-color: styles.get-color('light-background', 'dark');
+            }
+
+            &--selected {
+                background-color: styles.get-color('light-turquoise', 'dark');
+                color: styles.get-color('primary-text', 'light');
+                @include styles.typography('body','semi-bold');
+
+                &:hover {
+                    background-color: styles.get-color('secondary-turquoise', 'dark');
+                }
+            }
+        }
+
+        .date-picker__year {
+            color: styles.get-color('primary-text', 'dark');
+
+            &:hover {
+                background-color: styles.get-color('light-background', 'dark');
+            }
+
+            &--selected {
+                background-color: styles.get-color('light-turquoise', 'dark');
+                color: styles.get-color('primary-text', 'light');
+                @include styles.typography('body','semi-bold');
+
+                &:hover {
+                    background-color: styles.get-color('secondary-turquoise', 'dark');
+                }
+            }
+        }
+    }
+}

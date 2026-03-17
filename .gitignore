@@ -1,0 +1,30 @@
+# Compiled output
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/
+
+# Angular
+.angular/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment files (keep .development for dev, never production secrets)
+projects/*/src/environments/environment.ts

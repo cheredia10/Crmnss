@@ -1,0 +1,17 @@
+<button type="button" [class]="'icon-button ' + variant() + ' ' + size()" [title]="tooltipText()"
+  [attr.aria-label]="ariaLabel()" [disabled]="disabled()">
+
+  <!-- ✅ Usar @switch es ideal para renderizar una cosa de varias opciones. -->
+  @switch (true) {
+  @case (!!iconName()) {
+  <lib-icon [name]="iconName()" [color]="iconColor()"></lib-icon>
+  }
+  @case (!!matIconName()) {
+  <mat-icon [style.color]="iconColor()">{{matIconName()}}</mat-icon>
+  }
+  @default {
+  <!-- Opcional: Puedes dejarlo vacío o poner un placeholder si lo necesitas. -->
+  <!-- Usualmente, se deja vacío. -->
+  }
+  }
+</button>

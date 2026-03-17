@@ -1,0 +1,16 @@
+@use '../../styles/index' as styles;
+.status-badge {
+    display: block; /* Changed from inline-block to block for better expansion */
+    padding: 6px 14px;
+    border-radius: 9999px;
+    /* Fully rounded corners */
+    @include styles.typography('label', 'semi-bold');
+    text-align: center;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    border: 1px solid transparent;
+    /* Default transparent border */
+}
+
+/* Elimina todas las clases de estado específicas (ej. .status-high, .status-low)
+ ya que los colores se aplicarán dinámicamente. */

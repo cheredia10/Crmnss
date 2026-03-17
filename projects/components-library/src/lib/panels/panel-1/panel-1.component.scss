@@ -1,0 +1,353 @@
+@use '../../styles/index' as styles;
+
+.strengths-panel {
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  padding: 6px 6px;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+}
+
+.panel-title {
+  background-color: white;
+  padding: 1px 8px 1px 7px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: styles.get-color('primary-blue', 'dark');
+  font-size: 18px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #0a3977;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
+  svg {
+    stroke: #0a3977;
+  }
+}
+
+.panel-content {
+  flex: 1;
+  padding: 0;
+  min-height: 100px;
+  overflow-y: auto; // Volvemos a auto por defecto
+
+  // Estilización del scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 4px;
+  }
+
+  // Estilo para Firefox
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+}
+
+/* Lista de elementos */
+.items-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.strength-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 6px;
+  padding: 6px;
+}
+
+.item-number {
+  font-weight: 600;
+  color: #000000;
+  min-width: 16px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+}
+
+.item-text {
+  flex: 1;
+  font-size: 14px;
+  background-color: #FFF;
+  padding: 10px;
+  gap: 10px;
+  border-radius: 8px;
+  font-family: 'Open Sans', sans-serif;
+  flex: 1 0 0;
+  border: 1px solid #BBBFC1;
+  min-height: 22px;
+}
+
+.item-impact {
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  max-width: 75px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Open Sans', sans-serif;
+  border-color: 1px solid #BBBFC1;
+
+  &.impact-very-high {
+    background-color: #FF7466;
+    color: #333;
+  }
+
+  &.impact-high {
+    background-color: #9BDF86;
+    color: #333;
+  }
+
+  &.impact-medium {
+    background-color: #FFC46B;
+    color: #333;
+  }
+
+  &.impact-low {
+    background-color: #ffab91;
+    color: #bf360c;
+  }
+
+  // Nuevos estilos para urgencia
+  &.urgency-high {
+    background-color: #FF7466; // Rojo para "Inmediata"
+    color: #333;
+  }
+
+  &.urgency-medium {
+    background-color: #FFC46B; // Naranja para "Mediano Plazo"
+    color: #333;
+  }
+
+  &.urgency-low {
+    background-color: #9BDF86; // Verde para "Baja prioridad"
+    color: #333;
+  }
+}
+
+.item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+
+  &.edit {
+    background-color: #0d47a1;
+    color: white;
+
+    &:hover {
+      background-color: #083378;
+    }
+
+    svg {
+      stroke: white;
+    }
+  }
+
+  &.delete {
+    background-color: #d32f2f;
+    color: white;
+
+    &:hover {
+      background-color: #b71c1c;
+    }
+
+    svg {
+      stroke: white;
+    }
+  }
+
+  &.add {
+    background-color: #1976d2;
+    color: white;
+
+    &:hover {
+      background-color: #0d47a1;
+    }
+
+    svg {
+      stroke: white;
+    }
+  }
+}
+
+/* Estado vacío */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  color: #666;
+
+  p {
+    margin-bottom: 16px;
+  }
+}
+
+
+
+/* Formulario de edición */
+// .edit-form {
+//   padding: 16px;
+// }
+
+.edit-form .form-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  //gap: 20px;
+  align-items: start;
+  padding: 16px; // Añadimos el padding aquí.
+
+  .form-left-column {
+    //overflow-y: auto;
+    //max-height: 300px;
+    padding-right: 10px;
+
+    // Estilización del scrollbar
+    &::-webkit-scrollbar {
+      width: 8px;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+      border-radius: 4px;
+    }
+
+    // Estilo para Firefox
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+
+    .form-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 16px;
+
+      .item-number {
+        border-radius: 4px;
+        font-weight: 600;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+        color: #000000;
+      }
+
+      .text-input {
+        display: flex;
+        align-items: center;
+        height: 26px;
+        flex: 1 0 0;
+        padding: 10px;
+        border: 1px solid #BBBFC1;
+        border-radius: 8px;
+        background-color: #FFF;
+        @include styles.typography('label', 'semibold');
+      }
+    }
+  }
+
+  .form-right-column {
+    padding-top: 3px; // Para alinear mejor con el contenido de la izquierda
+  }
+}
+
+
+.text-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+
+  &:focus {
+    outline: none;
+    border-color: #1976d2;
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-row {
+    flex-wrap: wrap;
+  }
+
+  .text-input {
+    width: 100%;
+    order: 1;
+  }
+
+  app-dropdown-select {
+    flex: 1;
+    min-width: 120px;
+    order: 2;
+  }
+
+  .action-button {
+    order: 3;
+  }
+}

@@ -1,0 +1,9 @@
+<div class="menu-item" [class.disabled]="item()?.disabled" (click)="onClick()">
+    <span class="menu-item-label">{{ item()?.label }}</span>
+    <span class="menu-item-icon">
+        <lib-icon [name]="item()?.icon"></lib-icon>
+    </span>
+</div>
+@if (showSeparator()) {
+<div class="menu-separator"></div>
+}

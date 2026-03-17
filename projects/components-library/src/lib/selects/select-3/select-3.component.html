@@ -1,0 +1,30 @@
+<!-- select-3.component.html -->
+<div class="select-3-container" [ngClass]="[
+    customClass(),
+    disabled() ? 'disabled' : '',
+    isOpen() ? 'open' : '']" [id]="customId()" [ngStyle]="containerStyle()" (click)="toggleDropdown($event)"
+  (clickOutside)="closeDropdown()" role="combobox" [attr.aria-expanded]="isOpen()" [attr.aria-disabled]="disabled()">
+  <!-- Área de visualización -->
+  <div class="select-display">
+    <span class="select-text">{{ displayText() }}</span>
+    <span class="select-arrow" [class.rotated]="isOpen()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M7 10L12 15L17 10H7Z" fill="#242731" />
+      </svg>
+    </span>
+  </div>
+
+  <!-- Lista de opciones -->
+  @if (isOpen()) {
+    <div class="select-dropdown">
+      @for (option of options(); track option) {
+<div class="select-option" [ngClass]="{
+        selected: option.value === selectedValue(),
+        disabled: option.disabled
+      }" (click)="selectOption(option, $event)" role="option" [attr.aria-selected]="option.value === selectedValue()">
+          {{ option.label }}
+        </div>
+      }
+    </div>
+  }
+</div>

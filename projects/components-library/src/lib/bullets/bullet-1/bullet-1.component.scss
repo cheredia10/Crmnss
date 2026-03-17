@@ -1,0 +1,20 @@
+/* syntax-status-item.component.scss */
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    
+    &.clickable {
+      cursor: pointer;
+      
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    }
+    
+    .item-text {
+      font-size: 14px;
+      color: var(--color-text);
+    }
+  }

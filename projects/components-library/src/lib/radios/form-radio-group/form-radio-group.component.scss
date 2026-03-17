@@ -1,0 +1,281 @@
+@use '../../styles/index' as styles;
+
+.radio-group {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    @include styles.typography('label', 'semi-bold');
+
+    &.disabled {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    // Vertical layout
+    &:has(.radio-option:first-child) {
+        &[data-direction="vertical"] {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+    }
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px; // Espacio entre label e ícono de información
+
+    &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+.radio-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+
+    &:focus+.radio-custom {
+        box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+    }
+
+    &:focus:not(:focus-visible)+.radio-custom {
+        box-shadow: none;
+    }
+
+    // --- AÑADE ESTO ---
+    // Cuando el input está seleccionado, cambia el color del borde de su hermano .radio-custom
+    &:checked+.radio-custom {
+        border-color: styles.get-color('primary-blue', 'dark');
+    }
+
+    // --- FIN DE LO AÑADIDO ---
+}
+
+.radio-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #A9A8AA;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background: #ffffff;
+    flex-shrink: 0;
+}
+
+.radio-inner {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: transparent;
+    transition: all 0.2s ease;
+    transform: scale(0);
+
+    &.selected {
+        background: styles.get-color('primary-blue', 'dark');
+        transform: scale(1.25);
+    }
+}
+
+.radio-text {
+    @include styles.typography('label', 'semi-bold');
+    color: styles.get-color('primary-text', 'light');
+    line-height: 1.4;
+}
+
+// Size variations
+.radio-group {
+
+    // Small size
+    &[data-size="small"] {
+        gap: 16px;
+
+        .radio-custom {
+            width: 16px;
+            height: 16px;
+        }
+
+        .radio-inner {
+            width: 8px;
+            height: 8px;
+        }
+
+        .radio-text {
+            font-size: 14px;
+        }
+    }
+
+    // Large size
+    &[data-size="large"] {
+        gap: 32px;
+
+        .radio-custom {
+            width: 24px;
+            height: 24px;
+        }
+
+        .radio-inner {
+            width: 12px;
+            height: 12px;
+        }
+
+        .radio-text {
+            font-size: 18px;
+        }
+    }
+}
+
+// Vertical direction
+.radio-group[data-direction="vertical"] {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    &[data-size="small"] {
+        gap: 8px;
+    }
+
+    &[data-size="large"] {
+        gap: 16px;
+    }
+}
+
+// Disabled state
+.radio-option.disabled {
+    .radio-label {
+        cursor: not-allowed;
+    }
+
+    .radio-custom {
+        border-color: #e0e0e0;
+        background: #f5f5f5;
+    }
+
+    .radio-inner.selected {
+        background: #cccccc;
+    }
+
+    .radio-text {
+        color: #999999;
+    }
+}
+
+// Focus states for accessibility
+.radio-input:focus-visible+.radio-custom {
+    outline: 2px solid #1976d2;
+    outline-offset: 2px;
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+    .radio-custom {
+        border-width: 3px;
+    }
+
+    .radio-inner.selected {
+        background: #000000;
+    }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+
+    .radio-custom,
+    .radio-inner {
+        transition: none;
+    }
+}
+
+// Estilos para el ícono de información
+.info-icon-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+    min-width: 24px;
+    min-height: 24px;
+    
+    &:hover:not(:disabled) {
+        background-color: rgba(25, 118, 210, 0.1);
+    }
+    
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    lib-icon {
+        color: #1976d2; // Azul como en Figma
+        font-size: 16px;
+        
+        // Asegurar que el ícono tenga el tamaño correcto
+        width: 16px;
+        height: 16px;
+    }
+}
+
+// Ajustes para diferentes tamaños del radio group
+.radio-group {
+    &[data-size="small"] {
+        .info-icon-btn {
+            min-width: 20px;
+            min-height: 20px;
+            padding: 2px;
+            
+            lib-icon {
+                font-size: 14px;
+                width: 14px;
+                height: 14px;
+            }
+        }
+    }
+    
+    &[data-size="large"] {
+        .info-icon-btn {
+            min-width: 28px;
+            min-height: 28px;
+            padding: 6px;
+            
+            lib-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+}
+
+// Accesibilidad mejorada
+@media (prefers-contrast: high) {
+    .info-icon-btn {
+        border: 1px solid #1976d2;
+        
+        &:hover:not(:disabled) {
+            background-color: #1976d2;
+            
+            lib-icon {
+                color: white;
+            }
+        }
+    }
+}

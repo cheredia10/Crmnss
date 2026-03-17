@@ -1,0 +1,52 @@
+/* syntax-indicators-grid.component.scss */
+.indicators-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    width: 100%;
+
+    &.grid-1 {
+        grid-template-columns: 1fr;
+    }
+
+    &.grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    &.grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    &.grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    &.grid-5 {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .indicators-grid {
+        grid-template-columns: repeat(2, 1fr);
+
+        &.grid-4,
+        &.grid-5 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .indicators-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .indicators-grid {
+        gap: 8px;
+    }
+}

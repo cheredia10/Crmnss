@@ -1,0 +1,7 @@
+<label class="syntax-checkbox" [ngClass]="'variant-' + variant()">
+  <input type="checkbox" [checked]="_checked()" [disabled]="disabled()" (change)="onCheckboxChange($event)">
+  <span class="checkmark"></span>
+  @if (label()) {
+    <span class="label-text">{{ label() }}</span>
+  }
+</label>

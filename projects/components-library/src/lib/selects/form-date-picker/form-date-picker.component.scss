@@ -1,0 +1,78 @@
+@use '../../styles/index' as styles;
+:host {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+// BEST PRACTICE: El contenedor principal necesita ser relativo para
+// que el calendario (con position: absolute) se posicione respecto a él.
+.form-date-picker-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    //margin-bottom: 24px;
+    //align-items: center;
+}
+
+.date-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid styles.get-color('stroke','grey');;
+    border-radius: 8px;
+    width: 100%;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    background-color: white;
+    height: 40px;
+}
+
+.date-input {
+    border: none;
+    padding: 12px 16px;
+    font-size: 14px;
+    flex: 1;
+    background: transparent;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.date-input:focus {
+    outline: none;
+}
+
+.calendar-button {
+    padding: 0 12px;
+    background: transparent;
+    border: none;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #6b7280;
+}
+
+.date-input-wrapper:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.date-input.error+.calendar-button {
+    border-left-color: #ef4444;
+}
+
+.date-input-wrapper:has(.error) {
+    border-color: #ef4444;
+}
+
+.error-message {
+    color: #ef4444;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+}

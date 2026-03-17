@@ -1,0 +1,48 @@
+<div class="step-breadcrumb" [ngClass]="'size-' + size()">
+  <div class="steps-container">
+    @for (step of steps(); track step; let i = $index; let isLast = $last) {
+      <div class="step-wrapper">
+        <!-- Step Item -->
+        <div class="step-item"
+          [ngClass]="getStepItemClasses(step)"
+          (click)="onStepClick(step, i)"
+          [attr.aria-label]="step.label"
+          [attr.aria-current]="step.status === 'active' ? 'step' : null">
+          @if (!step.icon && !step.iconSvg) {
+            <span class="step-number">{{ i + 1 }}</span>
+          }
+          <!-- Step Number/Indicator -->
+          <div class="step-indicator">
+            @if (step.icon) {
+              <span class="step-icon">{{ step.icon }}</span>
+            }
+            @if (step.iconSvg) {
+              <span class="step-icon-svg" [innerHTML]="step.iconSvg"></span>
+            }
+            <!-- Default Crown Icon -->
+            @if (!step.icon && !step.iconSvg) {
+              <svg class="step-default-icon" viewBox="0 0 24 24"
+                fill="currentColor">
+                <path
+                  d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm2.7-2h8.6l.9-5.4-2.1 1.4L12 8l-3.1 2L6.8 8.6L7.7 14z" />
+                </svg>
+              }
+            </div>
+            <!-- Step Label -->
+            <div class="step-label">{{ step.label }}</div>
+            <!-- Step Description (optional) -->
+            @if (step.description) {
+              <div class="step-description">
+                {{ step.description }}
+              </div>
+            }
+          </div>
+          <!-- Connector Line -->
+          @if (!isLast && showConnectors()) {
+            <div class="step-connector"
+            [ngClass]="getConnectorClasses(i)"></div>
+          }
+        </div>
+      }
+    </div>
+  </div>

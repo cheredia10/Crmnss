@@ -1,0 +1,26 @@
+<div class="rating-container" 
+     [class.rating-disabled]="disabled"
+     [class.rating-readonly]="readonly"
+     (mouseleave)="onMouseLeave()">
+  
+  <button
+    *ngFor="let star of stars; trackBy: trackByStar"
+    type="button"
+    class="star-button"
+    [class]="getStarClass(star)"
+    [disabled]="disabled"
+    [style.color]="getStarColor(star)"
+    (click)="onStarClick(star)"
+    (mouseenter)="onStarHover(star)"
+    [attr.aria-label]="'Rate ' + star + ' out of ' + max + ' stars'"
+    [attr.aria-pressed]="star <= value">
+    
+    <!-- Star icon using Unicode star character -->
+    <span class="star-icon">★</span>
+  </button>
+  
+  <!-- Optional: Display current rating value -->
+  <span class="rating-value" *ngIf="value > 0">
+    {{ value }}/{{ max }}
+  </span>
+</div>

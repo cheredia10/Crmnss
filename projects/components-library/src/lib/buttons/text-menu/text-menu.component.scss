@@ -1,0 +1,51 @@
+@use '../../styles/index' as styles;
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background-color: styles.get-color('primary-blue', 'dark');
+    color: styles.get-color('primary-text', 'dark');
+    ;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 2px;
+
+    &:hover,
+    &.active {
+        background-color: styles.get-color('primary-turquoise', 'light');
+        /* Azul turquesa */
+    }
+
+    &.selected {
+        background-color: #1976d2;
+        /* Azul primario */
+    }
+
+    &.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+
+        &:hover {
+            background-color: styles.get-color('primary-blue', 'dark');
+            /* Mantiene el color original */
+        }
+    }
+}
+
+.menu-label {
+    @include styles.typography('body', 'semi-bold');
+}
+
+.menu-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+    }
+}

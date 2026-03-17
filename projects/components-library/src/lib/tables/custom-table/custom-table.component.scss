@@ -1,0 +1,293 @@
+@use '../../styles/index' as styles;
+
+.custom-table-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  
+  // Wrapper para el scroll horizontal que excluye el título
+  .table-scroll-wrapper {
+    overflow-x: auto;
+    overflow-y: visible; // Importante para que los dropdowns no causen scroll vertical
+    width: 100%;
+  }
+}
+
+.custom-table {
+  border-collapse: collapse;
+  font-family: 'Open Sans', sans-serif;
+  min-width: fit-content;
+  width: auto; // Se ajusta al contenido definido por las columnas
+  table-layout: fixed; // Fuerza el respeto estricto de widths
+
+  th,
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0; // Líneas verticales para formar celdillas
+    white-space: nowrap;
+    box-sizing: border-box;
+    height: 47px; // 47px + 1px border = 48px total
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    
+    // Eliminar línea vertical de la última columna
+    &:last-child {
+      border-right: none;
+    }
+    
+    &.allow-wrap {
+      white-space: normal;
+      word-wrap: break-word;
+      height: auto; // Permitir altura dinámica para contenido de múltiples líneas
+      min-height: 47px; // Mantener altura mínima de 47px + 1px border = 48px total
+    }
+    
+    // Clase específica para columnas con tamaño fijo
+    &.fixed-width {
+      overflow: hidden;
+      box-sizing: border-box !important;
+      
+      // Forzar que los headers y celdas respeten el width exacto
+      * {
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      
+      // Compensar padding interno para widths muy pequeños
+      &[style*="width: 47px"] {
+        width: 47px !important;
+        max-width: 47px !important;
+        min-width: 47px !important;
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+      }
+      
+      &[style*="width: 45px"] {
+        width: 45px !important;
+        max-width: 45px !important;  
+        min-width: 45px !important;
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+      }
+      
+      &[style*="width: 200px"] {
+        width: 200px !important;
+        max-width: 200px !important;
+        min-width: 200px !important;
+      }
+    }
+
+    &:first-child {
+      padding-left: 8px;
+    }
+
+    &:last-child {
+      padding-right: 8px;
+    }
+  }
+
+  td {
+    font-weight: 400; // Regular weight para las celdas
+  }
+
+  th {
+    background-color: #004179;
+    color: white;
+    font-weight: 600; // Semi-bold weight para las cabeceras
+    position: relative;
+    border-right: none !important; // Sin líneas verticales en headers
+
+    &.sortable {
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        background-color: #003a6d;
+      }
+    }
+  }
+
+  tbody tr {
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+
+  .checkbox-column,
+  .checkbox-cell {
+    width: 48px;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  .status-column,
+  .status-cell {
+    width: 120px;
+  }
+
+  .actions-column,
+  .actions-cell {
+    width: 60px; // Ancho fijo para la columna de acciones
+    min-width: 60px;
+    text-align: center;
+    padding: 8px;
+  }
+
+  .loading-cell,
+  .empty-cell {
+    text-align: center;
+    padding: 24px;
+    color: #757575;
+  }
+
+  .loading-indicator {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 20px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, #f0f0f0, transparent);
+      animation: loading 1.5s infinite;
+    }
+  }
+
+  @keyframes loading {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
+// Clases sticky - aplicadas después para mayor especificidad
+.sticky-left {
+  position: sticky !important;
+  left: 0 !important;
+  background-color: white !important;
+  z-index: 2 !important;
+  box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.sticky-right {
+  position: sticky !important;
+  right: 0 !important;
+  background-color: white !important;
+  z-index: 2 !important;
+  box-shadow: -2px 0 5px -2px rgba(0, 0, 0, 0.1) !important;
+}
+
+// Headers sticky tienen prioridad
+th.sticky-left,
+th.sticky-right {
+  background-color: #004179 !important;
+  z-index: 3 !important;
+}
+
+// Hover states para sticky
+tr:hover {
+
+  .sticky-left,
+  .sticky-right {
+    background-color: #f5f5f5 !important;
+  }
+
+  th.sticky-left,
+  th.sticky-right {
+    background-color: #003a6d !important;
+  }
+}
+
+// Clase especial para cuando el menú está abierto
+.actions-cell.sticky-right.menu-open {
+  z-index: 1000 !important;
+  overflow: visible !important;
+}
+
+.custom-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 24px;
+  height: 24px;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked+.checkmark {
+      background-color: #1465BB;
+
+      &::after {
+        content: "";
+        position: absolute;
+        display: block;
+        width: 6px;
+        height: 12px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        top: 3px;
+        left: 8px;
+      }
+    }
+  }
+
+  .checkmark {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid #1465BB;
+    background-color: white;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease;
+
+    &::after {
+      content: none;
+    }
+  }
+}
+
+// --------------------------------------------------------------------
+// --- ESTILOS PARA EL SCROLLBAR HORIZONTAL (TEMA CLARO) ---
+// --------------------------------------------------------------------
+
+// Para navegadores basados en WebKit (Chrome, Safari, Edge, Opera)
+.table-scroll-wrapper::-webkit-scrollbar {
+    height: 8px; // El grosor de la barra de scroll horizontal
+    background-color: transparent; // El fondo de la "pista" es transparente por defecto
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb {
+    // La parte que se arrastra del scrollbar
+    background-color: #e0e0e0; // Un gris claro, como en tu imagen
+    border-radius: 10px; // Bordes redondeados para darle forma de píldora
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+    // Opcional: un color ligeramente más oscuro al pasar el mouse
+    background-color: #cccccc;
+}
+
+
+// Para Firefox
+.table-scroll-wrapper {
+    scrollbar-width: thin; // 'auto' o 'thin'
+    // Sintaxis: color-del-thumb color-de-la-pista
+    // Hacemos la pista transparente para que tome el color de fondo del contenedor
+    scrollbar-color: #e0e0e0 transparent;
+}

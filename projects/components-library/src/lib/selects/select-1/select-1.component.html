@@ -1,0 +1,38 @@
+<!-- dropdown-select.component.html (actualizado para la nueva sintaxis) -->
+<div
+  class="dropdown-container"
+  [style.width]="width()"
+  [class.disabled]="disabled()"
+  [class.open]="isOpen"
+  [class.custom-class]="customClass()"
+  (click)="toggleDropdown()"
+  (clickOutside)="isOpen = false"
+  >
+  <div class="dropdown-selected">
+    @if (selectedLabel) {
+      <span class="dropdown-label">{{ selectedLabel }}</span>
+    }
+    @if (!selectedLabel) {
+      <span class="dropdown-placeholder">{{ label() || placeholder() }}</span>
+    }
+    <span class="dropdown-arrow">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M3.22456 4.25196L9.1563 4.25196C9.26178 4.25135 9.36505 4.28197 9.45295 4.3399C9.54084 4.39784 9.60939 4.48047 9.64983 4.57727C9.69028 4.67406 9.7008 4.78063 9.68006 4.88339C9.65931 4.98615 9.60823 5.08044 9.53334 5.15424L6.56481 8.09852C6.46532 8.19679 6.33072 8.25195 6.19043 8.25195C6.05014 8.25195 5.91554 8.19679 5.81604 8.09852L2.84752 5.15424C2.77263 5.08044 2.72155 4.98615 2.7008 4.88339C2.68006 4.78063 2.69058 4.67406 2.73103 4.57727C2.77147 4.48047 2.84001 4.39784 2.92791 4.3399C3.01581 4.28197 3.11908 4.25135 3.22456 4.25196Z" fill="#28506D"/>
+      </svg>
+    </span>
+  </div>
+
+  @if (isOpen) {
+    <div class="dropdown-menu">
+      @for (option of options(); track option) {
+        <div
+          class="dropdown-option"
+          [class.selected]="option.value === selectedValue"
+          (click)="selectOption(option, $event)"
+          >
+          {{ option.label }}
+        </div>
+      }
+    </div>
+  }
+</div>

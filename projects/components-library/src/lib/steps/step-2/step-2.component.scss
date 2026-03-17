@@ -1,0 +1,109 @@
+@use '../../styles/index' as styles;
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    transition: all 0.2s ease;
+
+    &.clickable:not(.status-disabled) {
+        cursor: pointer;
+
+        &:hover .step-indicator {
+            transform: scale(1.05);
+        }
+    }
+}
+
+.step-indicator {
+    display: flex;
+    width: 24px;
+    height: 24px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+}
+
+.step-content,
+.step-icon {
+    color: styles.get-color('light-grey', 'light');
+    @include styles.typography('small', 'semi-bold');
+}
+
+.step-label {
+    @include styles.typography('small', 'semi-bold');
+}
+
+/* Estados */
+.step-item {
+    &.status-active {
+        .step-indicator {
+            background-color: styles.get-color('graphics-blue', 'secondary');
+        }
+
+        .step-label {
+            color: styles.get-color('primary-text', 'light');
+        }
+    }
+
+    &.status-completed {
+        .step-indicator {
+            background-color: styles.get-color('success', 'light');
+        }
+
+        .step-label {
+            color: styles.get-color('primary-text', 'light');
+        }
+    }
+
+    &.status-disabled {
+        .step-indicator {
+            background-color: styles.get-color('stroke', 'grey');
+        }
+
+        .step-label {
+            color: styles.get-color('stroke', 'grey');
+        }
+    }
+
+    &.status-pending {
+        .step-indicator {
+            background-color: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            color: #666;
+        }
+
+        .step-label {
+            color: #666;
+        }
+    }
+}
+
+/* Tamaños */
+.step-item {
+    &.size-small {
+        .step-indicator {
+            width: 24px;
+            height: 24px;
+            font-size: 12px;
+        }
+
+        .step-label {
+            font-size: 12px;
+        }
+    }
+
+    &.size-large {
+        .step-indicator {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+        }
+
+        .step-label {
+            font-size: 16px;
+        }
+    }
+}

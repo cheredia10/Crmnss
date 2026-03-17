@@ -1,0 +1,240 @@
+@use '../../styles/index.scss' as styles;
+
+// Variables para el diseño de Figma
+:host {
+    --header-bg: #102956;
+    --header-text: #FFFFFF;
+    --row-bg: #ECECEC; // <-- NUEVO color de fondo de fila
+    --row-border: #E5E7EB;
+    --expanded-bg: #FAFAFA;
+    --text-primary: #464646;
+    --chevron-color: #6B7281;
+    --separator-color-header: #FFFFFF; // Separador blanco sólido
+    --separator-color-body: #919191; // Separador gris especificado
+}
+
+// --- CONTENEDOR PARA EL SCROLL ---
+.expandable-table-container {
+    overflow-x: auto; // Habilita el scroll horizontal
+    width: 100%;
+}
+
+.expandable-table {
+    width: auto; // Se ajusta al contenido definido por las columnas
+    min-width: fit-content; // Crece según sea necesario
+    border-collapse: separate; // NECESARIO para border-spacing
+    border-spacing: 0 6px; // Espacio vertical de 10px entre cada "bloque" de fila
+    table-layout: fixed; // Fuerza el respeto estricto de widths
+}
+
+// --- ESTILOS PARA LAS COLUMNAS STICKY (REVISADO) ---
+th.sticky-col,
+td.sticky-col {
+    position: sticky;
+    z-index: 1;
+}
+
+// Fondo para las celdas STICKY del CUERPO
+td.sticky-col {
+    background-color: var(--row-bg);
+}
+
+// Fondo para las celdas STICKY del HEADER
+th.sticky-col {
+    z-index: 2; // El header siempre por encima del cuerpo
+    background-color: styles.get-color('primary-blue', 'dark');
+}
+
+// Sombra para la primera columna sticky del CUERPO
+td.sticky-col[style*="left: 0px"] {
+    box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.1);
+}
+
+// Sombra para la última columna sticky del CUERPO (la de acciones)
+td.sticky-col[style*="right: 0px"] {
+    box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.1);
+}
+
+thead th {
+    background-color: styles.get-color('primary-blue', 'dark');
+    color: var(--header-text);
+    padding: 16px 20px;
+    text-align: left;
+    @include styles.typography('label', 'semi-bold');
+    box-sizing: border-box;
+    //position: relative; // <-- AÑADIDO: Necesario para el separador
+
+    // Clase específica para columnas con tamaño fijo
+    &.fixed-width {
+      overflow: hidden;
+      box-sizing: border-box !important;
+    }
+
+    // --- LÓGICA DE SEPARADOR Y POSICIÓN CORREGIDA ---
+    &:not(:last-child) {
+        position: relative; // <-- APLICAMOS 'relative' SOLO a las que tienen separador
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 1px;
+            background-color: var(--separator-color-header);
+        }
+    }
+
+
+    // --- ¡AÑADIR ESTE BLOQUE! ---
+    // Redondear las esquinas del header
+    &:first-child {
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px; // También la inferior para un look completo
+    }
+
+    &:last-child {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px; // También la inferior
+    }
+}
+
+tbody {
+    tr.main-row {
+        background-color: var(--row-bg);
+
+        td {
+            padding: 8px 16px;
+            vertical-align: middle;
+
+            // --- MODIFICADO/ELIMINADO: Quitamos los bordes ---
+            // border-top, border-bottom, border-right, border-left se gestionan ahora de otra manera o se eliminan
+            border: none;
+
+            //position: relative; // <-- AÑADIDO: Necesario para el separador
+            white-space: nowrap;
+            height: 60px; // Altura total de la fila
+            box-sizing: border-box;
+
+            // Clase específica para columnas con tamaño fijo
+            &.fixed-width {
+              overflow: hidden;
+              box-sizing: border-box !important;
+            }
+
+            // --- SEPARADOR APLICADO DE FORMA MÁS ESPECÍFICA ---
+            &:not(:last-child) {
+                position: relative; // <-- APLICAMOS 'relative' SOLO AQUÍ
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    right: 0;
+                    width: 1px;
+                    height: 40px;
+                    background: var(--separator-color-body);
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+            }
+
+            // Redondear las esquinas de la primera y última celda
+            // Esto se mantiene para dar la forma de "píldora" a la fila
+            &:first-child {
+                border-top-left-radius: 8px;
+                border-bottom-left-radius: 8px;
+            }
+
+            &:last-child {
+                border-top-right-radius: 8px;
+                border-bottom-right-radius: 8px;
+            }
+        }
+    }
+
+    .actions-cell {
+        display: flex;
+        align-items: center; // Clave: Alinear los ítems (menú y flecha) al centro verticalmente
+        justify-content: center; // Centrar horizontalmente también
+        gap: 8px;
+        padding: 0 !important; // Sin padding extra, la celda ya maneja su espacio
+        height: 100%; // Ocupa todo el espacio vertical de la celda
+        box-sizing: border-box;
+        // El ancho ahora se define desde el config
+        // La altura de la celda ahora está controlada por la propiedad `height` en `td`,
+        // por lo que los elementos flex se adaptarán a ella.
+    }
+
+    .details-header {
+        box-sizing: border-box;
+    }
+
+    // --- ¡AQUÍ ESTÁ LA MAGIA! ---
+    // Cuando TableActionsComponent añade la clase '.menu-open' a su <td> padre...
+    .actions-cell.menu-open {
+        // ...elevamos su z-index por encima de las otras celdas y el header.
+        z-index: 3;
+        // Hacemos que el contenido que se desborde (el menú) sea visible.
+        overflow: visible;
+    }
+
+    .expand-button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chevron {
+        width: 10px;
+        height: 10px;
+        border-left: 2px solid var(--chevron-color);
+        border-bottom: 2px solid var(--chevron-color);
+        transform: rotate(-45deg);
+        transition: transform 0.3s ease;
+
+        &.expanded {
+            transform: rotate(135deg);
+        }
+    }
+
+    // Fila expandida
+    tr.expanded-row td {
+        padding: 0;
+
+        // La fila principal expandida debe perder sus bordes inferiores redondeados
+        &+tr.main-row {
+            td:first-child {
+                border-bottom-left-radius: 0;
+            }
+
+            td:last-child {
+                border-bottom-right-radius: 0;
+            }
+        }
+    }
+
+    .expanded-content {
+        padding: 24px;
+        background-color: var(--expanded-bg);
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        border-left: 1px solid var(--row-border);
+        border-right: 1px solid var(--row-border);
+        border-bottom: 1px solid var(--row-border);
+    }
+
+    // en expandable-table.component.scss, dentro de tbody
+    tr.main-row.is-expanded {
+        td:first-child {
+            border-bottom-left-radius: 0;
+        }
+
+        td:last-child {
+            border-bottom-right-radius: 0;
+        }
+    }
+}
