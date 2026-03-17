@@ -110,7 +110,7 @@ interface Cliente {
                       <button class="icon-btn" title="Ver detalle" (click)="verDetalle(cliente.id)">
                         <span class="material-icons">visibility</span>
                       </button>
-                      <button class="icon-btn icon-btn--danger" title="Eliminar" (click)="deleteCliente(cliente.id)">
+                      <button class="icon-btn icon-btn--danger" title="Eliminar" (click)="openDeleteModal(cliente)">
                         <span class="material-icons">delete</span>
                       </button>
                     </div>
@@ -123,6 +123,34 @@ interface Cliente {
         <p class="results-count">Mostrando {{ filtered().length }} de {{ clientes().length }} clientes</p>
       }
     </div>
+
+    <!-- Modal eliminar cliente -->
+    @if (showDeleteModal) {
+      <div class="modal-overlay" (click)="showDeleteModal = false">
+        <div class="modal-card modal-card--sm" (click)="$event.stopPropagation()">
+          <div class="delete-modal-content">
+            <div class="delete-icon-wrap">
+              <span class="material-icons delete-icon">warning_amber</span>
+            </div>
+            <h2 class="delete-title">¿Eliminar cliente?</h2>
+            <p class="delete-body">
+              Estás a punto de eliminar a
+              <strong>{{ clienteToDelete?.nombre }}</strong>.
+              Esta acción no se puede deshacer.
+            </p>
+            <div class="delete-actions">
+              <button class="btn-secondary" (click)="showDeleteModal = false">
+                <span class="material-icons">close</span> Cancelar
+              </button>
+              <button class="btn-danger" (click)="confirmDelete()" [disabled]="deleting()">
+                <span class="material-icons">delete_forever</span>
+                {{ deleting() ? 'Eliminando...' : 'Sí, eliminar' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
 
     <!-- Modal nuevo cliente -->
     @if (showModal) {
@@ -231,6 +259,15 @@ interface Cliente {
     .autocomplete-wrapper { position: relative; }
     .autocomplete-list { position: absolute; z-index: 200; top: calc(100% + 2px); left: 0; right: 0; background: white; border: 1px solid #e0e0e8; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); max-height: 200px; overflow-y: auto; list-style: none; padding: 4px 0; margin: 0; }
     .autocomplete-item { padding: 10px 14px; font-size: 14px; color: #2A3548; cursor: pointer; transition: background 0.1s; &:hover { background: #e6f0fe; color: #004179; } }
+    /* Modal eliminar */
+    .modal-card--sm { max-width: 420px; }
+    .delete-modal-content { padding: 36px 32px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+    .delete-icon-wrap { width: 72px; height: 72px; border-radius: 50%; background: #fff3cd; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+    .delete-icon { font-size: 36px; color: #e65100; }
+    .delete-title { font-size: 20px; font-weight: 700; color: #2A3548; margin: 0; }
+    .delete-body { font-size: 14px; color: #8892a0; margin: 0; line-height: 1.6; strong { color: #2A3548; } }
+    .delete-actions { display: flex; gap: 12px; margin-top: 8px; }
+    .btn-danger { display: inline-flex; align-items: center; gap: 8px; background: #d32f2f; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 600; font-family: 'Open Sans',sans-serif; cursor: pointer; transition: background 0.15s; white-space: nowrap; &:hover { background: #b71c1c; } &:disabled { opacity: 0.6; cursor: not-allowed; } .material-icons { font-size: 18px; } }
   `]
 })
 export class ClientesListComponent implements OnInit {
@@ -238,9 +275,12 @@ export class ClientesListComponent implements OnInit {
   filtered = signal<Cliente[]>([]);
   loading = signal(true);
   saving = signal(false);
+  deleting = signal(false);
   modalError = signal('');
   empresaSuggestions = signal<string[]>([]);
   showModal = false;
+  showDeleteModal = false;
+  clienteToDelete: any = null;
   searchTerm = '';
   statusFilter = '';
 
@@ -290,9 +330,18 @@ export class ClientesListComponent implements OnInit {
     this.router.navigate(['/clientes', id]);
   }
 
-  async deleteCliente(id: string): Promise<void> {
-    if (!confirm('¿Eliminar este cliente?')) return;
-    await this.supabaseService.supabase.from('clientes').delete().eq('id', id);
+  openDeleteModal(cliente: any): void {
+    this.clienteToDelete = cliente;
+    this.showDeleteModal = true;
+  }
+
+  async confirmDelete(): Promise<void> {
+    if (!this.clienteToDelete) return;
+    this.deleting.set(true);
+    await this.supabaseService.supabase.from('clientes').delete().eq('id', this.clienteToDelete.id);
+    this.deleting.set(false);
+    this.showDeleteModal = false;
+    this.clienteToDelete = null;
     await this.loadClientes();
   }
 
