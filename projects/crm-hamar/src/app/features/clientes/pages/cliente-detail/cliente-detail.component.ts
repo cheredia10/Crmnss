@@ -255,24 +255,29 @@ type TabId = 'llamadas' | 'whatsapp' | 'documentos' | 'seguimiento';
             <button class="icon-close" (click)="showDocModal = false"><span class="material-icons">close</span></button>
           </div>
           <div class="modal-body">
-            <div class="field-group"><label class="field-label">Nombre *</label><input type="text" class="crm-input" [(ngModel)]="docForm.nombre" placeholder="Nombre del documento"></div>
+            @if (docUploadError()) {
+              <div class="error-alert"><span class="material-icons">error_outline</span>{{ docUploadError() }}</div>
+            }
+            <div class="field-group">
+              <label class="field-label">Archivo *</label>
+              <label class="upload-zone" [class.upload-zone--selected]="docFile">
+                <span class="material-icons">{{ docFile ? 'check_circle' : 'cloud_upload' }}</span>
+                <span>{{ docFile ? docFile.name : 'Clic para seleccionar archivo' }}</span>
+                <input type="file" (change)="onDocFileSelect($event)" style="display:none">
+              </label>
+            </div>
+            <div class="field-group"><label class="field-label">Nombre</label><input type="text" class="crm-input" [(ngModel)]="docForm.nombre" placeholder="Nombre del documento (opcional)"></div>
             <div class="field-group"><label class="field-label">Categoría</label>
               <select class="crm-input" [(ngModel)]="docForm.categoria">
                 <option>Contratos</option><option>Facturas</option><option>Propuestas</option><option>Otros</option>
               </select>
             </div>
-            <div class="field-group"><label class="field-label">Tipo</label>
-              <select class="crm-input" [(ngModel)]="docForm.tipo">
-                <option value="application/pdf">PDF</option>
-                <option value="application/vnd.ms-excel">Excel</option>
-                <option value="application/msword">Word</option>
-                <option value="image/png">Imagen</option>
-              </select>
-            </div>
           </div>
           <div class="modal-footer">
             <button class="btn-secondary" (click)="showDocModal = false">Cancelar</button>
-            <button class="btn-primary" (click)="saveDoc()" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Guardar' }}</button>
+            <button class="btn-primary" (click)="saveDoc()" [disabled]="saving() || !docFile">
+              {{ saving() ? 'Subiendo...' : 'Subir Documento' }}
+            </button>
           </div>
         </div>
       </div>
@@ -385,6 +390,13 @@ type TabId = 'llamadas' | 'whatsapp' | 'documentos' | 'seguimiento';
     .icon-close { background: transparent; border: none; cursor: pointer; color: #8892a0; padding: 4px; &:hover { color: #2A3548; } .material-icons { font-size: 20px; } }
     .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
+    .upload-zone { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 28px 20px; border: 2px dashed #e0e0e8; border-radius: 10px; cursor: pointer; transition: all 0.15s; color: #8892a0;
+      &:hover { border-color: #004179; background: #f0f6ff; }
+      &--selected { border-color: #155724; background: #f0fff4; color: #155724; }
+      .material-icons { font-size: 28px; }
+      span:last-of-type { font-size: 13px; text-align: center; word-break: break-all; }
+    }
+
     /* Alertas */
     .success-alert { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px; color: #155724; font-size: 14px; .material-icons { font-size: 18px; } }
     .error-alert { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #fdecea; border: 1px solid #f5c6cb; border-radius: 8px; color: #721c24; font-size: 14px; .material-icons { font-size: 18px; } }
@@ -416,7 +428,9 @@ export class ClienteDetailComponent implements OnInit {
 
   form = { nombre: '', empresa: '', email: '', telefono: '', estado: 'activo', notas: '' };
   waForm  = { phone: '', message: '' };
-  docForm = { nombre: '', categoria: 'Contratos', tipo: 'application/pdf' };
+  docForm = { nombre: '', categoria: 'Contratos' };
+  docFile: File | null = null;
+  docUploadError = signal('');
   segForm = { titulo: '', descripcion: '', estado: 'pendiente', prioridad: 'media', fecha_limite: '' };
 
   private clienteId = '';
@@ -501,13 +515,51 @@ export class ClienteDetailComponent implements OnInit {
     this.mensajes.set(data || []);
   }
 
+  onDocFileSelect(e: Event): void {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.docFile = file;
+      if (!this.docForm.nombre) this.docForm.nombre = file.name.replace(/\.[^.]+$/, '');
+    }
+  }
+
   async saveDoc(): Promise<void> {
-    if (!this.docForm.nombre.trim()) return;
+    if (!this.docFile) return;
     this.saving.set(true);
-    await this.supabase.supabase.from('documentos').insert([{ ...this.docForm, cliente_id: this.clienteId, cliente_nombre: this.cliente()!.nombre }]);
+    this.docUploadError.set('');
+
+    const ext = this.docFile.name.split('.').pop();
+    const path = `${this.clienteId}/${Date.now()}.${ext}`;
+
+    // Upload a Supabase Storage (bucket: 'documentos')
+    const { error: upErr } = await this.supabase.supabase.storage
+      .from('documentos')
+      .upload(path, this.docFile, { upsert: false });
+
+    if (upErr) {
+      this.docUploadError.set('Error al subir: ' + upErr.message);
+      this.saving.set(false);
+      return;
+    }
+
+    // Obtener URL pública
+    const { data: urlData } = this.supabase.supabase.storage.from('documentos').getPublicUrl(path);
+    const publicUrl = urlData.publicUrl;
+
+    // Guardar metadata en tabla documentos
+    await this.supabase.supabase.from('documentos').insert([{
+      nombre: this.docForm.nombre.trim() || this.docFile.name,
+      categoria: this.docForm.categoria,
+      tipo: this.docFile.type,
+      url: publicUrl,
+      cliente_id: this.clienteId,
+      cliente_nombre: this.cliente()!.nombre
+    }]);
+
     this.saving.set(false);
     this.showDocModal = false;
-    this.docForm = { nombre: '', categoria: 'Contratos', tipo: 'application/pdf' };
+    this.docForm = { nombre: '', categoria: 'Contratos' };
+    this.docFile = null;
     const { data } = await this.supabase.supabase.from('documentos').select('*').eq('cliente_id', this.clienteId).order('created_at', { ascending: false });
     this.documentos.set(data || []);
   }
