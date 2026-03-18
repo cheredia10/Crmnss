@@ -436,12 +436,20 @@ export class ClienteDetailComponent implements OnInit {
   }
 
   private async loadAll(): Promise<void> {
+    const clienteNombre = (await this.supabase.supabase.from('clientes').select('nombre').eq('id', this.clienteId).single()).data?.nombre || '';
+
     const [c, calls, msgs, docs, segs] = await Promise.all([
       this.supabase.supabase.from('clientes').select('*').eq('id', this.clienteId).single(),
       this.supabase.supabase.from('llamadas').select('*').eq('cliente_id', this.clienteId).order('created_at', { ascending: false }),
-      this.supabase.supabase.from('sms').select('*').eq('cliente_id', this.clienteId).order('created_at', { ascending: false }),
-      this.supabase.supabase.from('documentos').select('*').eq('cliente_id', this.clienteId).order('created_at', { ascending: false }),
-      this.supabase.supabase.from('seguimiento').select('*').eq('cliente_id', this.clienteId).order('created_at', { ascending: false }),
+      this.supabase.supabase.from('sms').select('*')
+        .or(`cliente_id.eq.${this.clienteId},cliente_nombre.eq.${clienteNombre}`)
+        .order('created_at', { ascending: false }),
+      this.supabase.supabase.from('documentos').select('*')
+        .or(`cliente_id.eq.${this.clienteId},cliente_nombre.eq.${clienteNombre}`)
+        .order('created_at', { ascending: false }),
+      this.supabase.supabase.from('seguimiento').select('*')
+        .or(`cliente_id.eq.${this.clienteId},cliente_nombre.eq.${clienteNombre}`)
+        .order('created_at', { ascending: false }),
     ]);
     this.cliente.set(c.data);
     this.llamadas.set(calls.data || []);
