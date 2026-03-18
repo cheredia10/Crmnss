@@ -531,9 +531,9 @@ export class ClienteDetailComponent implements OnInit {
     const ext = this.docFile.name.split('.').pop();
     const path = `${this.clienteId}/${Date.now()}.${ext}`;
 
-    // Upload a Supabase Storage (bucket: 'documentos')
+    // Upload a Supabase Storage (bucket: 'document')
     const { error: upErr } = await this.supabase.supabase.storage
-      .from('documentos')
+      .from('document')
       .upload(path, this.docFile, { upsert: false });
 
     if (upErr) {
@@ -543,7 +543,7 @@ export class ClienteDetailComponent implements OnInit {
     }
 
     // Obtener URL pública
-    const { data: urlData } = this.supabase.supabase.storage.from('documentos').getPublicUrl(path);
+    const { data: urlData } = this.supabase.supabase.storage.from('document').getPublicUrl(path);
     const publicUrl = urlData.publicUrl;
 
     // Guardar metadata en tabla documentos
