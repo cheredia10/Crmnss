@@ -44,13 +44,13 @@
 ## 📸 Screenshots
 
 ### Dashboard
-![Dashboard](./screenshots/dashboard.png)
+![Dashboard](./Dashboard.png)
 
 ### WhatsApp Module
-![WhatsApp](./screenshots/whatsapp.png)
+![WhatsApp](./Whatsapp.png)
 
 ### Kanban Board
-![Kanban](./screenshots/kanban.png)
+![Kanban](./kanban.png)
 
 ---
 
