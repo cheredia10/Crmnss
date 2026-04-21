@@ -2,7 +2,6 @@
 
 > A full-featured business CRM with WhatsApp integration, Kanban board, and real-time KPI dashboard — built in 2 days using Google Antigravity + Claude Code.
 
-![Dashboard](https://crmnss.vercel.app/login)
 
 ## 🌐 Live Demo
 
